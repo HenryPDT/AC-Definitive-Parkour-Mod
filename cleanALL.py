@@ -1,0 +1,88 @@
+import re
+import os
+
+# Function to determine the renumbering range
+def renumber_id(match):
+    global id_counter
+    new_id = f"<ID>{id_counter}</ID>"
+    id_counter += 1
+    return new_id
+
+# Prompt the user for the directory path
+directory = input("Enter the path to the directory: ").strip()
+
+# Validate if the directory exists
+if not os.path.isdir(directory):
+    print("Error: The specified directory does not exist.")
+    exit(1)
+
+# Walk through the directory and its subdirectories
+for root, _, files in os.walk(directory):
+    for file in files:
+        # Process only .CT files
+        if file.endswith(".CT"):
+            input_file = os.path.join(root, file)
+
+            # Initialize renumbering variables for each file
+            id_counter = 0  # Reset renumbering at the start of a new file
+            parkour_mode_found = False
+            extra_found = False
+
+            # Read the file
+            with open(input_file, 'r') as f:
+                lines = f.readlines()
+
+            processed_lines = []
+            inside_userdefined_symbols = False  # Track if inside <UserdefinedSymbols> section
+            inside_cheatcodes = False  # Track if inside <CheatCodes> section
+
+            for line in lines:
+                # Handle <UserdefinedSymbols> section removal
+                if "<UserdefinedSymbols>" in line:
+                    inside_userdefined_symbols = True  # Start ignoring lines
+                    continue
+                if "</UserdefinedSymbols>" in line:
+                    inside_userdefined_symbols = False  # Stop ignoring lines
+                    continue
+                if inside_userdefined_symbols:
+                    continue  # Skip all lines within the section
+
+                # Handle <CheatCodes> section removal
+                if "<CheatCodes>" in line:
+                    inside_cheatcodes = True  # Start ignoring lines
+                    continue
+                if "</CheatCodes>" in line:
+                    inside_cheatcodes = False  # Stop ignoring lines
+                    continue
+                if inside_cheatcodes:
+                    continue  # Skip all lines within the section
+
+                # Remove line containing <UserdefinedSymbols/>
+                if "<UserdefinedSymbols/>" in line:
+                    continue  # Skip this line
+
+                # Check for specific descriptions to update renumbering logic
+                if '<Description>"Parkour Mode"</Description>' in line:
+                    parkour_mode_found = True
+                    id_counter = 1000  # Reset to 1000 after this description
+                elif '<Description>"Extra"</Description>' in line:
+                    extra_found = True
+                    id_counter = 2000  # Reset to 2000 after this description
+
+                # Skip lines containing 'LastState'
+                if 'LastState' in line:
+                    continue  # Do not add this line to processed_lines
+
+                # Check for IDs and replace them using regex
+                if '<ID>' in line and '</ID>' in line:
+                    line = re.sub(r"<ID>\d+</ID>", renumber_id, line)
+
+                processed_lines.append(line)
+
+            # Overwrite the original file with processed content
+            with open(input_file, 'w') as f:
+                f.writelines(processed_lines)
+
+            print(f"Processed file: {input_file}")
+
+print("Processing complete.")
