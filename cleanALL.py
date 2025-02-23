@@ -25,8 +25,10 @@ for root, _, files in os.walk(directory):
 
             # Initialize renumbering variables for each file
             id_counter = 0  # Reset renumbering at the start of a new file
+            binds_found = False
             parkour_mode_found = False
             extra_found = False
+            vault_landing_found = False
 
             # Read the file
             with open(input_file, 'r') as f:
@@ -62,12 +64,18 @@ for root, _, files in os.walk(directory):
                     continue  # Skip this line
 
                 # Check for specific descriptions to update renumbering logic
-                if '<Description>"Parkour Mode"</Description>' in line:
+                if '<Description>"Binds"</Description>' in line:
+                    binds_found = True
+                    id_counter = 100  # Reset to 3000 after this description
+                elif '<Description>"Parkour Mode"</Description>' in line:
                     parkour_mode_found = True
-                    id_counter = 1000  # Reset to 1000 after this description
+                    id_counter = 200  # Reset to 1000 after this description
                 elif '<Description>"Extra"</Description>' in line:
                     extra_found = True
-                    id_counter = 2000  # Reset to 2000 after this description
+                    id_counter = 300  # Reset to 2000 after this description
+                elif '<Description>"Vault Landing Far Height"</Description>' in line:
+                    vault_landing_found = True
+                    id_counter = 400  # Reset to 3000 after this description
 
                 # Skip lines containing 'LastState'
                 if 'LastState' in line:
@@ -76,6 +84,9 @@ for root, _, files in os.walk(directory):
                 # Check for IDs and replace them using regex
                 if '<ID>' in line and '</ID>' in line:
                     line = re.sub(r"<ID>\d+</ID>", renumber_id, line)
+
+                # Remove trailing whitespace
+                line = line.rstrip() + '\n' #add newline back after strip
 
                 processed_lines.append(line)
 
