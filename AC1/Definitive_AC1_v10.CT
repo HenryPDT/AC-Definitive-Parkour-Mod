@@ -7998,7 +7998,8 @@ globalalloc(dh1,4)
 globalalloc(dh2,4)
 globalalloc(h_1,4)
 globalalloc(h_2,4)
-globalalloc(swing_height_to_distance,4)
+globalalloc(swing_far_ratio,4)
+globalalloc(swing_far_static,4)
 globalalloc(negate_mask,4)
 globalalloc(zero,4)
 globalalloc(one,4)
@@ -8052,8 +8053,10 @@ h_1:
 dd (float)1
 h_2:
 dd (float)1.15
-swing_height_to_distance:
-dd (float)2
+swing_far_ratio:
+dd (float)1.25
+swing_far_static:
+dd (float)1.5
 negate_mask:
 dd 80000000
 zero:
@@ -8427,7 +8430,7 @@ maxss xmm3,[h_min]                  // Clamp to h_min
 minss xmm3,[h_max]                  // Clamp to h_max
 movss [h_main],xmm3                 // Store the clamped h
 
-movss xmm4,[k_coef_out]                 // Load k_coef into xmm1
+movss xmm4,[k_coef_out]             // Load k_coef into xmm1
 mulss xmm3,xmm4                     // Multiply k_coef by f
 movss [k_coef_out],xmm3             // Store the result in k_coef_out
 
@@ -8435,8 +8438,10 @@ divss xmm1,[v_outthresh]            // Divide v_out by v_outthresh to get k_pre
 mulss xmm1,[k_coef_out]             // Multiply by k_coef_out
 minss xmm1,[k_upmax]                // Clamp to k_upmax
 movss [swing_up_height+8],xmm1      // Store the final swing up value (k)
-addss xmm1,[swing_height_to_distance]
-movss [swing_far_distance],xmm1      // Store the final swing up value (k)
+
+mulss xmm1,[swing_far_ratio]        // Multiply by swing_far_ratio
+addss xmm1,[swing_far_static]       // Add swing_far_static
+movss [swing_far_distance],xmm1     // Store the final swing up value (k)
 
 originalcode:
 mov [target_f],00
