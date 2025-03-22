@@ -1112,7 +1112,7 @@ dealloc(on_water)
                       <Description>"On Vault"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
-                      <Address>on_vault_F</Address>
+                      <Address>on_vault_f</Address>
                     </CheatEntry>
                     <CheatEntry>
                       <ID>58</ID>
@@ -6806,6 +6806,7 @@ globalalloc(swan_dive_f,1)
 globalalloc(kiosk_cancel_enable,1)
 globalalloc(diag_swing_f,1)
 globalalloc(on_hang_free_f,1)
+globalalloc(on_vault_f,1)
 globalalloc(fall_height,4)
 globalalloc(ground_roll_enable,1)
 globalalloc(already_rolled_f,1)
@@ -6824,6 +6825,8 @@ je already_dive
 cmp byte ptr [swan_dive_enable],01
 jne originalcode
 cmp byte ptr [on_hang_free_f],01
+je originalcode
+cmp byte ptr [on_vault_f],01
 je originalcode
 mov [swan_dive_f],01
 jmp exit

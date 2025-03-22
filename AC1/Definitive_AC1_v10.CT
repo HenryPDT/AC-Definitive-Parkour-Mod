@@ -1037,7 +1037,7 @@ dealloc(on_vault)
                       <Description>"On Vault"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
-                      <Address>on_vault_F</Address>
+                      <Address>on_vault_f</Address>
                     </CheatEntry>
                     <CheatEntry>
                       <ID>58</ID>
