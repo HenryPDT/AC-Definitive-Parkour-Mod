@@ -81,6 +81,27 @@ for root, _, files in os.walk(directory):
                 if 'LastState' in line:
                     continue  # Do not add this line to processed_lines
 
+                # Remove specific comment lines or comment parts without eliminating every empty line.
+                comment_substrings = [
+                    "//code from here to '[DISABLE]' will be used to enable the cheat",
+                    "//this is allocated memory, you have read,write,execute access",
+                    "//place your code here",
+                    "//code from here till the end of the code will be used to disable the cheat"
+                ]
+                remove_line = False  # Flag to indicate if we should skip this line entirely
+                for comment in comment_substrings:
+                    if comment in line:
+                        prefix = line.split(comment)[0]
+                        # If the comment is the only thing on the line, mark it to be skipped.
+                        if prefix.strip() == "":
+                            remove_line = True
+                            break
+                        else:
+                            # Otherwise, remove the comment and keep the rest of the line.
+                            line = prefix.rstrip() + "\n"
+                if remove_line:
+                    continue
+
                 # Check for IDs and replace them using regex
                 if '<ID>' in line and '</ID>' in line:
                     line = re.sub(r"<ID>\d+</ID>", renumber_id, line)

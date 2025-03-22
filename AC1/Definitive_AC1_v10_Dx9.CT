@@ -38,7 +38,6 @@
           <Color>00FF00</Color>
           <VariableType>Auto Assembler Script</VariableType>
           <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(entity,2048)
 label(returnhere)
 label(exit)
@@ -94,8 +93,7 @@ globalalloc(vault_inner_ledge_f,1)
 globalalloc(dismount_hang_free_eject_f,1)
 globalalloc(freeform_jump_f,1)
 
-entity: //this is allocated memory, you have read,write,execute access
-//place your code here
+entity:
 mov eax,[edi+8]
 mov [pEntity],eax
 mov eax,[edi]
@@ -114,8 +112,7 @@ alloc(ingame_binds,2048)
 label(returnhere2)
 label(exit2)
 
-ingame_binds: //this is allocated memory, you have read,write,execute access
-//place your code here
+ingame_binds:
 movups xmm0,[eax+18]
 movups [esi+18],xmm0
 
@@ -180,8 +177,7 @@ alloc(absolute_input,2048)
 label(returnhere3)
 label(exit3)
 
-absolute_input: //this is allocated memory, you have read,write,execute access
-//place your code here
+absolute_input:
 movups xmm0,[eax+00000110]
 movq [absolute_input_cam_f],xmm0
 movups xmm0,[eax+00000100]
@@ -203,7 +199,7 @@ alloc(relative_input,2048)
 label(returnhere4)
 label(exit4)
 
-relative_input: //this is allocated memory, you have read,write,execute access
+relative_input:
 fst [relative_input_f]
 fstp dword ptr [esi+00001244]
 
@@ -220,8 +216,7 @@ alloc(direction_input,2048)
 label(returnhere5)
 label(exit5)
 
-direction_input: //this is allocated memory, you have read,write,execute access
-//place your code here
+direction_input:
 movaps [direction_input_f],xmm0
 movaps [esi+00001270],xmm0
 
@@ -239,8 +234,7 @@ label(returnhere6)
 label(originalcode6)
 label(exit6)
 
-get_velocity: //this is allocated memory, you have read,write,execute access
-//place your code here
+get_velocity:
 mov [pVelocity],eax
 push edx
 mov edx,eax
@@ -292,8 +286,7 @@ alloc(get_fall_height,2048)
 label(returnhere7)
 label(exit7)
 
-get_fall_height: //this is allocated memory, you have read,write,execute access
-//place your code here
+get_fall_height:
 fst dword ptr [fall_height]
 fstp dword ptr [esp+20]
 cmp byte ptr [ebp+08],00
@@ -312,8 +305,7 @@ label(returnhere8)
 label(hang_crouch)
 label(exit8)
 
-on_hang: //this is allocated memory, you have read,write,execute access
-//place your code here
+on_hang:
 mov [on_ground_f],00
 mov [on_nso_f],00
 mov [on_air_f],00
@@ -348,8 +340,7 @@ alloc(on_hang_2,2048)
 label(returnhere9)
 label(exit9)
 
-on_hang_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+on_hang_2:
 mov [on_ground_f],00
 mov [on_nso_f],00
 mov [on_air_f],00
@@ -374,8 +365,7 @@ alloc(on_ground,2048)
 label(returnhere10)
 label(exit10)
 
-on_ground: //this is allocated memory, you have read,write,execute access
-//place your code here
+on_ground:
 mov [on_ground_f],01
 mov [on_nso_f],00
 mov [on_air_f],00
@@ -404,8 +394,7 @@ alloc(on_ground_land,2048)
 label(returnhere11)
 label(exit11)
 
-on_ground_land: //this is allocated memory, you have read,write,execute access
-//place your code here
+on_ground_land:
 mov [already_rolled_f],00
 mov [vault_inner_ledge_f],00
 mov eax,[edi+08]
@@ -424,8 +413,7 @@ alloc(on_nso,2048)
 label(returnhere12)
 label(exit12)
 
-on_nso: //this is allocated memory, you have read,write,execute access
-//place your code here
+on_nso:
 mov [on_nso_f],01
 mov [on_ground_f],00
 mov [on_air_f],00
@@ -454,8 +442,7 @@ alloc(on_air,2048)
 label(returnhere13)
 label(exit13)
 
-on_air: //this is allocated memory, you have read,write,execute access
-//place your code here
+on_air:
 mov [on_air_f],01
 mov ecx,[esi+08]
 mov eax,[ecx]
@@ -472,8 +459,7 @@ alloc(on_ledge_grab,2048)
 label(returnhere14)
 label(exit14)
 
-on_ledge_grab: //this is allocated memory, you have read,write,execute access
-//place your code here
+on_ledge_grab:
 mov [already_rolled_f],00
 mov [dive_beam_f],00
 mov [near_miss_f],00
@@ -494,8 +480,7 @@ alloc(on_run,2048)
 label(returnhere15)
 label(exit15)
 
-on_run: //this is allocated memory, you have read,write,execute access
-//place your code here
+on_run:
 mov [already_rolled_f],00
 mov [dive_beam_f],00
 mov [near_miss_f],00
@@ -518,8 +503,7 @@ alloc(on_prescriptive_move,2048)
 label(returnhere16)
 label(exit16)
 
-on_prescriptive_move: //this is allocated memory, you have read,write,execute access
-//place your code here
+on_prescriptive_move:
 mov [smooth_fall_f],00
 mov [instant_swingoff_f],00
 mov esi,[ebp+0C]
@@ -539,8 +523,7 @@ alloc(on_vault,2048)
 label(returnhere17)
 label(exit17)
 
-on_vault: //this is allocated memory, you have read,write,execute access
-//place your code here
+on_vault:
 mov [on_nso_f],00
 mov [on_ground_f],00
 mov [on_air_f],00
@@ -565,7 +548,6 @@ returnhere17:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+779478:
 db 8B 07 8B 90 B0 00 00 00
 //mov eax,[edi]
@@ -1087,7 +1069,6 @@ dealloc(on_vault)
                   <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                   <VariableType>Auto Assembler Script</VariableType>
                   <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(binds,5120)
 label(returnhere)
 label(originalcode)
@@ -1317,8 +1298,7 @@ globalalloc(forced_hang_alt_enable,1)
 
 globalalloc(on_hang_free_f,1)
 
-binds: //this is allocated memory, you have read,write,execute access
-//place your code here
+binds:
 mov [vault_enable],00
 mov [freeform_enable],00
 mov [parkour_down_enable],00
@@ -1861,8 +1841,7 @@ label(returnhere2)
 label(originalcode2)
 label(exit2)
 
-controller: //this is allocated memory, you have read,write,execute access
-//place your code here
+controller:
 mov bl,[esi+18]
 mov [buttonA],bl
 
@@ -1927,8 +1906,7 @@ label(returnhere3)
 label(originalcode3)
 label(exit3)
 
-keyboard: //this is allocated memory, you have read,write,execute access
-//place your code here
+keyboard:
 push esi
 lea esi,[edi-08]
 
@@ -2208,8 +2186,7 @@ alloc(bind_legs_tap,2048)
 label(returnhere4)
 label(exit4)
 
-bind_legs_tap: //this is allocated memory, you have read,write,execute access
-//place your code here
+bind_legs_tap:
 mov byte ptr [bindLegsTap],00
 mov byte ptr [esi+00001126],00
 
@@ -2226,8 +2203,7 @@ alloc(bind_legs_tap_2,2048)
 label(returnhere5)
 label(exit5)
 
-bind_legs_tap_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+bind_legs_tap_2:
 mov byte ptr [bindLegsTap],01
 mov byte ptr [esi+00001126],01
 
@@ -2241,7 +2217,6 @@ returnhere5:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "EaglePatchAC1.asi"+117E:
 db 8B 84 32 0C 05 00 00
 //mov eax,[edx+esi+0000050C]
@@ -3269,15 +3244,13 @@ dealloc(bind_legs_tap_2)
                           <Color>00FF00</Color>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(pause,2048)
 label(returnhere)
 label(exit)
 
 globalalloc(pause_f,1)
 
-pause: //this is allocated memory, you have read,write,execute access
-//place your code here
+pause:
 mov al,[eax+5C]
 mov [pause_f],al
 sub esp,10
@@ -3294,7 +3267,6 @@ returnhere:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 dealloc(pause)
 "AssassinsCreed_Dx9.exe"+94613A:
 db 8A 40 5C 83 EC 10
@@ -3323,14 +3295,12 @@ db 8A 40 5C 83 EC 10
                               <Description>"Disable NPC Targeting and Interaction and Tackle"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(disable_npc_interaction,2048)
 label(returnhere)
 label(originalcode)
 label(exit)
 
-disable_npc_interaction: //this is allocated memory, you have read,write,execute access
-//place your code here
+disable_npc_interaction:
 
 originalcode:
 jmp AssassinsCreed_Dx9.exe+7437EC
@@ -3347,7 +3317,6 @@ returnhere:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 dealloc(disable_npc_interaction)
 "AssassinsCreed_Dx9.exe"+7436C6:
 db 0F 86 20 01 00 00
@@ -3359,15 +3328,13 @@ db 0F 86 20 01 00 00
                               <Description>"Disable Ingame Binds"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(disable_ingame_binds,2048)
 label(returnhere)
 label(exit)
 
 globalalloc(pause_f,1)
 
-disable_ingame_binds: //this is allocated memory, you have read,write,execute access
-//place your code here
+disable_ingame_binds:
 movups [esi+00000100],xmm0
 cmp byte ptr [pause_f],01
 je exit
@@ -3389,7 +3356,6 @@ returnhere:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 dealloc(disable_ingame_binds)
 "EaglePatchAC1.asi"+1177:
 db 0F 11 86 00 01 00 00
@@ -3401,13 +3367,11 @@ db 0F 11 86 00 01 00 00
                               <Description>"Disable Combat Grab"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(disable_combat_grab,2048)
 label(returnhere)
 label(exit)
 
-disable_combat_grab: //this is allocated memory, you have read,write,execute access
-//place your code here
+disable_combat_grab:
 jmp AssassinsCreed_Dx9.exe+AE4BAD
 
 exit:
@@ -3422,7 +3386,6 @@ returnhere:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 dealloc(disable_combat_grab)
 "AssassinsCreed_Dx9.exe"+AE4AF4:
 db 0F 84 B3 00 00 00
@@ -3434,7 +3397,6 @@ db 0F 84 B3 00 00 00
                               <Description>"Disable Drop to Hang"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(disable_drop_to_hang,2048)
 label(returnhere)
 label(originalcode)
@@ -3445,8 +3407,7 @@ globalalloc(buttonLS,1)
 globalalloc(buttonLB,1)
 globalalloc(forced_hang_enable,1)
 
-disable_drop_to_hang: //this is allocated memory, you have read,write,execute access
-//place your code here
+disable_drop_to_hang:
 cmp byte ptr [buttonY],01
 je AssassinsCreed_Dx9.exe+AEB515
 cmp byte ptr [buttonLS],01
@@ -3472,7 +3433,6 @@ returnhere:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 dealloc(disable_drop_to_hang)
 "AssassinsCreed_Dx9.exe"+AEB35F:
 db 0F 84 B0 01 00 00
@@ -3486,7 +3446,6 @@ db 0F 84 B0 01 00 00
                           <Description>"Vault"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(vault,2048)
 label(returnhere)
 label(originalcode)
@@ -3505,8 +3464,7 @@ globalalloc(vault_ground_land_f,1)
 vault_inner_ledge_f:
 db 00
 
-vault: //this is allocated memory, you have read,write,execute access
-//place your code here
+vault:
 cmp byte ptr [parkour_far_enable],01
 je originalcode
 cmp byte ptr [vault_enable],01
@@ -3533,8 +3491,7 @@ label(returnhere2)
 label(originalcode2)
 label(exit2)
 
-vault_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+vault_2:
 cmp byte ptr [parkour_far_enable],00
 je originalcode2
 cmp byte ptr [vault_enable],00
@@ -3561,8 +3518,7 @@ alloc(vault_landing,2048)
 label(returnhere3)
 label(exit3)
 
-vault_landing: //this is allocated memory, you have read,write,execute access
-//place your code here
+vault_landing:
 mov [vault_enable],00
 mov [vault_inner_ledge_f],00
 mov [on_vault_f],01
@@ -3580,8 +3536,7 @@ alloc(vault_from_walk,2048)
 label(returnhere4)
 label(exit4)
 
-vault_from_walk: //this is allocated memory, you have read,write,execute access
-//place your code here
+vault_from_walk:
 cmp byte ptr [vault_enable],01
 je AssassinsCreed_Dx9.exe+AE7F87
 cmp byte ptr [esi+0000112B],00
@@ -3599,8 +3554,7 @@ alloc(vault_to_hang,2048)
 label(returnhere5)
 label(exit5)
 
-vault_to_hang: //this is allocated memory, you have read,write,execute access
-//place your code here
+vault_to_hang:
 mov [vault_inner_ledge_f],00
 cmp byte ptr [vault_enable],01
 je AssassinsCreed_Dx9.exe+AECBA4
@@ -3622,8 +3576,7 @@ alloc(vault_to_hang_2,2048)
 label(returnhere6)
 label(exit6)
 
-vault_to_hang_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+vault_to_hang_2:
 call AssassinsCreed_Dx9.exe+72E4F0
 cmp byte ptr [vault_enable],01
 je AssassinsCreed_Dx9.exe+9D2C84
@@ -3643,8 +3596,7 @@ label(returnhere7)
 label(originalcode7)
 label(exit7)
 
-vault_inner_ledge: //this is allocated memory, you have read,write,execute access
-//place your code here
+vault_inner_ledge:
 mov [vault_inner_ledge_f],00
 cmp byte ptr [vault_inner_ledge_enable],01
 jne originalcode7
@@ -3666,8 +3618,7 @@ alloc(vault_inner_ledge_2,2048)
 label(returnhere8)
 label(exit8)
 
-vault_inner_ledge_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+vault_inner_ledge_2:
 cmp byte ptr [vault_inner_ledge_f],01
 je AssassinsCreed_Dx9.exe+9FEED2
 test byte ptr [ecx+000000E0],40
@@ -3685,8 +3636,7 @@ alloc(vault_freeform,2048)
 label(returnhere9)
 label(exit9)
 
-vault_freeform: //this is allocated memory, you have read,write,execute access
-//place your code here
+vault_freeform:
 mov [vault_ground_land_f],01
 mov ecx,[esi+08]
 mov edx,[ecx]
@@ -3704,8 +3654,7 @@ label(returnhere10)
 label(originalcode10)
 label(exit10)
 
-vault_freeform_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+vault_freeform_2:
 cmp byte ptr [vault_ground_land_f],01
 jne originalcode10
 mov [vault_ground_land_f],00
@@ -3724,7 +3673,6 @@ returnhere10:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+A97584:
 db 75 1D 8B 44 24 78
 //jne AssassinsCreed_Dx9.exe+A975A3
@@ -3788,7 +3736,6 @@ dealloc(vault_freeform_2)
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(freeform,2048)
 label(returnhere)
 label(originalcode)
@@ -3796,8 +3743,7 @@ label(exit)
 
 globalalloc(freeform_enable,1)
 
-freeform: //this is allocated memory, you have read,write,execute access
-//place your code here
+freeform:
 cmp byte ptr [on_vault_f],01
 je originalcode
 cmp byte ptr [freeform_enable],01
@@ -3820,8 +3766,7 @@ alloc(disable_leap_of_faith,2048)
 label(returnhere2)
 label(exit2)
 
-disable_leap_of_faith: //this is allocated memory, you have read,write,execute access
-//place your code here
+disable_leap_of_faith:
 cmp byte ptr [freeform_enable],01
 je AssassinsCreed_Dx9.exe+A16458
 comisd xmm0,xmm5
@@ -3840,8 +3785,7 @@ alloc(disable_wallrun_grab,2048)
 label(returnhere3)
 label(exit3)
 
-disable_wallrun_grab: //this is allocated memory, you have read,write,execute access
-//place your code here
+disable_wallrun_grab:
 cmp byte ptr [freeform_enable],01
 je AssassinsCreed_Dx9.exe+A3749B
 test al,al
@@ -3857,7 +3801,6 @@ returnhere3:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+A9757E:
 db 8B 55 10 C6 02 00
 //mov edx,[ebp+10]
@@ -3883,7 +3826,6 @@ dealloc(disable_wallrun_grab)
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(parkour_down,2048)
 label(returnhere)
 label(originalcode)
@@ -3900,8 +3842,7 @@ globalalloc(forced_step_enable,1)
 globalalloc(dive_beam_alt_enable,1)
 globalalloc(self_swing_enable,1)
 
-parkour_down: //this is allocated memory, you have read,write,execute access
-//place your code here
+parkour_down:
 cmp byte ptr [on_vault_f],01
 je vault_freeform
 cmp byte ptr [dive_beam_alt_enable],01
@@ -3941,8 +3882,7 @@ label(returnhere2)
 label(originalcode2)
 label(exit2)
 
-parkour_down_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+parkour_down_2:
 cmp byte ptr [parkour_down_low_enable],01
 je AssassinsCreed_Dx9.exe+A973B4
 cmp byte ptr [parkour_down_enable],01
@@ -3970,8 +3910,7 @@ label(returnhere3)
 label(originalcode3)
 label(exit3)
 
-parkour_down_3: //this is allocated memory, you have read,write,execute access
-//place your code here
+parkour_down_3:
 cmp byte ptr [parkour_down_low_enable],01
 je AssassinsCreed_Dx9.exe+A974A4
 cmp byte ptr [parkour_down_enable],01
@@ -3999,8 +3938,7 @@ label(returnhere4)
 label(originalcode4)
 label(exit4)
 
-parkour_far_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+parkour_far_2:
 cmp byte ptr [dive_beam_alt_enable],01
 je AssassinsCreed_Dx9.exe+A97558
 cmp byte ptr [parkour_far_enable],01
@@ -4022,7 +3960,6 @@ returnhere4:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+A972F3:
 db 0F 86 BA 01 00 00
 //jbe AssassinsCreed_Dx9.exe+A974B3
@@ -4054,7 +3991,6 @@ dealloc(parkour_far_2)
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(dive_beam,2048)
 label(returnhere)
 label(originalcode)
@@ -4076,8 +4012,7 @@ globalalloc(dive_beam_alt_enable,1)
 globalalloc(dive_beam_f,1)
 globalalloc(on_hang_free_f,1)
 
-dive_beam: //this is allocated memory, you have read,write,execute access
-//place your code here
+dive_beam:
 cmp byte ptr [dive_beam_alt_enable],01
 je originalcode
 cmp byte ptr [parkour_down_low_enable],01
@@ -4123,8 +4058,7 @@ label(originalcode2)
 label(forced_hang_alt_2)
 label(exit2)
 
-dive_beam_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+dive_beam_2:
 cmp byte ptr [dive_beam_alt_enable],01
 je originalcode2
 cmp byte ptr [parkour_down_low_enable],01
@@ -4163,8 +4097,7 @@ label(returnhere3)
 label(originalcode3)
 label(exit3)
 
-dive_beam_far: //this is allocated memory, you have read,write,execute access
-//place your code here
+dive_beam_far:
 cmp byte ptr [dive_beam_alt_enable],01
 je AssassinsCreed_Dx9.exe+A974F4
 cmp byte ptr [dive_beam_far_enable],01
@@ -4191,8 +4124,7 @@ label(forced_hang_code)
 label(forced_step_code)
 label(exit4)
 
-forced_hang: //this is allocated memory, you have read,write,execute access
-//place your code here
+forced_hang:
 cmp byte ptr [dive_beam_enable],01
 je forced_hang_code
 cmp byte ptr [dive_beam_far_enable],01
@@ -4240,8 +4172,7 @@ label(returnhere5)
 label(originalcode5)
 label(exit5)
 
-forced_hang_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+forced_hang_2:
 cmp byte ptr [dive_beam_enable],01
 je originalcode5
 cmp byte ptr [forced_hang_enable],01
@@ -4266,8 +4197,7 @@ label(originalcode6)
 label(limit_hop)
 label(exit6)
 
-forced_step: //this is allocated memory, you have read,write,execute access
-//place your code here
+forced_step:
 cmp byte ptr [vault_landing_far_enable],01
 je originalcode6
 cmp byte ptr [forced_step_enable],01
@@ -4302,8 +4232,7 @@ label(returnhere7)
 label(originalcode7)
 label(exit7)
 
-inner_ledge: //this is allocated memory, you have read,write,execute access
-//place your code here
+inner_ledge:
 cmp byte ptr [vault_inner_ledge_enable],01
 je AssassinsCreed_Dx9.exe+A97370
 cmp byte ptr [parkour_down_low_enable],01
@@ -4326,7 +4255,6 @@ returnhere7:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+A9730E:
 db 74 05 39 7E 50
 //je AssassinsCreed_Dx9.exe+A97315
@@ -4378,7 +4306,6 @@ dealloc(inner_ledge)
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(drop_to_fall,2048)
 label(returnhere)
 label(originalcode)
@@ -4395,8 +4322,7 @@ globalalloc(on_hang_free_f,1)
 globalalloc(hang_free_hook_f,1)
 globalalloc(drop_to_fall_speed,4)
 
-drop_to_fall: //this is allocated memory, you have read,write,execute access
-//place your code here
+drop_to_fall:
 mov [drop_to_fall_f],00
 mov [drop_to_release_f],00
 cmp byte ptr [drop_to_fall_enable],01
@@ -4428,8 +4354,7 @@ label(code_2)
 label(originalcode2)
 label(exit2)
 
-drop_to_fall_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+drop_to_fall_2:
 cmp byte ptr [drop_to_fall_enable],01
 jne code_drop_fall_2
 mov [drop_to_fall_f],01
@@ -4469,8 +4394,7 @@ label(code4)
 label(code_check_4)
 label(exit4)
 
-drop_to_fall_4: //this is allocated memory, you have read,write,execute access
-//place your code here
+drop_to_fall_4:
 mov edx,[esi+10]
 cmp byte ptr [drop_to_hang_f],00
 jne code_check_4
@@ -4511,8 +4435,7 @@ label(returnhere5)
 label(originalcode5)
 label(exit5)
 
-drop_to_fall_5: //this is allocated memory, you have read,write,execute access
-//place your code here
+drop_to_fall_5:
 mov ecx,[esi+10]
 cmp byte ptr [drop_to_fall_f],01
 jne originalcode5
@@ -4540,8 +4463,7 @@ alloc(drop_to_fall_6,2048)
 label(returnhere6)
 label(exit6)
 
-drop_to_fall_6: //this is allocated memory, you have read,write,execute access
-//place your code here
+drop_to_fall_6:
 mov [drop_to_hang_f],00
 mov [drop_to_release_f],01
 call AssassinsCreed_Dx9.exe+15F7E0
@@ -4555,7 +4477,6 @@ returnhere6:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+9DEB62:
 db 84 C0 0F 84 2F 03 00 00
 //test al,al
@@ -4593,7 +4514,6 @@ dealloc(drop_to_fall_6)
                           <Options moHideChildren="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(ledge_drop,2048)
 label(returnhere)
 label(originalcode)
@@ -4609,8 +4529,7 @@ db 00
 //00: Activate with Parkour Down or Freeform
 //01: Always On
 
-ledge_drop: //this is allocated memory, you have read,write,execute access
-//place your code here
+ledge_drop:
 cmp byte ptr [ledge_drop_enable],01
 je AssassinsCreed_Dx9.exe+AE88BF
 cmp byte ptr [vault_inner_ledge_f],01
@@ -4634,8 +4553,7 @@ alloc(ledge_drop_2,2048)
 label(returnhere2)
 label(exit2)
 
-ledge_drop_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+ledge_drop_2:
 mov [ledge_drop_f],01
 lea edx,[esp+000000BC]
 
@@ -4652,8 +4570,7 @@ alloc(ledge_drop_3,2048)
 label(returnhere3)
 label(exit3)
 
-ledge_drop_3: //this is allocated memory, you have read,write,execute access
-//place your code here
+ledge_drop_3:
 mov [ledge_drop_f],00
 call AssassinsCreed_Dx9.exe+AF0320
 
@@ -4666,7 +4583,6 @@ returnhere3:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+AE887E:
 db 84 C0 74 3D 83 7C 24 4C 01
 //test al,al
@@ -4703,7 +4619,6 @@ dealloc(ledge_drop_3)
                           <Description>"Beam Drop"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(beam_drop,2048)
 label(returnhere)
 label(originalcode)
@@ -4712,8 +4627,7 @@ label(exit)
 globalalloc(beam_drop_enable,1)
 globalalloc(ledge_drop_f,1)
 
-beam_drop: //this is allocated memory, you have read,write,execute access
-//place your code here
+beam_drop:
 cmp byte ptr [beam_drop_enable],01
 je AssassinsCreed_Dx9.exe+AEAAE3
 
@@ -4734,8 +4648,7 @@ label(returnhere2)
 label(originalcode2)
 label(exit2)
 
-beam_drop_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+beam_drop_2:
 cmp byte ptr [beam_drop_enable],01
 je AssassinsCreed_Dx9.exe+AE95F8
 
@@ -4755,8 +4668,7 @@ alloc(nso_idle,2048)
 label(returnhere3)
 label(exit3)
 
-nso_idle: //this is allocated memory, you have read,write,execute access
-//place your code here
+nso_idle:
 mov [ledge_drop_f],01
 mov ebx,[esp+24]
 mov [esp+2C],ebx
@@ -4774,8 +4686,7 @@ alloc(nso_step,2048)
 label(returnhere4)
 label(exit4)
 
-nso_step: //this is allocated memory, you have read,write,execute access
-//place your code here
+nso_step:
 mov [ledge_drop_f],01
 mov ebx,ecx
 mov [esp+24],ecx
@@ -4793,8 +4704,7 @@ alloc(nso_idle_hp,2048)
 label(returnhere5)
 label(exit5)
 
-nso_idle_hp: //this is allocated memory, you have read,write,execute access
-//place your code here
+nso_idle_hp:
 mov [ledge_drop_f],00
 movss xmm0,[esp+00000190]
 
@@ -4811,8 +4721,7 @@ alloc(nso_step_hp,2048)
 label(returnhere6)
 label(exit6)
 
-nso_step_hp: //this is allocated memory, you have read,write,execute access
-//place your code here
+nso_step_hp:
 mov [ledge_drop_f],00
 xor ebx,ebx
 mov [esp+28],ebx
@@ -4827,7 +4736,6 @@ returnhere6:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+AEAAC9:
 db 0F 2F 94 24 90 01 00 00
 //comiss xmm2,[esp+00000190]
@@ -4869,13 +4777,11 @@ dealloc(nso_step_hp)
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(disable_stumble,2048)
 label(returnhere)
 label(exit)
 
-disable_stumble: //this is allocated memory, you have read,write,execute access
-//place your code here
+disable_stumble:
 jmp AssassinsCreed_Dx9.exe+A0D985
 
 exit:
@@ -4890,7 +4796,6 @@ returnhere:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 dealloc(disable_stumble)
 "AssassinsCreed_Dx9.exe"+A0D592:
 db 0F 84 92 00 00 00
@@ -4903,7 +4808,6 @@ db 0F 84 92 00 00 00
                           <Options moHideChildren="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(disable_snap,2048)
 label(returnhere)
 label(originalcode)
@@ -4932,8 +4836,7 @@ db 00
 //00: Dynamically Snap
 //01: Always Disable Snap
 
-disable_snap: //this is allocated memory, you have read,write,execute access
-//place your code here
+disable_snap:
 cmp byte ptr [dive_beam_f],01
 je AssassinsCreed_Dx9.exe+A0D551
 cmp byte ptr [vault_inner_ledge_f],01
@@ -4975,7 +4878,6 @@ returnhere:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 dealloc(disable_snap)
 dealloc(height_limit)
 dealloc(horizontal_limit)
@@ -5002,7 +4904,6 @@ db 0F 84 27 01 00 00
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(forced_disable_ledge_grab,2048)
 label(returnhere)
 label(originalcode)
@@ -5016,8 +4917,7 @@ globalalloc(bindHighProfile,1)
 globalalloc(dive_beam_f,1)
 globalalloc(drop_to_release_f,1)
 
-forced_disable_ledge_grab: //this is allocated memory, you have read,write,execute access
-//place your code here
+forced_disable_ledge_grab:
 cmp byte ptr [forced_ledge_grab_enable],01
 je exit
 cmp byte ptr [bindEmptyHand],01
@@ -5045,8 +4945,7 @@ label(returnhere2)
 label(originalcode2)
 label(exit2)
 
-forced_disable_ledge_grab_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+forced_disable_ledge_grab_2:
 cmp byte ptr [forced_ledge_grab_enable],01
 je AssassinsCreed_Dx9.exe+A0C70D
 cmp byte ptr [disable_ledge_grab_enable],01
@@ -5073,8 +4972,7 @@ label(originalcode3)
 label(drop_to_release_3)
 label(exit3)
 
-forced_disable_ledge_grab_3: //this is allocated memory, you have read,write,execute access
-//place your code here
+forced_disable_ledge_grab_3:
 cmp byte ptr [drop_to_release_f],01
 je drop_to_release_3
 cmp byte ptr [forced_ledge_grab_enable],01
@@ -5105,7 +5003,6 @@ returnhere3:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+A0C71E:
 db 66 0F 2F C1 0F 86 5B FD FF FF
 //comisd xmm0,xmm1
@@ -5130,7 +5027,6 @@ dealloc(forced_disable_ledge_grab_3)
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(disable_wall_rebound,2048)
 label(returnhere)
 label(originalcode)
@@ -5140,8 +5036,7 @@ globalalloc(disable_ledge_grab_enable,1)
 globalalloc(dive_beam_f,1)
 globalalloc(vault_inner_ledge_f,1)
 
-disable_wall_rebound: //this is allocated memory, you have read,write,execute access
-//place your code here
+disable_wall_rebound:
 cmp byte ptr [disable_ledge_grab_enable],01
 je AssassinsCreed_Dx9.exe+ADBE36
 cmp byte ptr [dive_beam_f],01
@@ -5166,7 +5061,6 @@ returnhere:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 dealloc(disable_wall_rebound)
 "AssassinsCreed_Dx9.exe"+ADBE24:
 db 84 C0 74 0E 8B 03
@@ -5180,7 +5074,6 @@ db 84 C0 74 0E 8B 03
                               <Description>"Disable Staggered Ledge Grab"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(disable_staggered_ledge_grab,2048)
 label(returnhere)
 label(originalcode)
@@ -5191,8 +5084,7 @@ globalalloc(dive_beam_f,1)
 globalalloc(near_miss_f,1)
 globalalloc(bindLegs,1)
 
-disable_staggered_ledge_grab: //this is allocated memory, you have read,write,execute access
-//place your code here
+disable_staggered_ledge_grab:
 cmp byte ptr [dive_beam_f],01
 je disable_staggered
 cmp byte ptr [near_miss_f],01
@@ -5220,7 +5112,6 @@ returnhere:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 dealloc(disable_staggered_ledge_grab)
 "AssassinsCreed_Dx9.exe"+A0D0F1:
 db 0F 2F 44 24 20
@@ -5234,7 +5125,6 @@ db 0F 2F 44 24 20
                           <Description>"Hang to Hang"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(hang_to_hang,2048)
 label(returnhere)
 label(originalcode)
@@ -5245,8 +5135,7 @@ globalalloc(hang_to_hang_enable,1)
 globalalloc(hang_to_hang_f,1)
 globalalloc(hang_to_hang_disable_f,1)
 
-hang_to_hang: //this is allocated memory, you have read,write,execute access
-//place your code here
+hang_to_hang:
 cmp byte ptr [hang_to_hang_enable],01
 jne button_release
 cmp byte ptr [hang_to_hang_disable_f],01
@@ -5274,8 +5163,7 @@ alloc(hang_to_hang_stand,2048)
 label(returnhere2)
 label(exit2)
 
-hang_to_hang_stand: //this is allocated memory, you have read,write,execute access
-//place your code here
+hang_to_hang_stand:
 call AssassinsCreed_Dx9.exe+9ECD70
 cmp byte ptr [hang_to_hang_f],01
 je AssassinsCreed_Dx9.exe+9FE17E
@@ -5292,8 +5180,7 @@ alloc(hang_to_hang_stand_2,2048)
 label(returnhere3)
 label(exit3)
 
-hang_to_hang_stand_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+hang_to_hang_stand_2:
 call AssassinsCreed_Dx9.exe+9ECD70
 cmp byte ptr [hang_to_hang_f],01
 je AssassinsCreed_Dx9.exe+9FE29E
@@ -5310,8 +5197,7 @@ alloc(hang_to_hang_stand_3,2048)
 label(returnhere4)
 label(exit4)
 
-hang_to_hang_stand_3: //this is allocated memory, you have read,write,execute access
-//place your code here
+hang_to_hang_stand_3:
 call AssassinsCreed_Dx9.exe+9F0980
 cmp byte ptr [hang_to_hang_f],01
 jne exit4
@@ -5331,8 +5217,7 @@ alloc(hang_to_hang_stand_4,2048)
 label(returnhere5)
 label(exit5)
 
-hang_to_hang_stand_4: //this is allocated memory, you have read,write,execute access
-//place your code here
+hang_to_hang_stand_4:
 mov [hang_to_hang_disable_f],01
 mov [hang_to_hang_f],00
 mov byte ptr [esi+00000B64],01
@@ -5350,8 +5235,7 @@ alloc(hang_to_hang_crouch,2048)
 label(returnhere6)
 label(exit6)
 
-hang_to_hang_crouch: //this is allocated memory, you have read,write,execute access
-//place your code here
+hang_to_hang_crouch:
 call AssassinsCreed_Dx9.exe+9D48B0
 cmp byte ptr [hang_to_hang_f],01
 je AssassinsCreed_Dx9.exe+9E2BA4
@@ -5368,8 +5252,7 @@ alloc(hang_to_hang_crouch_2,2048)
 label(returnhere7)
 label(exit7)
 
-hang_to_hang_crouch_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+hang_to_hang_crouch_2:
 call AssassinsCreed_Dx9.exe+9DE0C0
 cmp byte ptr [hang_to_hang_f],01
 jne exit7
@@ -5386,7 +5269,6 @@ returnhere7:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+15F69B:
 db 8B 4E 14 8B 01
 //mov ecx,[esi+14]
@@ -5431,7 +5313,6 @@ dealloc(hang_to_hang_crouch_2)
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(drop_to_hang,2048)
 label(returnhere)
 label(originalcode)
@@ -5443,8 +5324,7 @@ globalalloc(dismount_hang_free_eject_f,1)
 globalalloc(bindLegsTap,1)
 globalalloc(bindLegs,1)
 
-drop_to_hang: //this is allocated memory, you have read,write,execute access
-//place your code here
+drop_to_hang:
 mov eax,[esi+10]
 cmp dword ptr [eax+4C],0C
 jne originalcode
@@ -5468,8 +5348,7 @@ label(returnhere2)
 label(originalcode2)
 label(exit2)
 
-drop_to_hang_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+drop_to_hang_2:
 cmp byte ptr [on_hang_free_f],00
 je originalcode2
 cmp byte ptr [dismount_enable],01
@@ -5493,8 +5372,7 @@ alloc(drop_to_hang_3,2048)
 label(returnhere3)
 label(exit3)
 
-drop_to_hang_3: //this is allocated memory, you have read,write,execute access
-//place your code here
+drop_to_hang_3:
 movss xmm0,[eax+000000B8]
 cmp byte ptr [bindLegsTap],01
 jne exit3
@@ -5516,8 +5394,7 @@ alloc(drop_to_hang_4,2048)
 label(returnhere4)
 label(exit4)
 
-drop_to_hang_4: //this is allocated memory, you have read,write,execute access
-//place your code here
+drop_to_hang_4:
 mov [dismount_hang_free_eject_f],00
 cmp dword ptr [esp+04],00
 
@@ -5534,8 +5411,7 @@ label(returnhere5)
 label(originalcode5)
 label(exit5)
 
-manual_ledge_grab: //this is allocated memory, you have read,write,execute access
-//place your code here
+manual_ledge_grab:
 call AssassinsCreed_Dx9.exe+1017B0
 cmp byte ptr [on_hang_free_f],01
 jne originalcode5
@@ -5558,8 +5434,7 @@ alloc(prescriptive_ledge_grab,2048)
 label(returnhere6)
 label(exit6)
 
-prescriptive_ledge_grab: //this is allocated memory, you have read,write,execute access
-//place your code here
+prescriptive_ledge_grab:
 call AssassinsCreed_Dx9.exe+101760
 cmp byte ptr [bindLegsTap],01
 je AssassinsCreed_Dx9.exe+9CC1E0
@@ -5573,7 +5448,6 @@ returnhere6:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+9E359B:
 db 5E C2 04 00 CC
 //pop esi
@@ -5614,7 +5488,6 @@ dealloc(prescriptive_ledge_grab)
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(hang,2048)
 label(returnhere)
 label(originalcode)
@@ -5623,8 +5496,7 @@ label(exit)
 globalalloc(forced_hang_enable,1)
 globalalloc(vanilla_beam_entry_enable,1)
 
-hang: //this is allocated memory, you have read,write,execute access
-//place your code here
+hang:
 
 originalcode:
 mov [edi+10],ecx
@@ -5643,8 +5515,7 @@ alloc(pole_to_beam,2048)
 label(returnhere2)
 label(exit2)
 
-pole_to_beam: //this is allocated memory, you have read,write,execute access
-//place your code here
+pole_to_beam:
 mov esi,[esp+0000054C]
 cmp byte ptr [forced_hang_enable],01
 je exit2
@@ -5666,8 +5537,7 @@ alloc(release_beam,2048)
 label(returnhere3)
 label(exit3)
 
-release_beam: //this is allocated memory, you have read,write,execute access
-//place your code here
+release_beam:
 jmp AssassinsCreed_Dx9.exe+9CD01D
 
 exit3:
@@ -5682,8 +5552,7 @@ alloc(pull_up,2048)
 label(returnhere4)
 label(exit4)
 
-pull_up: //this is allocated memory, you have read,write,execute access
-//place your code here
+pull_up:
 jmp AssassinsCreed_Dx9.exe+9E22F0
 
 exit4:
@@ -5699,8 +5568,7 @@ alloc(swing_idle,2048)
 label(returnhere5)
 label(exit5)
 
-swing_idle: //this is allocated memory, you have read,write,execute access
-//place your code here
+swing_idle:
 jmp AssassinsCreed_Dx9.exe+9D3793
 
 exit5:
@@ -5716,8 +5584,7 @@ alloc(swing_idle_2,2048)
 label(returnhere6)
 label(exit6)
 
-swing_idle_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+swing_idle_2:
 fcomip st(0),st(1)
 fstp st(0)
 jmp AssassinsCreed_Dx9.exe+9D3891
@@ -5735,8 +5602,7 @@ alloc(swing_entry,2048)
 label(returnhere7)
 label(exit7)
 
-swing_entry: //this is allocated memory, you have read,write,execute access
-//place your code here
+swing_entry:
 jmp AssassinsCreed_Dx9.exe+9CD35A
 
 exit7:
@@ -5753,8 +5619,7 @@ label(returnhere8)
 label(originalcode8)
 label(exit8)
 
-vanilla_beam_entry: //this is allocated memory, you have read,write,execute access
-//place your code here
+vanilla_beam_entry:
 cmp byte ptr [vanilla_beam_entry_enable],01
 jne originalcode8
 push edi
@@ -5773,7 +5638,6 @@ returnhere8:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+9D05A9:
 db 89 4F 10 0F 28 06
 //mov [edi+10],ecx
@@ -5826,7 +5690,6 @@ dealloc(vanilla_beam_entry)
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(instant_swingoff,2048)
 label(returnhere)
 label(originalcode)
@@ -5843,8 +5706,7 @@ dd (float)1.31
 backward_input:
 dd (float)1.83
 
-instant_swingoff: //this is allocated memory, you have read,write,execute access
-//place your code here
+instant_swingoff:
 cmp byte ptr [instant_swingoff_f],01
 mov [instant_swingoff_f],00
 je AssassinsCreed_Dx9.exe+9CD062
@@ -5867,8 +5729,7 @@ label(returnhere2)
 label(originalcode2)
 label(exit2)
 
-disable_pullup_rotate: //this is allocated memory, you have read,write,execute access
-//place your code here
+disable_pullup_rotate:
 cmp byte ptr [instant_swingoff_f],01
 je AssassinsCreed_Dx9.exe+AECCEE
 
@@ -5889,8 +5750,7 @@ alloc(manual_ledge_grab,2048)
 label(returnhere3)
 label(exit3)
 
-manual_ledge_grab: //this is allocated memory, you have read,write,execute access
-//place your code here
+manual_ledge_grab:
 mov [instant_swingoff_f],01
 call AssassinsCreed_Dx9.exe+3113F0
 
@@ -5906,8 +5766,7 @@ alloc(drop_to_hang,2048)
 label(returnhere4)
 label(exit4)
 
-drop_to_hang: //this is allocated memory, you have read,write,execute access
-//place your code here
+drop_to_hang:
 mov [instant_swingoff_f],01
 mov [edx+54],00000000
 
@@ -5926,8 +5785,7 @@ label(originalcode5)
 label(disable_instant)
 label(exit5)
 
-drop_to_hang_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+drop_to_hang_2:
 cmp [relative_input_f],00000000
 je disable_instant
 
@@ -5965,8 +5823,7 @@ alloc(drop_to_hang_3,2048)
 label(returnhere6)
 label(exit6)
 
-drop_to_hang_3: //this is allocated memory, you have read,write,execute access
-//place your code here
+drop_to_hang_3:
 mov [instant_swingoff_f],00
 mov al,[esi+00000745]
 
@@ -5980,7 +5837,6 @@ returnhere6:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+9CD042:
 db 75 28 8B 4E 08
 //jne AssassinsCreed_Dx9.exe+9CD06C
@@ -6024,7 +5880,6 @@ dealloc(backward_input)
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(ground_landings,2048)
 label(returnhere)
 label(originalcode)
@@ -6038,8 +5893,7 @@ globalalloc(soft_land_enable,1)
 soft_land_height_threshold:
 dd (float)6
 
-ground_landings: //this is allocated memory, you have read,write,execute access
-//place your code here
+ground_landings:
 movss [drop_height],xmm0
 
 cmp byte ptr [ground_roll_enable],01
@@ -6063,7 +5917,6 @@ returnhere:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 dealloc(ground_landings)
 "AssassinsCreed_Dx9.exe"+A05C96:
 db 0F 86 C0 02 00 00
@@ -6075,13 +5928,11 @@ db 0F 86 C0 02 00 00
                               <Description>"Remove Hard Landing / Roll Screen Shake"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(remove_land_shake,2048)
 label(returnhere)
 label(exit)
 
-remove_land_shake: //this is allocated memory, you have read,write,execute access
-//place your code here
+remove_land_shake:
 jmp AssassinsCreed_Dx9.exe+A06205
 
 exit:
@@ -6096,7 +5947,6 @@ returnhere:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 dealloc(remove_land_shake)
 "AssassinsCreed_Dx9.exe"+A05E67:
 db 0F 84 98 03 00 00
@@ -6108,7 +5958,6 @@ db 0F 84 98 03 00 00
                               <Description>"Smooth Vault Ground Landing"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(smooth_vault,2048)
 label(returnhere)
 label(originalcode)
@@ -6121,8 +5970,7 @@ alloc(vault_land_height,4)
 vault_land_height:
 dd (float)2
 
-smooth_vault: //this is allocated memory, you have read,write,execute access
-//place your code here
+smooth_vault:
 cmp byte ptr [vault_f],01
 jne originalcode
 mov [vault_f],00
@@ -6151,8 +5999,7 @@ alloc(vault1,2048)
 label(returnhere1)
 label(exit1)
 
-vault1: //this is allocated memory, you have read,write,execute access
-//place your code here
+vault1:
 mov [vault_f],01
 mov ecx,[ebp+08]
 mov [ecx],00000002
@@ -6167,7 +6014,6 @@ returnhere1:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+A05FDD:
 db 75 2F 6A 00 6A 01
 //jne AssassinsCreed_Dx9.exe+A0600E
@@ -6190,7 +6036,6 @@ dealloc(vault_land_height)
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(forced_ground_roll,2048)
 label(returnhere)
 label(exit)
@@ -6198,8 +6043,7 @@ label(exit)
 globalalloc(forced_ground_roll_enable,1)
 globalalloc(forced_ground_roll_f,1)
 
-forced_ground_roll: //this is allocated memory, you have read,write,execute access
-//place your code here
+forced_ground_roll:
 lea ecx,[esi+000000C0]
 cmp byte ptr [forced_ground_roll_enable],01
 jne exit
@@ -6219,8 +6063,7 @@ alloc(forced_ground_roll_2,2048)
 label(returnhere2)
 label(exit2)
 
-forced_ground_roll_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+forced_ground_roll_2:
 call AssassinsCreed_Dx9.exe+9FEEC0
 cmp byte ptr [forced_ground_roll_f],00
 je exit2
@@ -6236,7 +6079,6 @@ returnhere2:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+AE8157:
 db 8D 8E C0 00 00 00
 //lea ecx,[esi+000000C0]
@@ -6290,7 +6132,6 @@ dealloc(forced_ground_roll_2)
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(kiosk_moves,2048)
 label(returnhere)
 label(originalcode)
@@ -6308,8 +6149,7 @@ alloc(zero,4)
 zero:
 dd (float)0
 
-kiosk_moves: //this is allocated memory, you have read,write,execute access
-//place your code here
+kiosk_moves:
 cmp byte ptr [kiosk_roll_f],01
 je kiosk_roll
 cmp byte ptr [kiosk_swing_f],01
@@ -6343,8 +6183,7 @@ alloc(kiosk_moves_2,2048)
 label(returnhere2)
 label(exit2)
 
-kiosk_moves_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+kiosk_moves_2:
 fcomip st(0),st(1)
 fstp st(0)
 fld dword ptr [relative_input_f]
@@ -6367,8 +6206,7 @@ label(returnhere3)
 label(originalcode3)
 label(exit3)
 
-manual_kiosk: //this is allocated memory, you have read,write,execute access
-//place your code here
+manual_kiosk:
 cmp byte ptr [kiosk_roll_enable],01
 jne originalcode3
 cmp [ebp+14],00000080
@@ -6399,8 +6237,7 @@ alloc(kiosk_roll_end,2048)
 label(returnhere4)
 label(exit4)
 
-kiosk_roll_end: //this is allocated memory, you have read,write,execute access
-//place your code here
+kiosk_roll_end:
 mov [already_rolled_f],01
 jmp AssassinsCreed_Dx9.exe+A3E457
 
@@ -6417,8 +6254,7 @@ alloc(kiosk_swing_end,2048)
 label(returnhere5)
 label(exit5)
 
-kiosk_swing_end: //this is allocated memory, you have read,write,execute access
-//place your code here
+kiosk_swing_end:
 mov [already_rolled_f],01
 mov [esp+04],eax
 xor ecx,ecx
@@ -6433,7 +6269,6 @@ returnhere5:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+7642CF:
 db 89 56 24 8B 79 0C
 //mov [esi+24],edx
@@ -6475,7 +6310,6 @@ dealloc(zero)
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(forced_kiosk,2048)
 label(returnhere)
 label(originalcode)
@@ -6494,8 +6328,7 @@ alloc(zero,4)
 zero:
 dd (float)0
 
-forced_kiosk: //this is allocated memory, you have read,write,execute access
-//place your code here
+forced_kiosk:
 fld dword ptr [player_velocity+8]
 fld dword ptr [zero]
 fcomip st(0),st(1)
@@ -6536,8 +6369,7 @@ alloc(forced_kiosk_2,2048)
 label(returnhere2)
 label(exit2)
 
-forced_kiosk_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+forced_kiosk_2:
 call AssassinsCreed_Dx9.exe+101DF0
 cmp byte ptr [forced_kiosk_enable],01
 jne exit2
@@ -6553,7 +6385,6 @@ returnhere2:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+A0FCC3:
 db 84 C0 74 0A E8 D4 18 FF FF
 //test al,al
@@ -6574,7 +6405,6 @@ dealloc(zero)
                               <Description>"Kiosk Cancel"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(kiosk_roll_cancel,2048)
 label(returnhere)
 label(originalcode)
@@ -6582,8 +6412,7 @@ label(exit)
 
 globalalloc(kiosk_cancel_enable,1)
 
-kiosk_roll_cancel: //this is allocated memory, you have read,write,execute access
-//place your code here
+kiosk_roll_cancel:
 cmp byte ptr [kiosk_cancel_enable],01
 jne originalcode
 push esi
@@ -6606,8 +6435,7 @@ label(returnhere2)
 label(originalcode2)
 label(exit2)
 
-kiosk_swing_cancel: //this is allocated memory, you have read,write,execute access
-//place your code here
+kiosk_swing_cancel:
 cmp byte ptr [kiosk_cancel_enable],01
 jne originalcode2
 push esi
@@ -6626,7 +6454,6 @@ returnhere2:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+A3E3F3:
 db 83 7C 24 14 00
 //cmp dword ptr [esp+14],00
@@ -6644,7 +6471,6 @@ dealloc(kiosk_swing_cancel)
                               <Description>"Smooth Prescriptive Kiosk Moves"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(smooth_kiosk,2048)
 label(returnhere)
 label(originalcode)
@@ -6654,8 +6480,7 @@ globalalloc(kiosk_speed,4)
 kiosk_speed:
 dd (float)0.9
 
-smooth_kiosk: //this is allocated memory, you have read,write,execute access
-//place your code here
+smooth_kiosk:
 fstp st(0)
 fld dword ptr [kiosk_speed]
 
@@ -6676,7 +6501,6 @@ returnhere:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 dealloc(smooth_kiosk)
 "AssassinsCreed_Dx9.exe"+A3EACF:
 db D9 C9 DF F1 DD D8
@@ -6690,7 +6514,6 @@ db D9 C9 DF F1 DD D8
                               <Description>"Kiosk Distance Modifier"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(kiosk_distance,2048)
 label(returnhere)
 label(exit)
@@ -6716,8 +6539,7 @@ dd (float)1.2
 dismount_kiosk_roll_value:
 dd (float)0.4
 
-kiosk_distance: //this is allocated memory, you have read,write,execute access
-//place your code here
+kiosk_distance:
 movss xmm0,[esi+7C]
 cmp eax,[pEntity]
 jne exit
@@ -6754,8 +6576,7 @@ alloc(kiosk_air,2048)
 label(returnhere1)
 label(exit1)
 
-kiosk_air: //this is allocated memory, you have read,write,execute access
-//place your code here
+kiosk_air:
 mov [kiosk_roll_air_f],01
 push esi
 mov esi,ecx
@@ -6773,8 +6594,7 @@ alloc(kiosk_finish,2048)
 label(returnhere2)
 label(exit2)
 
-kiosk_finish: //this is allocated memory, you have read,write,execute access
-//place your code here
+kiosk_finish:
 mov [kiosk_roll_air_f],00
 mov ecx,esi
 call AssassinsCreed_Dx9.exe+A3E0E0
@@ -6789,7 +6609,6 @@ returnhere2:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+E53B2:
 db F3 0F 10 46 7C
 //movss xmm0,[esi+7C]
@@ -6867,7 +6686,6 @@ dealloc(kiosk_finish)
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(enhanced_direction,2048)
 label(returnhere)
 label(originalcode)
@@ -6894,8 +6712,7 @@ dd (float)1 (float)-1 (float)0 (float)0
 angle_radians:
 dd (float)1.05
 
-enhanced_direction: //this is allocated memory, you have read,write,execute access
-//place your code here
+enhanced_direction:
 cmp eax,[pEntity]
 jne originalcode
 cmp [direction_input_f],00000000
@@ -6976,7 +6793,6 @@ returnhere:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 dealloc(enhanced_direction)
 "AssassinsCreed_Dx9.exe"+80254C:
 db 8B 48 50 85 C9
@@ -6990,7 +6806,6 @@ db 8B 48 50 85 C9
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(enhanced_swing,2048)
 label(returnhere)
 label(exit)
@@ -7015,8 +6830,7 @@ dd (float)2
 angle_restriction_side:
 dd (float)1.05
 
-enhanced_swing: //this is allocated memory, you have read,write,execute access
-//place your code here
+enhanced_swing:
 mov ecx,[esi+14]
 lea eax,[esp+60]
 mov [diag_swing_f],01
@@ -7093,8 +6907,7 @@ alloc(enhanced_swing_2,2048)
 label(returnhere2)
 label(exit2)
 
-enhanced_swing_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+enhanced_swing_2:
 //je AssassinsCreed_Dx9.exe+AED126
 mov ecx,[esp+28]
 
@@ -7111,8 +6924,7 @@ alloc(self_flip,2048)
 label(returnhere3)
 label(exit3)
 
-self_flip: //this is allocated memory, you have read,write,execute access
-//place your code here
+self_flip:
 mov [clamp_f],00
 ja exit3
 fld dword ptr [esp+1C]
@@ -7132,7 +6944,6 @@ returnhere3:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+AECE68:
 db 8B 4E 14 8D 44 24 60
 //mov ecx,[esi+14]
@@ -7160,7 +6971,6 @@ dealloc(angle_restriction_side)
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(enhanced_ground_roll,2048)
 label(returnhere)
 label(originalcode)
@@ -7181,8 +6991,7 @@ dd (float)2.5
 angle_restriction_side:
 dd (float)0.8
 
-enhanced_ground_roll: //this is allocated memory, you have read,write,execute access
-//place your code here
+enhanced_ground_roll:
 mov [diag_swing_f],00
 mov [clamp_f],00
 cmp [relative_input_f],00000000
@@ -7225,8 +7034,7 @@ label(returnhere2)
 label(originalcode2)
 label(exit2)
 
-enhanced_ground_roll_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+enhanced_ground_roll_2:
 mov edx,eax
 cmp edx,0
 je originalcode2
@@ -7269,7 +7077,6 @@ returnhere2:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+A05CB7:
 db 51 6A 00 6A 00
 //push ecx
@@ -7292,7 +7099,6 @@ dealloc(angle_restriction_side)
                               <Options moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(enhanced_kiosk_roll,2048)
 label(returnhere)
 label(originalcode)
@@ -7306,8 +7112,7 @@ alloc(angle_restriction,4)
 angle_restriction:
 dd (float)2
 
-enhanced_kiosk_roll: //this is allocated memory, you have read,write,execute access
-//place your code here
+enhanced_kiosk_roll:
 mov [diag_swing_f],00
 mov [clamp_f],00
 cmp [edi+24],00000001
@@ -7340,8 +7145,7 @@ alloc(enhanced_kiosk_roll_2,2048)
 label(returnhere2)
 label(exit2)
 
-enhanced_kiosk_roll_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+enhanced_kiosk_roll_2:
 mov [diag_swing_f],00
 mov eax,[ecx]
 mov edx,[eax+50]
@@ -7355,7 +7159,6 @@ returnhere2:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+A3E545:
 db 5F 5E 8B E5 5D
 //pop edi
@@ -7381,7 +7184,6 @@ dealloc(angle_restriction)
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 globalalloc(coords_modifier,2048)
 label(originalcode)
 label(exit)
@@ -7486,8 +7288,7 @@ dd (float)0.5
 self_swing_distance:
 dd (float)-1
 
-coords_modifier: //this is allocated memory, you have read,write,execute access
-//place your code here
+coords_modifier:
 cmp byte ptr [coords_mod_f],01
 je coords_mod
 jmp originalcode
@@ -7614,8 +7415,7 @@ alloc(coords_modifier_1,2048)
 label(returnhere1)
 label(exit1)
 
-coords_modifier_1: //this is allocated memory, you have read,write,execute access
-//place your code here
+coords_modifier_1:
 movaps xmm0,[eax+10]
 movaps [player_rotation],xmm0
 movaps xmm0,[eax+30]
@@ -7635,8 +7435,7 @@ alloc(coords_modifier_2,2048)
 label(returnhere2)
 label(exit2)
 
-coords_modifier_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+coords_modifier_2:
 mov [coords_mod_f],00
 mov [swing_up_f],00
 mov [parkour_down_low_f],00
@@ -7661,8 +7460,7 @@ label(returnhere3)
 label(originalcode3)
 label(exit3)
 
-coords_modifier_3: //this is allocated memory, you have read,write,execute access
-//place your code here
+coords_modifier_3:
 cmp byte ptr [parkour_down_low_enable],01
 jne @f
 mov [parkour_down_low_f],01
@@ -7719,7 +7517,6 @@ returnhere3:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+AAF6F0:
 db 0F 28 40 30 0F 28 5C 24 20
 //movaps xmm0,[eax+30]
@@ -7745,7 +7542,6 @@ dealloc(coords_modifier_3)
                               <Options moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(target_modifier,4096)
 label(returnhere)
 label(originalcode)
@@ -8079,8 +7875,7 @@ globalalloc(h_main,4)
 globalalloc(k_coef_out,4)
 globalalloc(swing_up_height,16)
 
-target_modifier: //this is allocated memory, you have read,write,execute access
-//place your code here
+target_modifier:
 cmp byte ptr [target_f],00
 je originalcode
 cmp byte ptr [already_rolled_f],01
@@ -8464,8 +8259,7 @@ alloc(target_modifier_2,2048)
 label(returnhere2)
 label(exit2)
 
-target_modifier_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+target_modifier_2:
 mov [target_f],01
 call AssassinsCreed_Dx9.exe+712540
 
@@ -8482,8 +8276,7 @@ label(returnhere3)
 label(originalcode3)
 label(exit3)
 
-smooth_fall: //this is allocated memory, you have read,write,execute access
-//place your code here
+smooth_fall:
 cmp byte ptr [smooth_fall_f],01
 jne originalcode3
 mov [smooth_fall_f],00
@@ -8505,8 +8298,7 @@ alloc(swing_up_cycle,2048)
 label(returnhere4)
 label(exit4)
 
-swing_up_cycle: //this is allocated memory, you have read,write,execute access
-//place your code here
+swing_up_cycle:
 mov ecx,[swing_up_height_cycle]
 mov [swing_up_height+8],ecx
 push 00
@@ -8526,8 +8318,7 @@ alloc(swing_up_drop,2048)
 label(returnhere5)
 label(exit5)
 
-swing_up_drop: //this is allocated memory, you have read,write,execute access
-//place your code here
+swing_up_drop:
 call AssassinsCreed_Dx9.exe+9DE980
 mov [swing_up_height+8],00000000
 
@@ -8543,8 +8334,7 @@ alloc(move_type,2048)
 label(returnhere6)
 label(exit6)
 
-move_type: //this is allocated memory, you have read,write,execute access
-//place your code here
+move_type:
 lea ecx,[ebp+14]
 mov [move_type_f],ecx
 movaps [esp+00000110],xmm0
@@ -8559,7 +8349,6 @@ returnhere6:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+712552:
 db 0F 29 06 0F 28 40 10
 //movaps [esi],xmm0
@@ -8600,7 +8389,6 @@ dealloc(move_type)
                               <Description>"Swing / Vault / Eject Modifier"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(swing_vault_coords,2048)
 label(returnhere)
 label(originalcode)
@@ -8616,8 +8404,7 @@ globalalloc(vault_freeform_f,1)
 globalalloc(forced_hang_f,1)
 globalalloc(dive_beam_far_f,1)
 
-swing_vault_coords: //this is allocated memory, you have read,write,execute access
-//place your code here
+swing_vault_coords:
 mov [self_swing_f],00
 cmp byte ptr [swing_up_f],01
 je coords_mod
@@ -8660,8 +8447,7 @@ label(originalcode2)
 label(exit2)
 label(coords_mod2)
 
-eject_coords: //this is allocated memory, you have read,write,execute access
-//place your code here
+eject_coords:
 cmp byte ptr [parkour_down_low_f],01
 je coords_mod2
 cmp byte ptr [dive_beam_far_f],01
@@ -8688,7 +8474,6 @@ returnhere2:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+AEC02D:
 db 0F 28 40 30 8B 46 14
 //movaps xmm0,[eax+30]
@@ -8709,7 +8494,6 @@ dealloc(eject_coords)
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(nso_idle_coords,2048)
 label(returnhere)
 label(originalcode)
@@ -8725,8 +8509,7 @@ globalalloc(self_swing_f,1)
 globalalloc(forced_hang_f,1)
 globalalloc(self_swing_enable,1)
 
-nso_idle_coords: //this is allocated memory, you have read,write,execute access
-//place your code here
+nso_idle_coords:
 mov [forced_hang_f],00
 cmp byte ptr [nso_idle_f],01
 jne originalcode
@@ -8762,8 +8545,7 @@ alloc(nso_idle_coords_2,2048)
 label(returnhere2)
 label(exit2)
 
-nso_idle_coords_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+nso_idle_coords_2:
 lea ebx,[edi+000000C0]
 cmp byte ptr [edi+0000112B],00
 je exit2
@@ -8785,8 +8567,7 @@ alloc(nso_idle_coords_3,2048)
 label(returnhere3)
 label(exit3)
 
-nso_idle_coords_3: //this is allocated memory, you have read,write,execute access
-//place your code here
+nso_idle_coords_3:
 mov [esp+12],al
 cmp byte ptr [nso_idle_f],01
 jne AssassinsCreed_Dx9.exe+AEA669
@@ -8808,8 +8589,7 @@ alloc(nso_idle_coords_4,2048)
 label(returnhere4)
 label(exit4)
 
-nso_idle_coords_4: //this is allocated memory, you have read,write,execute access
-//place your code here
+nso_idle_coords_4:
 cmp dword ptr [esp+28],02
 
 exit4:
@@ -8825,8 +8605,7 @@ alloc(self_swing,2048)
 label(returnhere5)
 label(exit5)
 
-self_swing: //this is allocated memory, you have read,write,execute access
-//place your code here
+self_swing:
 cmp byte ptr [self_swing_enable],01
 je AssassinsCreed_Dx9.exe+AEAAA0
 
@@ -8843,7 +8622,6 @@ returnhere5:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+AE9ECC:
 db 0F 28 40 30 0F 29 84 24 50 01 00 00
 //movaps xmm0,[eax+30]
@@ -8880,7 +8658,6 @@ dealloc(self_swing)
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
 alloc(nso_run_coords,2048)
 label(returnhere)
 label(originalcode)
@@ -8896,8 +8673,7 @@ globalalloc(self_swing_f,1)
 globalalloc(forced_hang_f,1)
 globalalloc(forced_ground_roll_enable,1)
 
-nso_run_coords: //this is allocated memory, you have read,write,execute access
-//place your code here
+nso_run_coords:
 mov [forced_hang_f],00
 cmp byte ptr [forced_ground_roll_enable],01
 je originalcode
@@ -8935,8 +8711,7 @@ alloc(nso_run_coords_2,2048)
 label(returnhere2)
 label(exit2)
 
-nso_run_coords_2: //this is allocated memory, you have read,write,execute access
-//place your code here
+nso_run_coords_2:
 mov ecx,[esp+1C]
 mov eax,[edi]
 cmp byte ptr [esi+0000112B],00
@@ -8960,8 +8735,7 @@ label(originalcode3)
 label(forced_ground_roll_3)
 label(exit3)
 
-nso_run_coords_3: //this is allocated memory, you have read,write,execute access
-//place your code here
+nso_run_coords_3:
 cmp byte ptr [forced_ground_roll_enable],01
 je forced_ground_roll_3
 cmp byte ptr [nso_run_f],01
@@ -8987,7 +8761,6 @@ returnhere3:
 
 
 [DISABLE]
-//code from here till the end of the code will be used to disable the cheat
 "AssassinsCreed_Dx9.exe"+AE90F9:
 //db 0F 28 40 30 D9 05 14 FA 68 01
 movaps xmm0,[eax+30]
