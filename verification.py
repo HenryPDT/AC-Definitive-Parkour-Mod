@@ -26,11 +26,18 @@ def find_addresses(line):
         process_part = match.group(2)
         hex_part = match.group(5).upper()  # Normalize hex to uppercase
 
-        # Normalize process name by stripping quotes
-        if process_part.startswith(('"', "'")):
-            process_name = process_part.strip('"\'').split('.exe')[0] + '.exe'
+        # Extract only the exe file name from the process part using a regex search.
+        exe_match = re.search(r'(AssassinsCreed_Dx(?:9|10)\.exe)', process_part, re.IGNORECASE)
+        if exe_match:
+            process_name = exe_match.group(1)
         else:
+            # Fallback: if the expected pattern isn't found, remove any leading/trailing characters.
             process_name = process_part.split('.exe')[0] + '.exe'
+        
+        # Normalize both DX9 and DX10 versions to a common name.
+        if process_name.lower().startswith("assassinscreed_dx"):
+            process_name = "AssassinsCreed.exe"
+
         addresses.append((process_name, hex_part))
     return addresses
 
@@ -86,6 +93,8 @@ def verify_files(folder_path):
             last_char2 = hex2[-1]
             if last_char1 != last_char2:
                 errors.append(f"Error line {line_num}: Last hex character differs '{hex1}' vs '{hex2}'")
+                errors.append(f"  Line 1: {line1}")
+                errors.append(f"  Line 2: {line2}")
 
             # rest1 = hex1[:-1]
             # rest2 = hex2[:-1]
