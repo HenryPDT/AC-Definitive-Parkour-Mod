@@ -1233,10 +1233,8 @@ label(forced_hang_disable)
 label(parkour_down_disable)
 label(ground_roll_disable)
 label(vault_landing_low_disable)
-label(vault_landing_far_disable)
 label(near_miss_disable)
 label(parkour_down_low_disable)
-label(dive_beam_far_disable)
 label(swing_up_disable)
 label(swan_dive_disable)
 label(forced_ledge_grab_disable)
@@ -1698,24 +1696,16 @@ mov [vault_inner_ledge_enable],01
 vault_landing_far:
 cmp byte ptr [parkour_far_enable],00
 je vault_landing_low
-cmp byte ptr [bindHighProfile],01
-je vault_landing_low
-cmp byte ptr [bindLegs],01
-je vault_landing_low
 mov [vault_landing_far_enable],01
-cmp byte ptr [vault_enable],00
+cmp byte ptr [bindLegs],00
 je vault_landing_low
 mov [vault_step_enable],01
 
 vault_landing_low:
 cmp byte ptr [parkour_down_enable],00
 je ledge_drop
-cmp byte ptr [bindHighProfile],01
-je ledge_drop
-cmp byte ptr [bindLegs],01
-je ledge_drop
 mov [vault_landing_low_enable],01
-cmp byte ptr [vault_enable],00
+cmp byte ptr [bindLegs],00
 je ledge_drop
 mov [vault_step_enable],01
 
@@ -1963,14 +1953,8 @@ mov [soft_land_enable],00
 
 vault_landing_low_disable:
 cmp byte ptr [vault_landing_low_enable],00
-je vault_landing_far_disable
-mov [vault_landing_far_enable],00
-mov [vault_enable],00
-
-vault_landing_far_disable:
-cmp byte ptr [vault_landing_far_enable],00
 je near_miss_disable
-mov [vault_enable],00
+mov [vault_landing_far_enable],00
 
 near_miss_disable:
 cmp byte ptr [near_miss_enable],00
@@ -1992,15 +1976,10 @@ mov [forced_step_enable],00
 
 parkour_down_low_disable:
 cmp byte ptr [parkour_down_low_enable],00
-je dive_beam_far_disable
+je swing_up_disable
 mov [dive_beam_far_enable],00
 mov [parkour_down_enable],00
 mov [swing_up_enable],00
-
-dive_beam_far_disable:
-cmp byte ptr [dive_beam_far_enable],00
-je swing_up_disable
-mov [vault_landing_far_enable],00
 
 swing_up_disable:
 cmp byte ptr [swing_up_enable],00
@@ -8687,6 +8666,7 @@ label(originalcode)
 label(exit)
 label(get_coords)
 label(coords_mod)
+label(vault_coords_mod)
 label(swing_up)
 label(swing_up_2)
 label(parkour_down_low)
@@ -8708,6 +8688,7 @@ globalalloc(vault_freeform_f,1)
 globalalloc(forced_hang_f,1)
 globalalloc(dive_beam_far_f,1)
 globalalloc(self_swing_f,1)
+globalalloc(on_vault_f,1)
 globalalloc(player_coords,16)
 globalalloc(player_rotation,16)
 globalalloc(direction_input_f,16)
@@ -8807,22 +8788,27 @@ mov eax,[ebx+08]
 jmp exit
 
 coords_mod:
+cmp byte ptr [on_vault_f],01
+je vault_coords_mod
 cmp byte ptr [dive_beam_far_f],01
 je dive_beam_far
 cmp byte ptr [swing_up_f],01
 je swing_up
-cmp byte ptr [vault_freeform_f],01
-je vault_freeform
-cmp byte ptr [vault_landing_far_f],01
-je vault_landing_far
-cmp byte ptr [vault_landing_low_f],01
-je vault_landing_low
 cmp byte ptr [parkour_down_low_f],01
 je parkour_down_low
 cmp byte ptr [self_swing_f],01
 je self_swing
 cmp byte ptr [forced_hang_f],01
 je forced_hang
+jmp originalcode
+
+vault_coords_mod:
+cmp byte ptr [vault_freeform_f],01
+je vault_freeform
+cmp byte ptr [vault_landing_far_f],01
+je vault_landing_far
+cmp byte ptr [vault_landing_low_f],01
+je vault_landing_low
 jmp originalcode
 
 dive_beam_far:
@@ -8974,10 +8960,14 @@ mov [dive_beam_far_f],01
 @@:
 cmp byte ptr [vault_landing_low_enable],01
 jne @f
+cmp byte ptr [on_vault_f],01
+jne @f
 mov [vault_landing_low_f],01
 
 @@:
 cmp byte ptr [vault_landing_far_enable],01
+jne @f
+cmp byte ptr [on_vault_f],01
 jne @f
 mov [vault_landing_far_f],01
 
