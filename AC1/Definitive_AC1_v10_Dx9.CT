@@ -1664,6 +1664,8 @@ mov [kiosk_cancel_enable],01
 self_swing:
 cmp byte ptr [bindEmptyHand],00
 je drop_to_fall
+cmp byte ptr [bindLegs],00
+je drop_to_fall
 cmp byte ptr [forced_hang_enable],00
 je drop_to_fall
 mov [self_swing_enable],01
@@ -3435,6 +3437,7 @@ globalalloc(bindEmptyHand,1)
 globalalloc(on_vault_f,1)
 globalalloc(vault_inner_ledge_enable,1)
 globalalloc(parkour_far_enable,1)
+globalalloc(self_swing_enable,1)
 globalalloc(freeform_enable,1)
 globalalloc(on_hang_free_f,1)
 globalalloc(vault_inner_ledge_f,1)
@@ -3446,6 +3449,8 @@ db 00
 vault:
 cmp byte ptr [parkour_far_enable],01
 je originalcode
+cmp byte ptr [self_swing_enable],01
+je AssassinsCreed_Dx9.exe+A975A3
 cmp byte ptr [vault_enable],01
 jne originalcode
 mov eax,[esp+78]
