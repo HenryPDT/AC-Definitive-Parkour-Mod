@@ -5469,35 +5469,259 @@ db 74 65 8B 4E 08
                         </CheatEntry>
                         <CheatEntry>
                           <ID>220</ID>
-                          <Description>"Disable Wallrun Eject Angle Restriction"</Description>
+                          <Description>"Disable Eject Angle Restriction"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-alloc(disable_eject_angle_restriction,2048)
+alloc(crouch_eject,2048)
+label(crouch_eject_left)
 label(returnhere)
 label(exit)
 
-disable_eject_angle_restriction:
-comisd xmm2,xmm0
-movss [ebp-14],xmm1
-jmp ACRSP.exe+1701443
+globalalloc(horizontal_clamp,4)
+globalalloc(diagonal_clamp,4)
+globalalloc(diagonal_angle,4)
+globalalloc(diagonal_angle_hang,4)
+globalalloc(wallrun_back_eject_angle,4)
+globalalloc(climb_leap_angle,4)
+globalalloc(zero,4)
+globalalloc(forced_hang_enable,1)
+
+horizontal_clamp:
+dd (float)1.55
+
+diagonal_clamp:
+dd (float)1.9
+
+diagonal_angle:
+dd (float)1.65
+
+diagonal_angle_hang:
+dd (float)1.7
+
+wallrun_back_eject_angle:
+dd (float)0.52
+
+climb_leap_angle:
+dd (float)2.62
+
+zero:
+dd (float)0
+
+crouch_eject:
+comiss xmm0,[horizontal_clamp]
+jb ACRSP.exe+16FEA27
+movss xmm1,[ebp-28]
+comiss xmm1,[zero]
+ja crouch_eject_left
+comiss xmm0,[diagonal_clamp]
+jb ACRSP.exe+16FE9AA
+fld dword ptr [diagonal_angle]
+cmp byte ptr [forced_hang_enable],01
+jne ACRSP.exe+16FE9B0
+fstp st(0)
+fld dword ptr [diagonal_angle_hang]
+jmp ACRSP.exe+16FE9B0
+
+crouch_eject_left:
+comiss xmm0,[diagonal_clamp]
+jb ACRSP.exe+16FE9EA
+fld dword ptr [diagonal_angle]
+fchs
+cmp byte ptr [forced_hang_enable],01
+jne ACRSP.exe+16FE9F0
+fstp st(0)
+fld dword ptr [diagonal_angle_hang]
+fchs
+jmp ACRSP.exe+16FE9F0
 
 exit:
 jmp returnhere
 
-"ACRSP.exe"+170141D:
-jmp disable_eject_angle_restriction
+"ACRSP.exe"+16FE97B:
+jmp crouch_eject
 nop
 returnhere:
 
 
+alloc(stand_eject,2048)
+label(stand_eject_left)
+label(returnhere2)
+label(exit2)
+
+stand_eject:
+comiss xmm0,[horizontal_clamp]
+jb ACRSP.exe+170049E
+movss xmm1,[ebp-34]
+comiss xmm1,[zero]
+ja stand_eject_left
+comiss xmm0,[diagonal_clamp]
+jb ACRSP.exe+170041B
+fld dword ptr [diagonal_angle]
+cmp byte ptr [forced_hang_enable],01
+jne ACRSP.exe+1700421
+fstp st(0)
+fld dword ptr [diagonal_angle_hang]
+jmp ACRSP.exe+1700421
+
+stand_eject_left:
+comiss xmm0,[diagonal_clamp]
+jb ACRSP.exe+170045E
+fld dword ptr [diagonal_angle]
+fchs
+cmp byte ptr [forced_hang_enable],01
+jne ACRSP.exe+1700464
+fstp st(0)
+fld dword ptr [diagonal_angle_hang]
+fchs
+jmp ACRSP.exe+1700464
+
+exit2:
+jmp returnhere2
+
+"ACRSP.exe"+17003EC:
+jmp stand_eject
+nop
+returnhere2:
+
+
+alloc(wallrun_eject,2048)
+label(returnhere3)
+label(wallrun_eject_left)
+label(exit3)
+
+wallrun_eject:
+add esp,0C
+movss xmm1,[ebp-18]
+movsd xmm2,[ACRSP.exe+1F26920]
+cvtps2pd xmm0,xmm1
+andpd xmm0,xmm2
+cvtsd2ss xmm0,xmm0
+
+comiss xmm0,[horizontal_clamp]
+jb ACRSP.exe+162C599
+comiss xmm1,[zero]
+ja wallrun_eject_left
+comiss xmm0,[diagonal_clamp]
+jb ACRSP.exe+162C544
+fld dword ptr [diagonal_angle]
+cmp byte ptr [forced_hang_enable],01
+jne ACRSP.exe+162C564
+fstp st(0)
+fld dword ptr [diagonal_angle_hang]
+jmp ACRSP.exe+162C564
+
+wallrun_eject_left:
+comiss xmm0,[diagonal_clamp]
+jb ACRSP.exe+162C55E
+fld dword ptr [diagonal_angle]
+fchs
+cmp byte ptr [forced_hang_enable],01
+jne ACRSP.exe+162C564
+fstp st(0)
+fld dword ptr [diagonal_angle_hang]
+fchs
+jmp ACRSP.exe+162C564
+
+exit3:
+jmp returnhere3
+
+"ACRSP.exe"+162C532:
+jmp wallrun_eject
+nop
+returnhere3:
+
+
+alloc(wallrun_eject_2,2048)
+label(returnhere4)
+label(wallrun_code_2)
+label(exit4)
+
+wallrun_eject_2:
+comiss xmm0,[wallrun_back_eject_angle]
+ja wallrun_code_2
+jmp ACRSP.exe+17014F8
+
+wallrun_code_2:
+movss [ebp-14],xmm1
+jmp ACRSP.exe+1701443
+
+exit4:
+jmp returnhere4
+
+"ACRSP.exe"+17013CA:
+jmp wallrun_eject_2
+returnhere4:
+
+
+alloc(crouch_climb_leap,2048)
+label(returnhere5)
+label(exit5)
+
+crouch_climb_leap:
+comiss xmm0,[climb_leap_angle]
+jbe ACRSP.exe+16FE95E
+
+exit5:
+jmp returnhere5
+
+"ACRSP.exe"+16FE836:
+jmp crouch_climb_leap
+nop
+returnhere5:
+
+
+alloc(stand_climb_leap,2048)
+label(returnhere6)
+label(exit6)
+
+stand_climb_leap:
+comiss xmm0,[climb_leap_angle]
+jbe ACRSP.exe+17003CD
+
+exit6:
+jmp returnhere6
+
+"ACRSP.exe"+17002A5:
+jmp stand_climb_leap
+nop
+returnhere6:
 
 
 [DISABLE]
-dealloc(disable_eject_angle_restriction)
-"ACRSP.exe"+170141D:
-db 66 0F 2F D0 76 20
-//comisd xmm2,xmm0
-//jna ACRSP.exe+1701443
+"ACRSP.exe"+16FE97B:
+db 76 1B 0F 28 45 A0
+//jna ACRSP.exe+16FE998
+//movaps xmm0,[ebp-60]
+
+"ACRSP.exe"+17003EC:
+db 76 1B 0F 28 45 90
+//jna ACRSP.exe+1700409
+//movaps xmm0,[ebp-70]
+
+"ACRSP.exe"+162C532:
+db D9 45 E8 83 C4 0C
+//fld dword ptr [ebp-18]
+//add esp,0C
+
+"ACRSP.exe"+17013CA:
+db 0F 2F D0 76 35
+//comiss xmm2,xmm0
+//jna ACRSP.exe+1701404
+
+"ACRSP.exe"+16FE836:
+db 0F 86 22 01 00 00
+//jbe ACRSP.exe+16FE95E
+
+"ACRSP.exe"+17002A5:
+db 0F 86 22 01 00 00
+//jbe ACRSP.exe+17003CD
+
+dealloc(crouch_eject)
+dealloc(stand_eject)
+dealloc(wallrun_eject)
+dealloc(wallrun_eject_2)
+dealloc(crouch_climb_leap)
+dealloc(stand_climb_leap)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
@@ -5759,7 +5983,8 @@ label(left_eject_state)
 
 globalalloc(hang_eject_f,4)
 globalalloc(relative_input_f,4)
-alloc(zero,4)
+globalalloc(zero,4)
+
 zero:
 dd (float)0
 
@@ -5882,7 +6107,6 @@ dealloc(wallrun_eject)
 dealloc(hang_eject)
 dealloc(hang_eject_2)
 dealloc(back_eject)
-dealloc(zero)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
@@ -7593,7 +7817,8 @@ globalalloc(kiosk_roll_enable,1)
 globalalloc(kiosk_swing_enable,1)
 globalalloc(relative_input_f,4)
 globalalloc(already_rolled_f,1)
-alloc(zero,4)
+globalalloc(zero,4)
+
 zero:
 dd (float)0
 
@@ -7750,7 +7975,6 @@ dealloc(kiosk_moves_2)
 dealloc(manual_kiosk)
 dealloc(kiosk_roll_end)
 dealloc(kiosk_swing_end)
-dealloc(zero)
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
@@ -7772,8 +7996,8 @@ globalalloc(kiosk_roll_enable,1)
 globalalloc(kiosk_swing_enable,1)
 globalalloc(already_rolled_f,1)
 globalalloc(player_velocity,16)
+globalalloc(zero,4)
 
-alloc(zero,4)
 zero:
 dd (float)0
 
@@ -7846,7 +8070,6 @@ db E8 B3 18 B0 FE
 
 dealloc(forced_kiosk)
 dealloc(forced_kiosk_2)
-dealloc(zero)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
