@@ -4822,6 +4822,7 @@ cmp byte ptr [vault_inner_ledge_f],01
 je ACBSP.exe+154E096
 
 originalcode:
+mov [ledge_drop_f],00
 test al,al
 je ACBSP.exe+154E096
 cmp dword ptr [ebp-48],01
@@ -8757,6 +8758,10 @@ label(swing_dismount)
 label(hang_short)
 label(hang_far)
 label(hang_dismount)
+label(ledge_drop)
+label(ledge_drop_short)
+label(ledge_drop_far)
+label(ledge_drop_dismount)
 label(vault_freeform)
 label(vault_freeform_short)
 label(vault_freeform_far)
@@ -8812,6 +8817,9 @@ globalalloc(swing_dismount_height,16)
 globalalloc(hang_short_height,16)
 globalalloc(hang_far_height,16)
 globalalloc(hang_dismount_height,16)
+globalalloc(ledge_drop_short_height,16)
+globalalloc(ledge_drop_far_height,16)
+globalalloc(ledge_drop_dismount_height,16)
 globalalloc(vault_freeform_height,16)
 globalalloc(vault_freeform_short_height,16)
 globalalloc(vault_freeform_far_height,16)
@@ -8850,6 +8858,13 @@ dd (float)0 (float)0 (float)0 (float)0
 hang_far_height:
 dd (float)0 (float)0 (float)0 (float)0
 hang_dismount_height:
+dd (float)0 (float)0 (float)0 (float)0
+
+ledge_drop_short_height:
+dd (float)0 (float)0 (float)0 (float)0
+ledge_drop_far_height:
+dd (float)0 (float)0 (float)0 (float)0
+ledge_drop_dismount_height:
 dd (float)0 (float)0 (float)0 (float)0
 
 vault_freeform_height:
@@ -8891,6 +8906,9 @@ globalalloc(swing_dismount_distance,4)
 globalalloc(hang_short_distance,4)
 globalalloc(hang_far_distance,4)
 globalalloc(hang_dismount_distance,4)
+globalalloc(ledge_drop_short_distance,4)
+globalalloc(ledge_drop_far_distance,4)
+globalalloc(ledge_drop_dismount_distance,4)
 globalalloc(vault_freeform_distance,4)
 globalalloc(vault_freeform_short_distance,4)
 globalalloc(vault_freeform_far_distance,4)
@@ -8907,7 +8925,7 @@ dd (float)-5
 nso_jump_far_distance:
 dd (float)1
 nso_jump_dismount_distance:
-dd (float)-7
+dd (float)-6.5
 
 ground_jump_short_distance:
 dd (float)-4
@@ -8929,6 +8947,13 @@ hang_far_distance:
 dd (float)1.5
 hang_dismount_distance:
 dd (float)-7
+
+ledge_drop_short_distance:
+dd (float)-1
+ledge_drop_far_distance:
+dd (float)1
+ledge_drop_dismount_distance:
+dd (float)-1.5
 
 vault_freeform_distance:
 dd (float)3.5
@@ -8996,6 +9021,7 @@ globalalloc(negate_mask,4)
 globalalloc(zero,4)
 globalalloc(one,4)
 globalalloc(two,4)
+globalalloc(freeform_distance,4)
 
 height_offset:
 dd (float)0 (float)0 (float)1 (float)0
@@ -9057,6 +9083,8 @@ one:
 dd (float)1
 two:
 dd (float)2
+freeform_distance:
+dd (float)8
 
 //Velocity parameters
 globalalloc(v_v,4)
@@ -9080,6 +9108,7 @@ je originalcode
 movaps xmm1,xmm0
 movaps xmm2,[player_coords]
 subps xmm1,xmm2
+movaps xmm4,xmm1
 mulps xmm1,[empty_height_float]
 movaps xmm3,xmm1
 mulps xmm3,xmm3
@@ -9088,6 +9117,12 @@ sqrtps xmm3,xmm3
 shufps xmm3,xmm3,0
 divps xmm1,xmm3
 movaps [vector_coords],xmm1
+
+mulps xmm4,xmm4
+mulps xmm4,[empty_last_float]
+haddps xmm4,xmm4
+haddps xmm4,xmm4
+sqrtss xmm4,xmm4
 
 mov [freeform_jump_f],00
 cmp [edi+10],00000000
@@ -9099,8 +9134,10 @@ jne checks
 mov [freeform_jump_f],01
 mov eax,[move_type_f]
 mov [eax],00000001
+comiss xmm4,[freeform_distance]
+ja checks
 cmp byte ptr [ledge_drop_f],01
-je math
+je ledge_drop
 
 checks:
 cmp byte ptr [dismount_hang_free_eject_f],01
@@ -9215,6 +9252,30 @@ jmp vector
 hang_far:
 movss xmm4,[hang_far_distance]
 movaps xmm5,[hang_far_height]
+jmp vector
+
+ledge_drop:
+cmp byte ptr [dismount_enable],01
+je ledge_drop_dismount
+cmp byte ptr [short_freeform_enable],01
+je ledge_drop_short
+cmp byte ptr [far_freeform_enable],01
+je ledge_drop_far
+jmp math
+
+ledge_drop_dismount:
+movss xmm4,[ledge_drop_dismount_distance]
+movaps xmm5,[ledge_drop_dismount_height]
+jmp vector
+
+ledge_drop_short:
+movss xmm4,[ledge_drop_short_distance]
+movaps xmm5,[ledge_drop_short_height]
+jmp vector
+
+ledge_drop_far:
+movss xmm4,[ledge_drop_far_distance]
+movaps xmm5,[ledge_drop_far_height]
 jmp vector
 
 freeform_jump:
@@ -10282,55 +10343,104 @@ dealloc(nso_run_coords_3)
                                       <CheatEntries>
                                         <CheatEntry>
                                           <ID>443</ID>
+                                          <Description>"Ledge Drop Short Height"</Description>
+                                          <ShowAsSigned>0</ShowAsSigned>
+                                          <VariableType>Float</VariableType>
+                                          <Address>ledge_drop_short_height+8</Address>
+                                        </CheatEntry>
+                                        <CheatEntry>
+                                          <ID>444</ID>
+                                          <Description>"Ledge Drop Short Distance"</Description>
+                                          <ShowAsSigned>0</ShowAsSigned>
+                                          <VariableType>Float</VariableType>
+                                          <Address>ledge_drop_short_distance</Address>
+                                        </CheatEntry>
+                                        <CheatEntry>
+                                          <ID>445</ID>
+                                          <Description>"Ledge Drop Far Height"</Description>
+                                          <ShowAsSigned>0</ShowAsSigned>
+                                          <VariableType>Float</VariableType>
+                                          <Address>ledge_drop_far_height+8</Address>
+                                        </CheatEntry>
+                                        <CheatEntry>
+                                          <ID>446</ID>
+                                          <Description>"Ledge Drop Far Distance"</Description>
+                                          <ShowAsSigned>0</ShowAsSigned>
+                                          <VariableType>Float</VariableType>
+                                          <Address>ledge_drop_far_distance</Address>
+                                        </CheatEntry>
+                                        <CheatEntry>
+                                          <ID>447</ID>
+                                          <Description>"Ledge Drop Dismount Height"</Description>
+                                          <ShowAsSigned>0</ShowAsSigned>
+                                          <VariableType>Float</VariableType>
+                                          <Address>ledge_drop_dismount_height+8</Address>
+                                        </CheatEntry>
+                                        <CheatEntry>
+                                          <ID>448</ID>
+                                          <Description>"Ledge Drop Dismount Distance"</Description>
+                                          <ShowAsSigned>0</ShowAsSigned>
+                                          <VariableType>Float</VariableType>
+                                          <Address>ledge_drop_dismount_distance</Address>
+                                        </CheatEntry>
+                                      </CheatEntries>
+                                    </CheatEntry>
+                                    <CheatEntry>
+                                      <ID>449</ID>
+                                      <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
+                                      <GroupHeader>1</GroupHeader>
+                                      <CheatEntries>
+                                        <CheatEntry>
+                                          <ID>450</ID>
                                           <Description>"Parkour Down Freeform Jump Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>parkour_down_freeform_jump_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>444</ID>
+                                          <ID>451</ID>
                                           <Description>"Parkour Down Freeform Jump Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>parkour_down_freeform_jump_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>445</ID>
+                                          <ID>452</ID>
                                           <Description>"Parkour Down Freeform Swing Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>parkour_down_freeform_swing_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>446</ID>
+                                          <ID>453</ID>
                                           <Description>"Parkour Down Freeform Swing Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>parkour_down_freeform_swing_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>447</ID>
+                                          <ID>454</ID>
                                           <Description>"Parkour Down Low Freeform Jump Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>parkour_down_low_freeform_jump_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>448</ID>
+                                          <ID>455</ID>
                                           <Description>"Parkour Down Low Freeform Jump Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>parkour_down_low_freeform_jump_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>449</ID>
+                                          <ID>456</ID>
                                           <Description>"Parkour Down Low Freeform Swing Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>parkour_down_low_freeform_swing_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>450</ID>
+                                          <ID>457</ID>
                                           <Description>"Parkour Down Low Freeform Swing Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
@@ -10339,75 +10449,75 @@ dealloc(nso_run_coords_3)
                                       </CheatEntries>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>451</ID>
+                                      <ID>458</ID>
                                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                                       <GroupHeader>1</GroupHeader>
                                       <CheatEntries>
                                         <CheatEntry>
-                                          <ID>452</ID>
+                                          <ID>459</ID>
                                           <Description>"Vault Freeform Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_freeform_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>453</ID>
+                                          <ID>460</ID>
                                           <Description>"Vault Freeform Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_freeform_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>454</ID>
+                                          <ID>461</ID>
                                           <Description>"Vault Freeform Short Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_freeform_short_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>455</ID>
+                                          <ID>462</ID>
                                           <Description>"Vault Freeform Short Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_freeform_short_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>456</ID>
+                                          <ID>463</ID>
                                           <Description>"Vault Freeform Far Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_freeform_far_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>457</ID>
+                                          <ID>464</ID>
                                           <Description>"Vault Freeform Far Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_freeform_far_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>458</ID>
+                                          <ID>465</ID>
                                           <Description>"Vault Freeform Dismount Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_freeform_dismount_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>459</ID>
+                                          <ID>466</ID>
                                           <Description>"Vault Freeform Dismount Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_freeform_dismount_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>460</ID>
+                                          <ID>467</ID>
                                           <Description>"Vault Inner Ledge Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_inner_ledge_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>461</ID>
+                                          <ID>468</ID>
                                           <Description>"Vault Inner Ledge Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
@@ -10416,19 +10526,19 @@ dealloc(nso_run_coords_3)
                                       </CheatEntries>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>462</ID>
+                                      <ID>469</ID>
                                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                                       <GroupHeader>1</GroupHeader>
                                       <CheatEntries>
                                         <CheatEntry>
-                                          <ID>463</ID>
+                                          <ID>470</ID>
                                           <Description>"Near Miss Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>near_miss_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>464</ID>
+                                          <ID>471</ID>
                                           <Description>"Near Miss Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
@@ -10437,26 +10547,26 @@ dealloc(nso_run_coords_3)
                                       </CheatEntries>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>465</ID>
+                                      <ID>472</ID>
                                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                                       <GroupHeader>1</GroupHeader>
                                       <CheatEntries>
                                         <CheatEntry>
-                                          <ID>466</ID>
+                                          <ID>473</ID>
                                           <Description>"Freeform Jump"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Byte</VariableType>
                                           <Address>freeform_jump_f</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>467</ID>
+                                          <ID>474</ID>
                                           <Description>"Unit Vector X"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vector_coords</Address>
                                           <CheatEntries>
                                             <CheatEntry>
-                                              <ID>468</ID>
+                                              <ID>475</ID>
                                               <Description>"Unit Vector Y"</Description>
                                               <ShowAsSigned>0</ShowAsSigned>
                                               <VariableType>Float</VariableType>
@@ -10465,42 +10575,42 @@ dealloc(nso_run_coords_3)
                                           </CheatEntries>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>469</ID>
+                                          <ID>476</ID>
                                           <Description>"Distance Between Jump"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>distance_between_jump</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>470</ID>
+                                          <ID>477</ID>
                                           <Description>"Vertical Difference"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vert_diff</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>471</ID>
+                                          <ID>478</ID>
                                           <Description>"Horizontal Difference"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>hori_diff</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>472</ID>
+                                          <ID>479</ID>
                                           <Description>"Target Coords X"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>target_coords</Address>
                                           <CheatEntries>
                                             <CheatEntry>
-                                              <ID>473</ID>
+                                              <ID>480</ID>
                                               <Description>"Target Coords Y"</Description>
                                               <ShowAsSigned>0</ShowAsSigned>
                                               <VariableType>Float</VariableType>
                                               <Address>+4</Address>
                                             </CheatEntry>
                                             <CheatEntry>
-                                              <ID>474</ID>
+                                              <ID>481</ID>
                                               <Description>"Target Coords Z"</Description>
                                               <ShowAsSigned>0</ShowAsSigned>
                                               <VariableType>Float</VariableType>
@@ -10509,7 +10619,7 @@ dealloc(nso_run_coords_3)
                                           </CheatEntries>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>475</ID>
+                                          <ID>482</ID>
                                           <Description>"X-axis Pointer (South Positive)"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
@@ -10519,7 +10629,7 @@ dealloc(nso_run_coords_3)
                                           </Offsets>
                                           <CheatEntries>
                                             <CheatEntry>
-                                              <ID>476</ID>
+                                              <ID>483</ID>
                                               <Description>"Y-Axis (East Positive)"</Description>
                                               <ShowAsSigned>0</ShowAsSigned>
                                               <Color>C0C0C0</Color>
@@ -10527,7 +10637,7 @@ dealloc(nso_run_coords_3)
                                               <Address>+4</Address>
                                             </CheatEntry>
                                             <CheatEntry>
-                                              <ID>477</ID>
+                                              <ID>484</ID>
                                               <Description>"Z-Axis (Height)"</Description>
                                               <ShowAsSigned>0</ShowAsSigned>
                                               <Color>C0C0C0</Color>
@@ -10537,21 +10647,21 @@ dealloc(nso_run_coords_3)
                                           </CheatEntries>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>478</ID>
+                                          <ID>485</ID>
                                           <Description>"f_main"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>f_main</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>479</ID>
+                                          <ID>486</ID>
                                           <Description>"h_main"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>h_main</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>480</ID>
+                                          <ID>487</ID>
                                           <Description>"k_coef_out"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
