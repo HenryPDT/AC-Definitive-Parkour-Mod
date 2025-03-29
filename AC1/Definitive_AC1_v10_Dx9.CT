@@ -77,6 +77,8 @@ globalalloc(on_hang_wall_f,1)
 globalalloc(on_hang_crouch_f,1)
 globalalloc(on_hang_stand_f,1)
 globalalloc(on_vault_f,1)
+globalalloc(vault_f,1)
+globalalloc(vault_ground_land_f,1)
 globalalloc(on_ground_f,1)
 globalalloc(on_nso_f,1)
 globalalloc(on_air_f,1)
@@ -310,6 +312,7 @@ mov [on_ground_f],00
 mov [on_nso_f],00
 mov [on_air_f],00
 mov [on_vault_f],00
+mov [vault_f],00
 mov esi,ecx
 mov eax,[esi+10]
 cmp dword ptr [eax+68],01
@@ -350,6 +353,7 @@ mov [on_hang_wall_f],01
 mov [on_hang_crouch_f],00
 mov [on_hang_stand_f],01
 mov [on_vault_f],00
+mov [vault_f],00
 mov eax,[edx+000000B0]
 
 exit9:
@@ -375,6 +379,8 @@ mov [on_hang_wall_f],00
 mov [on_hang_crouch_f],00
 mov [on_hang_stand_f],00
 mov [on_vault_f],00
+mov [vault_f],00
+mov [vault_ground_land_f],00
 mov [dive_beam_f],00
 mov [freeform_jump_f],00
 push ebp
@@ -423,6 +429,7 @@ mov [on_hang_wall_f],00
 mov [on_hang_crouch_f],00
 mov [on_hang_stand_f],00
 mov [on_vault_f],00
+mov [vault_f],00
 mov [vault_inner_ledge_f],00
 mov [already_rolled_f],00
 mov [dive_beam_f],00
@@ -465,6 +472,7 @@ mov [dive_beam_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [on_vault_f],00
+mov [vault_f],00
 mov [vault_inner_ledge_f],00
 cmp dword ptr [esp+04],00
 
@@ -487,6 +495,7 @@ mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [dismount_hang_free_eject_f],00
 mov [on_vault_f],00
+mov [vault_f],00
 mov edx,[edi]
 mov eax,[edx+00000460]
 
