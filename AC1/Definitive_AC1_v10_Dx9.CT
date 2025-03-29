@@ -4897,6 +4897,7 @@ db 0F 84 27 01 00 00
                           <AssemblerScript>[ENABLE]
 alloc(crouch_eject,2048)
 label(crouch_eject_left)
+label(crouch_climb_leap_code)
 label(returnhere)
 label(exit)
 
@@ -4923,20 +4924,18 @@ diagonal_angle_hang:
 dd (float)1.7
 
 wallrun_back_eject_angle:
-dd (float)0.52
+dd (float)0.78
 
 climb_leap_angle:
-dd (float)2.62
+dd (float)2.36
 
 zero:
 dd (float)0
 
 crouch_eject:
-fcomip st(0),st(1)
-fstp st(0)
 movss xmm0,[esp+50]
 comiss xmm0,[climb_leap_angle]
-jae exit
+jae crouch_climb_leap_code
 comiss xmm0,[horizontal_clamp]
 jb AssassinsCreed_Dx9.exe+AEC84E
 movss xmm1,[esp+4C]
@@ -4964,26 +4963,29 @@ fld dword ptr [diagonal_angle_hang]
 fchs
 jmp AssassinsCreed_Dx9.exe+AEC808
 
+crouch_climb_leap_code:
+movaps xmm0,[esp+70]
+jmp AssassinsCreed_Dx9.exe+AEC79C
+
 exit:
 jmp returnhere
 
-"AssassinsCreed_Dx9.exe"+AEC791:
+"AssassinsCreed_Dx9.exe"+AEC795:
 jmp crouch_eject
-nop
+nop 2
 returnhere:
 
 
 alloc(stand_eject,2048)
 label(stand_eject_left)
+label(stand_climb_leap_code)
 label(returnhere2)
 label(exit2)
 
 stand_eject:
-fcomip st(0),st(1)
-fstp st(0)
 movss xmm0,[esp+2C]
 comiss xmm0,[climb_leap_angle]
-jae exit2
+jae stand_climb_leap_code
 comiss xmm0,[horizontal_clamp]
 jb AssassinsCreed_Dx9.exe+AE6322
 movss xmm1,[esp+1C]
@@ -5011,12 +5013,16 @@ fld dword ptr [diagonal_angle_hang]
 fchs
 jmp AssassinsCreed_Dx9.exe+AE62DC
 
+stand_climb_leap_code:
+movaps xmm0,[esp+50]
+jmp AssassinsCreed_Dx9.exe+AE626C
+
 exit2:
 jmp returnhere2
 
-"AssassinsCreed_Dx9.exe"+AE6261:
+"AssassinsCreed_Dx9.exe"+AE6265:
 jmp stand_eject
-nop
+nop 2
 returnhere2:
 
 
@@ -5090,17 +5096,15 @@ returnhere4:
 
 
 [DISABLE]
-"AssassinsCreed_Dx9.exe"+AEC791:
-db DF F1 DD D8 76 0F
-//fcomip st(0),st(1)
-//fstp st(0)
+"AssassinsCreed_Dx9.exe"+AEC795:
+db 76 0F 0F 28 44 24 70
 //jna AssassinsCreed_Dx9.exe+AEC7A6
+//movaps xmm0,[esp+70]
 
-"AssassinsCreed_Dx9.exe"+AE6261:
-db DF F1 DD D8 76 0C
-//fcomip st(0),st(1)
-//fstp st(0)
+"AssassinsCreed_Dx9.exe"+AE6265:
+db 76 0C 0F 28 44 24 50
 //jna AssassinsCreed_Dx9.exe+AE6273
+//movaps xmm0,[esp+50]
 
 "AssassinsCreed_Dx9.exe"+A366F4:
 db D9 44 24 1C 83 C4 0C

@@ -5474,6 +5474,7 @@ db 74 65 8B 4E 08
                           <AssemblerScript>[ENABLE]
 alloc(crouch_eject,2048)
 label(crouch_eject_left)
+label(crouch_climb_leap_code)
 label(returnhere)
 label(exit)
 
@@ -5499,15 +5500,17 @@ diagonal_angle_hang:
 dd (float)1.7
 
 wallrun_back_eject_angle:
-dd (float)0.52
+dd (float)0.78
 
 climb_leap_angle:
-dd (float)2.62
+dd (float)2.36
 
 zero:
 dd (float)0
 
 crouch_eject:
+comiss xmm0,[climb_leap_angle]
+jae crouch_climb_leap_code
 comiss xmm0,[horizontal_clamp]
 jb ACRSP.exe+1732437
 movss xmm1,[ebp-28]
@@ -5534,6 +5537,10 @@ fld dword ptr [diagonal_angle_hang]
 fchs
 jmp ACRSP.exe+1732400
 
+crouch_climb_leap_code:
+movaps xmm0,[ebp-60]
+jmp ACRSP.exe+1732391
+
 exit:
 jmp returnhere
 
@@ -5545,10 +5552,13 @@ returnhere:
 
 alloc(stand_eject,2048)
 label(stand_eject_left)
+label(stand_climb_leap_code)
 label(returnhere2)
 label(exit2)
 
 stand_eject:
+comiss xmm0,[climb_leap_angle]
+jae stand_climb_leap_code
 comiss xmm0,[horizontal_clamp]
 jb ACRSP.exe+1733EAE
 movss xmm1,[ebp-34]
@@ -5574,6 +5584,10 @@ fstp st(0)
 fld dword ptr [diagonal_angle_hang]
 fchs
 jmp ACRSP.exe+1733E74
+
+stand_climb_leap_code:
+movaps xmm0,[ebp-70]
+jmp ACRSP.exe+1733E02
 
 exit2:
 jmp returnhere2
