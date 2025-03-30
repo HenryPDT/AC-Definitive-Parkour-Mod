@@ -77,7 +77,6 @@ globalalloc(on_hang_wall_f,1)
 globalalloc(on_hang_crouch_f,1)
 globalalloc(on_hang_stand_f,1)
 globalalloc(on_vault_f,1)
-globalalloc(vault_f,1)
 globalalloc(vault_ground_land_f,1)
 globalalloc(on_ground_f,1)
 globalalloc(on_nso_f,1)
@@ -323,7 +322,6 @@ mov [on_ground_f],00
 mov [on_nso_f],00
 mov [on_air_f],00
 mov [on_vault_f],00
-mov [vault_f],00
 mov [on_water_f],00
 mov ecx,[edi+10]
 mov edx,[ecx+68]
@@ -366,7 +364,6 @@ mov [on_hang_wall_f],01
 mov [on_hang_crouch_f],00
 mov [on_hang_stand_f],01
 mov [on_vault_f],00
-mov [vault_f],00
 mov [on_water_f],00
 mov ebp,[ebx+04]
 mov [esp+04],ebp
@@ -394,8 +391,6 @@ mov [on_hang_wall_f],00
 mov [on_hang_crouch_f],00
 mov [on_hang_stand_f],00
 mov [on_vault_f],00
-mov [vault_f],00
-mov [vault_ground_land_f],00
 mov [dive_beam_f],00
 mov [freeform_jump_f],00
 mov [on_water_f],00
@@ -445,7 +440,6 @@ mov [on_hang_wall_f],00
 mov [on_hang_crouch_f],00
 mov [on_hang_stand_f],00
 mov [on_vault_f],00
-mov [vault_f],00
 mov [vault_inner_ledge_f],00
 mov [already_rolled_f],00
 mov [dive_beam_f],00
@@ -494,7 +488,6 @@ mov [dive_beam_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [on_vault_f],00
-mov [vault_f],00
 mov [vault_inner_ledge_f],00
 mov [swan_dive_f],00
 mov ebp,esp
@@ -520,7 +513,6 @@ mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [dismount_hang_free_eject_f],00
 mov [on_vault_f],00
-mov [vault_f],00
 mov [swan_dive_f],00
 mov edx,[edi]
 mov eax,[edx+00000700]
@@ -604,7 +596,6 @@ mov [dive_beam_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [on_vault_f],00
-mov [vault_f],00
 mov [vault_inner_ledge_f],00
 mov [on_water_f],01
 mov [swan_dive_f],00
@@ -3640,8 +3631,17 @@ globalalloc(freeform_enable,1)
 globalalloc(on_hang_free_f,1)
 globalalloc(vault_inner_ledge_f,1)
 globalalloc(vault_ground_land_f,1)
+globalalloc(vault_required_passes,1)
+globalalloc(vault_pass_counter,1)
+globalalloc(vault_to_fall_f,1)
 
 vault_inner_ledge_f:
+db 00
+
+vault_required_passes:
+db 0A
+
+vault_pass_counter:
 db 00
 
 vault:
@@ -3702,6 +3702,7 @@ vault_landing:
 mov [vault_enable],00
 mov [vault_inner_ledge_f],00
 mov [on_vault_f],01
+mov [vault_pass_counter],00
 call ACBSP.exe+1B982F0
 
 exit3:
@@ -3835,12 +3836,20 @@ alloc(vault_freeform_2,2048)
 label(returnhere10)
 label(originalcode10)
 label(exit10)
+label(passed_code_10)
 
 vault_freeform_2:
 cmp byte ptr [vault_ground_land_f],01
 jne originalcode10
+mov dl,[vault_pass_counter]
+cmp dl,[vault_required_passes]
+jb passed_code_10
+mov [vault_pass_counter],00
 mov [vault_ground_land_f],00
 jmp exit10
+
+passed_code_10:
+inc byte ptr [vault_pass_counter]
 
 originalcode10:
 cmp edx,[eax+08]
@@ -3921,6 +3930,24 @@ nop 2
 returnhere13:
 
 
+alloc(vault_to_fall,2048)
+label(returnhere14)
+label(exit14)
+
+vault_to_fall:
+mov [vault_to_fall_f],01
+mov ecx,esi
+call ACBSP.exe+DCB1E0
+
+exit14:
+jmp returnhere14
+
+"ACBSP.exe"+DCC4B0:
+jmp vault_to_fall
+nop 2
+returnhere14:
+
+
 [DISABLE]
 "ACBSP.exe"+1B98C0E:
 db 75 1E 8B 45 94
@@ -3985,6 +4012,11 @@ db 84 C0 74 0A 8B 42 44
 //je ACBSP.exe+1CDA30C
 //mov eax,[edx+44]
 
+"ACBSP.exe"+DCC4B0:
+db 8B CE E8 29 ED FF FF
+//mov ecx,esi
+//call ACBSP.exe+DCB1E0
+
 dealloc(vault)
 dealloc(vault_2)
 dealloc(vault_landing)
@@ -3998,6 +4030,7 @@ dealloc(vault_freeform_2)
 dealloc(vault_freeform_3)
 dealloc(vault_from_hang)
 dealloc(vault_from_hang_2)
+dealloc(vault_to_fall)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
@@ -7146,16 +7179,16 @@ label(originalcode)
 label(exit)
 
 globalalloc(drop_height,4)
-globalalloc(vault_f,1)
-alloc(vault_land_height,4)
+globalalloc(vault_to_fall_f,1)
+globalalloc(vault_land_height,4)
 
 vault_land_height:
 dd (float)2
 
 smooth_vault:
-cmp byte ptr [vault_f],01
+cmp byte ptr [vault_to_fall_f],01
 jne originalcode
-mov [vault_f],00
+mov [vault_to_fall_f],00
 movss xmm0,[drop_height]
 comiss xmm0,[vault_land_height]
 ja originalcode
@@ -7166,7 +7199,7 @@ cmp dword ptr [ebp-1C],01
 jne ACBSP.exe+E03DF4
 push 00
 push 00
-mov [vault_f],00
+mov [vault_to_fall_f],00
 
 exit:
 jmp returnhere
@@ -7177,60 +7210,13 @@ nop
 returnhere:
 
 
-alloc(vault1,2048)
-label(returnhere1)
-label(exit1)
-
-vault1:
-mov [vault_f],01
-mov ecx,[ebx+08]
-mov [ecx],00000002
-
-exit1:
-jmp returnhere1
-
-"ACBSP.exe"+1B98C1C:
-jmp vault1
-nop 4
-returnhere1:
-
-
-alloc(vault2,2048)
-label(returnhere2)
-label(exit2)
-
-vault2:
-mov [vault_f],01
-jmp ACBSP.exe+DD370A
-
-exit2:
-jmp returnhere2
-
-"ACBSP.exe"+DD3536:
-jmp vault2
-returnhere2:
-
-
 [DISABLE]
+dealloc(smooth_vault)
 "ACBSP.exe"+E03DC0:
 db 75 32 6A 00 6A 00
 //jne ACBSP.exe+E03DF4
 //push 00
 //push 00
-
-"ACBSP.exe"+1B98C1C:
-db 8B 4B 08 C7 01 02 00 00 00
-//mov ecx,[ebx+08]
-//mov [ecx],00000002
-
-"ACBSP.exe"+DD3536:
-db E9 CF 01 00 00
-//jmp ACBSP.exe+DD370A
-
-dealloc(smooth_vault)
-dealloc(vault1)
-dealloc(vault2)
-dealloc(vault_land_height)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>

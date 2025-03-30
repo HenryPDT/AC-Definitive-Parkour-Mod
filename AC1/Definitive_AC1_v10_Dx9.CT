@@ -77,7 +77,6 @@ globalalloc(on_hang_wall_f,1)
 globalalloc(on_hang_crouch_f,1)
 globalalloc(on_hang_stand_f,1)
 globalalloc(on_vault_f,1)
-globalalloc(vault_f,1)
 globalalloc(vault_ground_land_f,1)
 globalalloc(on_ground_f,1)
 globalalloc(on_nso_f,1)
@@ -312,7 +311,6 @@ mov [on_ground_f],00
 mov [on_nso_f],00
 mov [on_air_f],00
 mov [on_vault_f],00
-mov [vault_f],00
 mov esi,ecx
 mov eax,[esi+10]
 cmp dword ptr [eax+68],01
@@ -353,7 +351,6 @@ mov [on_hang_wall_f],01
 mov [on_hang_crouch_f],00
 mov [on_hang_stand_f],01
 mov [on_vault_f],00
-mov [vault_f],00
 mov eax,[edx+000000B0]
 
 exit9:
@@ -379,8 +376,6 @@ mov [on_hang_wall_f],00
 mov [on_hang_crouch_f],00
 mov [on_hang_stand_f],00
 mov [on_vault_f],00
-mov [vault_f],00
-mov [vault_ground_land_f],00
 mov [dive_beam_f],00
 mov [freeform_jump_f],00
 push ebp
@@ -429,7 +424,6 @@ mov [on_hang_wall_f],00
 mov [on_hang_crouch_f],00
 mov [on_hang_stand_f],00
 mov [on_vault_f],00
-mov [vault_f],00
 mov [vault_inner_ledge_f],00
 mov [already_rolled_f],00
 mov [dive_beam_f],00
@@ -472,7 +466,6 @@ mov [dive_beam_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [on_vault_f],00
-mov [vault_f],00
 mov [vault_inner_ledge_f],00
 cmp dword ptr [esp+04],00
 
@@ -495,7 +488,6 @@ mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [dismount_hang_free_eject_f],00
 mov [on_vault_f],00
-mov [vault_f],00
 mov edx,[edi]
 mov eax,[edx+00000460]
 
@@ -3459,8 +3451,17 @@ globalalloc(freeform_enable,1)
 globalalloc(on_hang_free_f,1)
 globalalloc(vault_inner_ledge_f,1)
 globalalloc(vault_ground_land_f,1)
+globalalloc(vault_required_passes,1)
+globalalloc(vault_pass_counter,1)
+globalalloc(vault_to_fall_f,1)
 
 vault_inner_ledge_f:
+db 00
+
+vault_required_passes:
+db 0A
+
+vault_pass_counter:
 db 00
 
 vault:
@@ -3523,6 +3524,7 @@ vault_landing:
 mov [vault_enable],00
 mov [vault_inner_ledge_f],00
 mov [on_vault_f],01
+mov [vault_pass_counter],00
 call AssassinsCreed_Dx9.exe+A96BF0
 
 exit3:
@@ -3654,12 +3656,20 @@ alloc(vault_freeform_2,2048)
 label(returnhere10)
 label(originalcode10)
 label(exit10)
+label(passed_code_10)
 
 vault_freeform_2:
 cmp byte ptr [vault_ground_land_f],01
 jne originalcode10
+mov dl,[vault_pass_counter]
+cmp dl,[vault_required_passes]
+jb passed_code_10
+mov [vault_pass_counter],00
 mov [vault_ground_land_f],00
 jmp AssassinsCreed_Dx9.exe+A03956
+
+passed_code_10:
+inc byte ptr [vault_pass_counter]
 
 originalcode10:
 cmp ecx,[eax+00000214]
@@ -3671,6 +3681,24 @@ jmp returnhere10
 jmp vault_freeform_2
 nop
 returnhere10:
+
+
+alloc(vault_to_fall,2048)
+label(returnhere11)
+label(exit11)
+
+vault_to_fall:
+mov [vault_to_fall_f],01
+mov ecx,esi
+call AssassinsCreed_Dx9.exe+9E0280
+
+exit11:
+jmp returnhere11
+
+"AssassinsCreed_Dx9.exe"+9E07B9:
+jmp vault_to_fall
+nop 2
+returnhere11:
 
 
 [DISABLE]
@@ -3719,6 +3747,11 @@ db 8B 4E 08 8B 11
 db 3B 88 14 02 00 00
 //cmp ecx,[eax+00000214]
 
+"AssassinsCreed_Dx9.exe"+9E07B9:
+db 8B CE E8 C0 FA FF FF
+//mov ecx,esi
+//call AssassinsCreed_Dx9.exe+9E0280
+
 dealloc(vault)
 dealloc(vault_2)
 dealloc(vault_landing)
@@ -3729,6 +3762,7 @@ dealloc(vault_inner_ledge)
 dealloc(vault_inner_ledge_2)
 dealloc(vault_freeform)
 dealloc(vault_freeform_2)
+dealloc(vault_to_fall)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
@@ -6198,16 +6232,16 @@ label(originalcode)
 label(exit)
 
 globalalloc(drop_height,4)
-globalalloc(vault_f,1)
-alloc(vault_land_height,4)
+globalalloc(vault_to_fall_f,1)
+globalalloc(vault_land_height,4)
 
 vault_land_height:
 dd (float)2
 
 smooth_vault:
-cmp byte ptr [vault_f],01
+cmp byte ptr [vault_to_fall_f],01
 jne originalcode
-mov [vault_f],00
+mov [vault_to_fall_f],00
 movss xmm0,[drop_height]
 comiss xmm0,[vault_land_height]
 ja originalcode
@@ -6218,7 +6252,7 @@ cmp dword ptr [esp+18],01
 jne AssassinsCreed_Dx9.exe+A0600E
 push 00
 push 01
-mov [vault_f],00
+mov [vault_to_fall_f],00
 
 exit:
 jmp returnhere
@@ -6229,39 +6263,13 @@ nop
 returnhere:
 
 
-alloc(vault1,2048)
-label(returnhere1)
-label(exit1)
-
-vault1:
-mov [vault_f],01
-mov ecx,[ebp+08]
-mov [ecx],00000002
-
-exit1:
-jmp returnhere1
-
-"AssassinsCreed_Dx9.exe"+A97593:
-jmp vault1
-nop 4
-returnhere1:
-
-
 [DISABLE]
+dealloc(smooth_vault)
 "AssassinsCreed_Dx9.exe"+A05FDD:
 db 75 2F 6A 00 6A 01
 //jne AssassinsCreed_Dx9.exe+A0600E
 //push 00
 //push 01
-
-"AssassinsCreed_Dx9.exe"+A97593:
-db 8B 4D 08 C7 01 02 00 00 00
-//mov ecx,[ebp+08]
-//mov [ecx],00000002
-
-dealloc(smooth_vault)
-dealloc(vault1)
-dealloc(vault_land_height)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
