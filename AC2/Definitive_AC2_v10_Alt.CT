@@ -8540,9 +8540,10 @@ alloc(target_modifier,4096)
 label(returnhere)
 label(originalcode)
 label(exit)
-label(math)
-label(vault_inner_ledge)
+label(ledge_drop_check)
+label(checks)
 label(near_miss)
+label(vault_inner_ledge)
 label(nso_jump_short)
 label(nso_jump_far)
 label(nso_jump_dismount)
@@ -8559,19 +8560,19 @@ label(ledge_drop)
 label(ledge_drop_short)
 label(ledge_drop_far)
 label(ledge_drop_dismount)
+label(freeform_jump)
+label(parkour_down_freeform_jump)
+label(parkour_down_freeform_swing)
+label(parkour_down_low_freeform_jump)
+label(parkour_down_low_freeform_swing)
 label(vault_freeform)
 label(vault_freeform_short)
 label(vault_freeform_far)
 label(vault_freeform_dismount)
 label(vault_vector)
 label(vector)
-label(freeform_jump)
-label(parkour_down_freeform_jump)
-label(parkour_down_freeform_swing)
-label(parkour_down_low_freeform_jump)
-label(parkour_down_low_freeform_swing)
+label(math)
 label(below_zero)
-label(checks)
 
 //Flags and mod states
 globalalloc(target_f,1)
@@ -8600,6 +8601,8 @@ globalalloc(dismount_enable,1)
 globalalloc(player_coords,16)
 globalalloc(target_coords,16)
 globalalloc(vector_coords,16)
+globalalloc(input_vector_coords,16)
+globalalloc(dot_product,16)
 
 // Jump and movement height values
 globalalloc(nso_jump_short_height,16)
@@ -8627,6 +8630,7 @@ globalalloc(parkour_down_freeform_jump_height,16)
 globalalloc(parkour_down_freeform_swing_height,16)
 globalalloc(parkour_down_low_freeform_jump_height,16)
 globalalloc(parkour_down_low_freeform_swing_height,16)
+globalalloc(freeform_jump_target_diff_height,16)
 globalalloc(swing_up_height_cycle,4)
 
 nso_jump_short_height:
@@ -8687,6 +8691,9 @@ dd (float)0 (float)0 (float)1 (float)0
 parkour_down_low_freeform_swing_height:
 dd (float)0 (float)0 (float)0 (float)0
 
+freeform_jump_target_diff_height:
+dd (float)0 (float)0 (float)3 (float)0
+
 swing_up_height_cycle:
 dd (float)0.75
 
@@ -8716,6 +8723,7 @@ globalalloc(parkour_down_freeform_jump_distance,4)
 globalalloc(parkour_down_freeform_swing_distance,4)
 globalalloc(parkour_down_low_freeform_jump_distance,4)
 globalalloc(parkour_down_low_freeform_swing_distance,4)
+globalalloc(freeform_jump_target_diff_distance,16)
 
 nso_jump_short_distance:
 dd (float)-5
@@ -8775,6 +8783,9 @@ dd (float)-4
 parkour_down_low_freeform_swing_distance:
 dd (float)-2
 
+freeform_jump_target_diff_distance:
+dd (float)8
+
 //Miscellaneous values
 globalalloc(empty_height_float,16)
 globalalloc(empty_last_float,16)
@@ -8819,6 +8830,7 @@ globalalloc(zero,4)
 globalalloc(one,4)
 globalalloc(two,4)
 globalalloc(freeform_distance,4)
+globalalloc(dot_threshold,4)
 
 height_offset:
 dd (float)0 (float)0 (float)1 (float)0
@@ -8882,6 +8894,8 @@ two:
 dd (float)2
 freeform_distance:
 dd (float)8
+dot_threshold:
+dd (float)0.99
 
 //Velocity parameters
 globalalloc(v_v,4)
@@ -8914,6 +8928,8 @@ sqrtps xmm3,xmm3
 shufps xmm3,xmm3,0
 divps xmm1,xmm3
 movaps [vector_coords],xmm1
+movaps xmm3,[direction_input_f]
+movaps [input_vector_coords],xmm3
 
 mulps xmm4,xmm4
 mulps xmm4,[empty_last_float]
@@ -8931,6 +8947,22 @@ jne checks
 mov [freeform_jump_f],01
 mov ecx,[move_type_f]
 mov [ecx],00000001
+
+mulps xmm1,xmm3
+haddps xmm1,xmm1
+haddps xmm1,xmm1
+movaps [dot_product],xmm1
+
+comiss xmm1,[dot_threshold]
+jae ledge_drop_check
+movss xmm1,[freeform_jump_target_diff_distance]
+shufps xmm1,xmm1,0
+mulps xmm3,xmm1
+addps xmm2,xmm3
+movaps xmm0,xmm2
+subps xmm0,[freeform_jump_target_diff_height]
+
+ledge_drop_check:
 comiss xmm4,[freeform_distance]
 ja checks
 cmp byte ptr [ledge_drop_f],01
@@ -10364,13 +10396,43 @@ dealloc(nso_run_coords_3)
                                         </CheatEntry>
                                         <CheatEntry>
                                           <ID>474</ID>
+                                          <Description>"Dot Product"</Description>
+                                          <ShowAsSigned>0</ShowAsSigned>
+                                          <VariableType>Float</VariableType>
+                                          <Address>dot_product</Address>
+                                        </CheatEntry>
+                                        <CheatEntry>
+                                          <ID>475</ID>
+                                          <Description>"Dot Threshold"</Description>
+                                          <ShowAsSigned>0</ShowAsSigned>
+                                          <VariableType>Float</VariableType>
+                                          <Address>dot_threshold</Address>
+                                        </CheatEntry>
+                                        <CheatEntry>
+                                          <ID>476</ID>
+                                          <Description>"Input Unit Vector X"</Description>
+                                          <ShowAsSigned>0</ShowAsSigned>
+                                          <VariableType>Float</VariableType>
+                                          <Address>input_vector_coords</Address>
+                                          <CheatEntries>
+                                            <CheatEntry>
+                                              <ID>477</ID>
+                                              <Description>"Input Unit Vector Y"</Description>
+                                              <ShowAsSigned>0</ShowAsSigned>
+                                              <VariableType>Float</VariableType>
+                                              <Address>input_vector_coords+4</Address>
+                                            </CheatEntry>
+                                          </CheatEntries>
+                                        </CheatEntry>
+                                        <CheatEntry>
+                                          <ID>478</ID>
                                           <Description>"Unit Vector X"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vector_coords</Address>
                                           <CheatEntries>
                                             <CheatEntry>
-                                              <ID>475</ID>
+                                              <ID>479</ID>
                                               <Description>"Unit Vector Y"</Description>
                                               <ShowAsSigned>0</ShowAsSigned>
                                               <VariableType>Float</VariableType>
@@ -10379,42 +10441,42 @@ dealloc(nso_run_coords_3)
                                           </CheatEntries>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>476</ID>
+                                          <ID>480</ID>
                                           <Description>"Distance Between Jump"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>distance_between_jump</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>477</ID>
+                                          <ID>481</ID>
                                           <Description>"Vertical Difference"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vert_diff</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>478</ID>
+                                          <ID>482</ID>
                                           <Description>"Horizontal Difference"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>hori_diff</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>479</ID>
+                                          <ID>483</ID>
                                           <Description>"Target Coords X"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>target_coords</Address>
                                           <CheatEntries>
                                             <CheatEntry>
-                                              <ID>480</ID>
+                                              <ID>484</ID>
                                               <Description>"Target Coords Y"</Description>
                                               <ShowAsSigned>0</ShowAsSigned>
                                               <VariableType>Float</VariableType>
                                               <Address>+4</Address>
                                             </CheatEntry>
                                             <CheatEntry>
-                                              <ID>481</ID>
+                                              <ID>485</ID>
                                               <Description>"Target Coords Z"</Description>
                                               <ShowAsSigned>0</ShowAsSigned>
                                               <VariableType>Float</VariableType>
@@ -10423,7 +10485,7 @@ dealloc(nso_run_coords_3)
                                           </CheatEntries>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>482</ID>
+                                          <ID>486</ID>
                                           <Description>"X-axis Pointer (South Positive)"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
@@ -10433,7 +10495,7 @@ dealloc(nso_run_coords_3)
                                           </Offsets>
                                           <CheatEntries>
                                             <CheatEntry>
-                                              <ID>483</ID>
+                                              <ID>487</ID>
                                               <Description>"Y-Axis (East Positive)"</Description>
                                               <ShowAsSigned>0</ShowAsSigned>
                                               <Color>C0C0C0</Color>
@@ -10441,7 +10503,7 @@ dealloc(nso_run_coords_3)
                                               <Address>+4</Address>
                                             </CheatEntry>
                                             <CheatEntry>
-                                              <ID>484</ID>
+                                              <ID>488</ID>
                                               <Description>"Z-Axis (Height)"</Description>
                                               <ShowAsSigned>0</ShowAsSigned>
                                               <Color>C0C0C0</Color>
@@ -10451,21 +10513,21 @@ dealloc(nso_run_coords_3)
                                           </CheatEntries>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>485</ID>
+                                          <ID>489</ID>
                                           <Description>"f_main"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>f_main</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>486</ID>
+                                          <ID>490</ID>
                                           <Description>"h_main"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>h_main</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>487</ID>
+                                          <ID>491</ID>
                                           <Description>"k_coef_out"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
