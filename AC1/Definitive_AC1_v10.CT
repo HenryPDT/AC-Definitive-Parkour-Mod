@@ -7867,8 +7867,10 @@ globalalloc(dismount_enable,1)
 
 //Player and target coordinates
 globalalloc(player_coords,16)
+globalalloc(start_coords,16)
 globalalloc(target_coords,16)
 globalalloc(vector_coords,16)
+globalalloc(direction_input_f,16)
 globalalloc(input_vector_coords,16)
 globalalloc(dot_product,16)
 
@@ -8186,6 +8188,7 @@ je originalcode
 
 movaps xmm1,xmm0
 movaps xmm2,[player_coords]
+movaps [start_coords],xmm2
 subps xmm1,xmm2
 movaps xmm4,xmm1
 mulps xmm1,[empty_height_float]
@@ -8207,6 +8210,8 @@ sqrtss xmm4,xmm4
 
 cmp byte ptr [eject_clamp_f],01
 mov [eject_clamp_f],00
+je ledge_drop_check
+cmp [input_vector_coords],00000000
 je ledge_drop_check
 
 mov [freeform_jump_f],00
@@ -9707,7 +9712,7 @@ dealloc(nso_run_coords_3)
                                               <Description>"Input Unit Vector Y"</Description>
                                               <ShowAsSigned>0</ShowAsSigned>
                                               <VariableType>Float</VariableType>
-                                              <Address>input_vector_coords+4</Address>
+                                              <Address>+4</Address>
                                             </CheatEntry>
                                           </CheatEntries>
                                         </CheatEntry>
@@ -9723,7 +9728,7 @@ dealloc(nso_run_coords_3)
                                               <Description>"Unit Vector Y"</Description>
                                               <ShowAsSigned>0</ShowAsSigned>
                                               <VariableType>Float</VariableType>
-                                              <Address>vector_coords+4</Address>
+                                              <Address>+4</Address>
                                             </CheatEntry>
                                           </CheatEntries>
                                         </CheatEntry>
@@ -9773,27 +9778,22 @@ dealloc(nso_run_coords_3)
                                         </CheatEntry>
                                         <CheatEntry>
                                           <ID>486</ID>
-                                          <Description>"X-axis Pointer (South Positive)"</Description>
+                                          <Description>"Start Coords X"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
-                                          <Address>pEntity</Address>
-                                          <Offsets>
-                                            <Offset>40</Offset>
-                                          </Offsets>
+                                          <Address>start_coords</Address>
                                           <CheatEntries>
                                             <CheatEntry>
                                               <ID>487</ID>
-                                              <Description>"Y-Axis (East Positive)"</Description>
+                                              <Description>"Start Coords Y"</Description>
                                               <ShowAsSigned>0</ShowAsSigned>
-                                              <Color>C0C0C0</Color>
                                               <VariableType>Float</VariableType>
                                               <Address>+4</Address>
                                             </CheatEntry>
                                             <CheatEntry>
                                               <ID>488</ID>
-                                              <Description>"Z-Axis (Height)"</Description>
+                                              <Description>"Start Coords Z"</Description>
                                               <ShowAsSigned>0</ShowAsSigned>
-                                              <Color>C0C0C0</Color>
                                               <VariableType>Float</VariableType>
                                               <Address>+8</Address>
                                             </CheatEntry>
