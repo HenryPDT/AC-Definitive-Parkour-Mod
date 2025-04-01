@@ -4945,6 +4945,7 @@ label(crouch_climb_leap_code)
 label(returnhere)
 label(exit)
 
+globalalloc(eject_clamp_f,1)
 globalalloc(horizontal_clamp,4)
 globalalloc(diagonal_clamp,4)
 globalalloc(diagonal_angle,4)
@@ -4962,7 +4963,7 @@ diagonal_clamp:
 dd (float)1.9
 
 diagonal_angle:
-dd (float)1.65
+dd (float)1.6
 
 diagonal_angle_hang:
 dd (float)1.7
@@ -4977,12 +4978,14 @@ zero:
 dd (float)0
 
 crouch_eject:
+mov [eject_clamp_f],00
 movss xmm0,[esp+50]
 comiss xmm0,[climb_leap_angle]
 jae crouch_climb_leap_code
 comiss xmm0,[horizontal_clamp]
 jb AssassinsCreed_Dx10.exe+CBF67E
 movss xmm1,[esp+4C]
+mov [eject_clamp_f],01
 comiss xmm1,[zero]
 ja crouch_eject_left
 comiss xmm0,[diagonal_clamp]
@@ -5027,12 +5030,14 @@ label(returnhere2)
 label(exit2)
 
 stand_eject:
+mov [eject_clamp_f],00
 movss xmm0,[esp+2C]
 comiss xmm0,[climb_leap_angle]
 jae stand_climb_leap_code
 comiss xmm0,[horizontal_clamp]
 jb AssassinsCreed_Dx10.exe+CB9152
 movss xmm1,[esp+1C]
+mov [eject_clamp_f],01
 comiss xmm1,[zero]
 ja stand_eject_left
 comiss xmm0,[diagonal_clamp]
@@ -5076,6 +5081,7 @@ label(wallrun_eject_left)
 label(exit3)
 
 wallrun_eject:
+mov [eject_clamp_f],00
 fld dword ptr [esp+1C]
 add esp,0C
 fabs
@@ -5085,6 +5091,7 @@ movss xmm0,[esp+14]
 
 comiss xmm0,[horizontal_clamp]
 jb AssassinsCreed_Dx10.exe+C095A4
+mov [eject_clamp_f],01
 comiss xmm1,[zero]
 ja wallrun_eject_left
 comiss xmm0,[diagonal_clamp]
@@ -7850,6 +7857,7 @@ globalalloc(on_hang_free_f,1)
 globalalloc(dismount_hang_free_eject_f,1)
 globalalloc(already_rolled_f,1)
 globalalloc(move_type_f,4)
+globalalloc(eject_clamp_f,1)
 
 globalalloc(parkour_down_enable,1)
 globalalloc(short_freeform_enable,1)
@@ -8196,6 +8204,10 @@ mulps xmm4,[empty_last_float]
 haddps xmm4,xmm4
 haddps xmm4,xmm4
 sqrtss xmm4,xmm4
+
+cmp byte ptr [eject_clamp_f],01
+mov [eject_clamp_f],00
+je ledge_drop_check
 
 mov [freeform_jump_f],00
 cmp [eax+10],00000000
