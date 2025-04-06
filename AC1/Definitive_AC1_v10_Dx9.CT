@@ -8821,7 +8821,7 @@ coords_mod2:
 mov [coords_mod_f],01
 call coords_modifier
 movaps xmm1,[esp+50]
-jmp exit
+jmp exit2
 
 originalcode2:
 movaps xmm0,[eax+30]
