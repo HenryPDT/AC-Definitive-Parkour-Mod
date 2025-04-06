@@ -8549,6 +8549,7 @@ label(returnhere)
 label(originalcode)
 label(exit)
 label(ledge_drop_check)
+label(freeform_jump_diff_check)
 label(checks)
 label(near_miss)
 label(vault_inner_ledge)
@@ -8601,6 +8602,8 @@ globalalloc(move_type_f,4)
 globalalloc(eject_clamp_f,1)
 
 globalalloc(parkour_down_enable,1)
+globalalloc(parkour_down_low_enable,1)
+globalalloc(freeform_enable,1)
 globalalloc(short_freeform_enable,1)
 globalalloc(far_freeform_enable,1)
 globalalloc(near_miss_enable,1)
@@ -8608,6 +8611,7 @@ globalalloc(dismount_enable,1)
 
 //Player and target coordinates
 globalalloc(player_coords,16)
+globalalloc(player_rotation,16)
 globalalloc(start_coords,16)
 globalalloc(target_coords,16)
 globalalloc(vector_coords,16)
@@ -8949,12 +8953,6 @@ haddps xmm4,xmm4
 haddps xmm4,xmm4
 sqrtss xmm4,xmm4
 
-cmp byte ptr [eject_clamp_f],01
-mov [eject_clamp_f],00
-je ledge_drop_check
-cmp [input_vector_coords],00000000
-je ledge_drop_check
-
 mov [freeform_jump_f],00
 cmp [eax+10],00000000
 jne checks
@@ -8966,25 +8964,31 @@ mov [freeform_jump_f],01
 mov ecx,[move_type_f]
 mov [ecx],00000001
 
+ledge_drop_check:
+comiss xmm4,[freeform_distance]
+ja freeform_jump_diff_check
+cmp byte ptr [ledge_drop_f],01
+je ledge_drop
+
+freeform_jump_diff_check:
+cmp byte ptr [eject_clamp_f],01
+mov [eject_clamp_f],00
+je checks
+cmp [input_vector_coords],00000000
+je checks
+
 mulps xmm1,xmm3
 haddps xmm1,xmm1
 haddps xmm1,xmm1
 movaps [dot_product],xmm1
-
 comiss xmm1,[dot_threshold]
-jae ledge_drop_check
+jae checks
 movss xmm1,[freeform_jump_target_diff_distance]
 shufps xmm1,xmm1,0
 mulps xmm3,xmm1
 addps xmm2,xmm3
 movaps xmm0,xmm2
 subps xmm0,[freeform_jump_target_diff_height]
-
-ledge_drop_check:
-comiss xmm4,[freeform_distance]
-ja checks
-cmp byte ptr [ledge_drop_f],01
-je ledge_drop
 
 checks:
 cmp byte ptr [dismount_hang_free_eject_f],01
