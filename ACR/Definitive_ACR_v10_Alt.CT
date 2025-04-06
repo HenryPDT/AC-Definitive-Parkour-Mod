@@ -4970,7 +4970,6 @@ cmp byte ptr [vault_inner_ledge_f],01
 je ACRSP.exe+160F116
 
 originalcode:
-mov [ledge_drop_f],00
 test al,al
 je ACRSP.exe+160F116
 cmp dword ptr [ebp-64],01
@@ -4989,13 +4988,15 @@ label(returnhere2)
 label(exit2)
 
 ledge_drop_2:
+mov [ledge_drop_f],00
+cmp byte ptr [ebp-3C],00
+je ACRSP.exe+160F116
 mov [ledge_drop_f],01
-lea edx,[ebp-00000140]
 
 exit2:
 jmp returnhere2
 
-"ACRSP.exe"+160F0D3:
+"ACRSP.exe"+160F0BA:
 jmp ledge_drop_2
 nop
 returnhere2:
@@ -5024,9 +5025,10 @@ db 84 C0 74 31 83 7D 9C 01
 //je ACRSP.exe+160F116
 //cmp dword ptr [ebp-64],01
 
-"ACRSP.exe"+160F0D3:
-db 8D 95 C0 FE FF FF
-//lea edx,[ebp-00000140]
+"ACRSP.exe"+160F0BA:
+db 80 7D C4 00 74 56
+//cmp byte ptr [ebp-3C],00
+//je ACRSP.exe+160F116
 
 "ACRSP.exe"+160F3AC:
 db E8 6F 02 19 FF

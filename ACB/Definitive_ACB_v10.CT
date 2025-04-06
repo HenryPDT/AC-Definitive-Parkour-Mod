@@ -4865,7 +4865,6 @@ cmp byte ptr [vault_inner_ledge_f],01
 je ACBSP.exe+1BDA656
 
 originalcode:
-mov [ledge_drop_f],00
 test al,al
 je ACBSP.exe+1BDA656
 cmp dword ptr [ebp-48],01
@@ -4884,13 +4883,15 @@ label(returnhere2)
 label(exit2)
 
 ledge_drop_2:
+mov [ledge_drop_f],00
+cmp byte ptr [ebp-34],00
+je ACBSP.exe+1BDA656
 mov [ledge_drop_f],01
-lea edx,[ebp-00000140]
 
 exit2:
 jmp returnhere2
 
-"ACBSP.exe"+1BDA611:
+"ACBSP.exe"+1BDA5F6:
 jmp ledge_drop_2
 nop
 returnhere2:
@@ -4919,9 +4920,10 @@ db 84 C0 74 33 83 7D B8 01
 //je ACBSP.exe+1BDA656
 //cmp dword ptr [ebp-48],01
 
-"ACBSP.exe"+1BDA611:
-db 8D 95 C0 FE FF FF
-//lea edx,[ebp-00000140]
+"ACBSP.exe"+1BDA5F6:
+db 80 7D CC 00 74 5A
+//cmp byte ptr [ebp-34],00
+//je ACBSP.exe+1BDA656
 
 "ACBSP.exe"+1BDA8AF:
 db E8 5C 58 26 FF

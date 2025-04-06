@@ -4571,7 +4571,6 @@ cmp byte ptr [vault_inner_ledge_f],01
 je AssassinsCreed_Dx9.exe+AE88BF
 
 originalcode:
-mov [ledge_drop_f],00
 test al,al
 je AssassinsCreed_Dx9.exe+AE88BF
 cmp dword ptr [esp+4C],01
@@ -4590,13 +4589,15 @@ label(returnhere2)
 label(exit2)
 
 ledge_drop_2:
+mov [ledge_drop_f],00
+cmp byte ptr [esp+30],00
+je AssassinsCreed_Dx9.exe+AE88BF
 mov [ledge_drop_f],01
-lea edx,[esp+000000BC]
 
 exit2:
 jmp returnhere2
 
-"AssassinsCreed_Dx9.exe"+AE886F:
+"AssassinsCreed_Dx9.exe"+AE8852:
 jmp ledge_drop_2
 nop 2
 returnhere2:
@@ -4613,7 +4614,7 @@ call AssassinsCreed_Dx9.exe+AF0320
 exit3:
 jmp returnhere3
 
-"AssassinsCreed_Dx9.exe"+AE8C8C:
+"AssassinsCreed_Dx9.exe"+AE8C0E:
 jmp ledge_drop_3
 returnhere3:
 
@@ -4625,12 +4626,13 @@ db 84 C0 74 3D 83 7C 24 4C 01
 //je AssassinsCreed_Dx9.exe+AE88BF
 //cmp dword ptr [esp+4C],01
 
-"AssassinsCreed_Dx9.exe"+AE886F:
-db 8D 94 24 BC 00 00 00
-//lea edx,[esp+000000BC]
+"AssassinsCreed_Dx9.exe"+AE8852:
+db 80 7C 24 30 00 74 66
+//cmp byte ptr [esp+30],00
+//je AssassinsCreed_Dx9.exe+AE88BF
 
-"AssassinsCreed_Dx9.exe"+AE8C8C:
-db E8 8F 76 00 00
+"AssassinsCreed_Dx9.exe"+AE8C0E:
+db E8 0D 77 00 00
 //call AssassinsCreed_Dx9.exe+AF0320
 
 dealloc(ledge_drop)
