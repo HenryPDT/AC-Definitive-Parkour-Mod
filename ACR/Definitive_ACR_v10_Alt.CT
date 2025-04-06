@@ -10254,6 +10254,7 @@ globalalloc(vault_landing_low_f,1)
 globalalloc(vault_freeform_f,1)
 globalalloc(forced_hang_f,1)
 globalalloc(dive_beam_far_f,1)
+globalalloc(forced_hang_enable,1)
 
 swing_vault_coords:
 mov [self_swing_f],00
@@ -10267,10 +10268,13 @@ cmp byte ptr [vault_landing_low_f],01
 je coords_mod
 cmp byte ptr [vault_freeform_f],01
 je coords_mod
-cmp byte ptr [forced_hang_f],01
-je coords_mod
 cmp byte ptr [dive_beam_far_f],01
 je coords_mod
+cmp byte ptr [forced_hang_f],01
+jne originalcode
+cmp byte ptr [forced_hang_enable],01
+je coords_mod
+mov [forced_hang_f],00
 jmp originalcode
 
 coords_mod:
