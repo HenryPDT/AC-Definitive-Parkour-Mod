@@ -8587,7 +8587,6 @@ label(below_zero)
 
 //Flags and mod states
 globalalloc(pEntity,4)
-globalalloc(player_target_f,1)
 globalalloc(target_f,1)
 globalalloc(ledge_drop_f,1)
 globalalloc(freeform_jump_f,1)
@@ -8930,8 +8929,6 @@ globalalloc(k_coef_out,4)
 globalalloc(swing_up_height,16)
 
 target_modifier:
-cmp byte ptr [player_target_f],00
-je originalcode
 cmp byte ptr [target_f],00
 je originalcode
 cmp byte ptr [already_rolled_f],01
@@ -9354,7 +9351,6 @@ addss xmm1,[swing_far_static]       // Add swing_far_static
 movss [swing_far_distance],xmm1     // Store the final swing up value (k)
 
 originalcode:
-mov [player_target_f],00
 mov [target_f],00
 mov [ledge_drop_f],00
 movaps [eax],xmm0
@@ -9372,10 +9368,16 @@ returnhere:
 
 alloc(target_modifier_2,2048)
 label(returnhere2)
+label(originalcode2)
 label(exit2)
 
 target_modifier_2:
+mov eax,[ebp+67C]
+cmp eax,[pEntity]
+jne originalcode2
 mov [target_f],01
+
+originalcode2:
 call AssassinsCreedIIGame.exe+5F0530
 
 exit2:
@@ -9464,30 +9466,6 @@ nop 3
 returnhere6:
 
 
-alloc(player_target,2048)
-label(returnhere7)
-label(originalcode7)
-label(exit7)
-
-player_target:
-mov ecx,[ebp-14]
-cmp ecx,[pEntity]
-jne originalcode7
-mov [player_target_f],01
-
-originalcode7:
-mov ecx,edi
-call AssassinsCreedIIGame.exe+91E330
-
-exit7:
-jmp returnhere7
-
-"AssassinsCreedIIGame.exe"+92BF4C:
-jmp player_target
-nop 2
-returnhere7:
-
-
 [DISABLE]
 "AssassinsCreedIIGame.exe"+5F0552:
 db 0F 29 06 0F 28 40 10
@@ -9517,18 +9495,12 @@ db 8B 43 14 3D 00 00 08 00
 //mov eax,[ebx+14]
 //cmp eax,00080000
 
-"AssassinsCreedIIGame.exe"+92BF4C:
-db 8B CF E8 DD 23 FF FF
-//mov ecx,edi
-//call AssassinsCreedIIGame.exe+91E330
-
 dealloc(target_modifier)
 dealloc(target_modifier_2)
 dealloc(smooth_fall)
 dealloc(swing_up_cycle)
 dealloc(swing_up_drop)
 dealloc(move_type)
-dealloc(player_target)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
