@@ -993,7 +993,7 @@ dealloc(on_water)
                         </CheatEntry>
                         <CheatEntry>
                           <ID>42</ID>
-                          <Description>"Face South"</Description>
+                          <Description>"Face East"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <Color>C0C0C0</Color>
                           <VariableType>Float</VariableType>
@@ -1001,7 +1001,7 @@ dealloc(on_water)
                         </CheatEntry>
                         <CheatEntry>
                           <ID>43</ID>
-                          <Description>"Face East"</Description>
+                          <Description>"Face North"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <Color>C0C0C0</Color>
                           <VariableType>Float</VariableType>
@@ -1009,7 +1009,7 @@ dealloc(on_water)
                         </CheatEntry>
                         <CheatEntry>
                           <ID>44</ID>
-                          <Description>"Face East"</Description>
+                          <Description>"Face North"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <Color>C0C0C0</Color>
                           <VariableType>Float</VariableType>
@@ -1017,7 +1017,7 @@ dealloc(on_water)
                         </CheatEntry>
                         <CheatEntry>
                           <ID>45</ID>
-                          <Description>"Face North"</Description>
+                          <Description>"Face West"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <Color>C0C0C0</Color>
                           <VariableType>Float</VariableType>
