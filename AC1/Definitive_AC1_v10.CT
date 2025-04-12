@@ -4956,7 +4956,7 @@ globalalloc(wallrun_back_eject_angle,4)
 globalalloc(climb_leap_angle,4)
 globalalloc(zero,4)
 globalalloc(forced_hang_enable,1)
-globalalloc(relative_input_f,4)
+globalalloc(direction_input_f,16)
 
 horizontal_clamp:
 dd (float)1.55
@@ -5132,7 +5132,7 @@ label(exit4)
 
 wallrun_eject_2:
 mov ecx,edi
-cmp [relative_input_f],00000000
+cmp [direction_input_f],00000000
 je AssassinsCreed_Dx10.exe+CB35C2
 cvtsd2ss xmm0,xmm0
 comiss xmm0,[wallrun_back_eject_angle]
@@ -5973,6 +5973,7 @@ label(originalcode)
 label(exit)
 
 globalalloc(instant_swingoff_f,1)
+globalalloc(direction_input_f,16)
 globalalloc(relative_input_f,4)
 alloc(forward_input,4)
 alloc(backward_input,4)
@@ -5989,7 +5990,7 @@ mov [instant_swingoff_f],00
 je AssassinsCreed_Dx10.exe+B796F2
 
 originalcode:
-cmp eax,AssassinsCreed_Dx10.exe+2526510
+cmp eax,02926510
 jne AssassinsCreed_Dx10.exe+B796FC
 mov ecx,[esi+08]
 
@@ -6063,7 +6064,7 @@ label(disable_instant)
 label(exit5)
 
 drop_to_hang_2:
-cmp [relative_input_f],00000000
+cmp [direction_input_f],00000000
 je disable_instant
 
 fld dword ptr [relative_input_f]
@@ -7065,6 +7066,7 @@ label(clamp_1)
 globalalloc(diag_swing_f,1)
 globalalloc(direction_input_f,16)
 globalalloc(clamp_f,1)
+globalalloc(direction_input_f,16)
 globalalloc(relative_input_f,4)
 globalalloc(inverse,16)
 globalalloc(cos_value,4)
@@ -7229,6 +7231,7 @@ label(exit)
 
 globalalloc(diag_swing_f,1)
 globalalloc(clamp_f,1)
+globalalloc(direction_input_f,16)
 globalalloc(relative_input_f,4)
 globalalloc(pGroundLand,4)
 globalalloc(angle_radians,4)
@@ -7244,7 +7247,7 @@ dd (float)0.8
 enhanced_ground_roll:
 mov [diag_swing_f],00
 mov [clamp_f],00
-cmp [relative_input_f],00000000
+cmp [direction_input_f],00000000
 je originalcode
 fld dword ptr [relative_input_f]
 fabs
@@ -7356,6 +7359,7 @@ label(exit)
 
 globalalloc(diag_swing_f,1)
 globalalloc(clamp_f,1)
+globalalloc(direction_input_f,16)
 globalalloc(relative_input_f,4)
 alloc(angle_restriction,4)
 
@@ -7367,7 +7371,7 @@ mov [diag_swing_f],00
 mov [clamp_f],00
 cmp [edi+24],00000001
 je originalcode
-cmp [relative_input_f],00000000
+cmp [direction_input_f],00000000
 je originalcode
 fld dword ptr [relative_input_f]
 fabs
@@ -7839,7 +7843,7 @@ label(vault_freeform)
 label(vault_freeform_short)
 label(vault_freeform_far)
 label(vault_freeform_dismount)
-label(vault_vector)
+label(rotation_vector)
 label(vector)
 label(math)
 label(below_zero)
@@ -7969,7 +7973,7 @@ parkour_down_low_freeform_swing_height:
 dd (float)0 (float)0 (float)0 (float)0
 
 freeform_jump_target_diff_height:
-dd (float)0 (float)0 (float)3 (float)0
+dd (float)0 (float)0 (float)-3 (float)0
 
 swing_up_height_cycle:
 dd (float)0.75
@@ -8250,7 +8254,7 @@ shufps xmm1,xmm1,0
 mulps xmm3,xmm1
 addps xmm2,xmm3
 movaps xmm0,xmm2
-subps xmm0,[freeform_jump_target_diff_height]
+addps xmm0,[freeform_jump_target_diff_height]
 
 checks:
 cmp byte ptr [dismount_hang_free_eject_f],01
@@ -8433,24 +8437,24 @@ cmp byte ptr [freeform_enable],01
 jne math
 movss xmm4,[vault_freeform_distance]
 movaps xmm5,[vault_freeform_height]
-jmp vault_vector
+jmp rotation_vector
 
 vault_freeform_dismount:
 movss xmm4,[vault_freeform_dismount_distance]
 movaps xmm5,[vault_freeform_dismount_height]
-jmp vault_vector
+jmp rotation_vector
 
 vault_freeform_short:
 movss xmm4,[vault_freeform_short_distance]
 movaps xmm5,[vault_freeform_short_height]
-jmp vault_vector
+jmp rotation_vector
 
 vault_freeform_far:
 movss xmm4,[vault_freeform_far_distance]
 movaps xmm5,[vault_freeform_far_height]
-jmp vault_vector
+jmp rotation_vector
 
-vault_vector:
+rotation_vector:
 movaps xmm1,[player_rotation]
 shufps xmm4,xmm4,0
 mulps xmm1,xmm4
@@ -9856,12 +9860,14 @@ dealloc(nso_run_coords_3)
       </CheatEntries>
     </CheatEntry>
   </CheatEntries>
-  <LuaScript>-- Process name
-local process_name = "AssassinsCreed_Dx10.exe"
+  <LuaScript>
+-- Process name
+local process_names = {"AssassinsCreed_Dx10.exe", "AssassinsCreed_Dx9.exe"}
+local process_name = process_names[1]
 
 -- IDs or descriptions of the mod entries
-local modEntryID = "Enable Mod"       -- Replace with the memory record's ID or description for the first mod
-local parkourModeEntryID = "Parkour Mode" -- Replace with the memory record's ID or description for "Parkour Mode"
+local modEntryID = "Enable Mod"
+local parkourModeEntryID = "Parkour Mode"
 
 -- CUSTOM FUNCTIONS --
 --================================================================================
@@ -9927,6 +9933,23 @@ function enforceDependency()
    end
 end
 
+-- VERSION AUTO-DETECTION --
+--================================================================================
+-- This function reads specific memory addresses to determine the version.
+function autodetectVersion()
+   local value1 = readInteger("AssassinsCreed_Dx10.exe+5671")
+   if value1 and value1 == 0x016886D8 then
+      return 1
+   else
+      local value2 = readInteger("AssassinsCreed_Dx9.exe+5651")
+      if value2 and value2 == 0x016816A8 then
+         return 2
+      else
+         return 1  -- Fallback to version 1 if neither address matches.
+      end
+   end
+end
+
 -- TIMERS --
 --================================================================================
 
@@ -9934,18 +9957,38 @@ function process_checker(t)
    local status = readInteger(process_name)
 
    if status == nil then
-      -- Not attached to process
+      -- Try alternative process name if not found on the current one
+      if process_name == process_names[1] then
+         status = readInteger(process_names[2])
+         if status ~= nil then
+            process_name = process_names[2]
+         end
+      else
+         status = readInteger(process_names[1])
+         if status ~= nil then
+            process_name = process_names[1]
+         end
+      end
+   end
+
+   if status == nil then
+      -- Not attached to any process, so attempt to attach to both
       getMainForm().Caption = 'Not Attached'
       getApplication().Title = 'Not Attached'
       AddressList.disableAllWithoutExecute()
       for i = 0, AddressList.Count - 1 do
          AddressList[i].Active = false
       end
-      openProcess(process_name)
+      openProcess(process_names[1])
+      openProcess(process_names[2])
    else
       -- Attached to process
       getMainForm().Caption = 'Attached to ' .. process_name
       getApplication().Title = 'Attached to ' .. process_name
+
+      -- Auto-detect version periodically.
+      version = autodetectVersion()
+      -- print("Detected version: " .. version)
 
       -- Enforce dependency rule
       enforceDependency()
@@ -9956,7 +9999,8 @@ end
 --================================================================================
 
 -----------------------------   Start Execution   --------------------------------
-openProcess(process_name)
+openProcess(process_names[1])
+openProcess(process_names[2])
 process_timer = InitTimer(getMainForm(), 1000, false, process_checker)
 timer_setEnabled(process_timer, true) -- Start timer
 addCompactMenu()
