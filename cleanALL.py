@@ -69,13 +69,13 @@ for root, _, files in os.walk(directory):
                     id_counter = 100  # Reset to 3000 after this description
                 elif '<Description>"Parkour Mode"</Description>' in line:
                     parkour_mode_found = True
-                    id_counter = 200  # Reset to 1000 after this description
+                    id_counter = 300  # Reset to 1000 after this description
                 elif '<Description>"Extra"</Description>' in line:
                     extra_found = True
-                    id_counter = 300  # Reset to 2000 after this description
+                    id_counter = 500  # Reset to 2000 after this description
                 elif '<Description>"Vault Landing Far Height"</Description>' in line:
                     vault_landing_found = True
-                    id_counter = 400  # Reset to 3000 after this description
+                    id_counter = 700  # Reset to 3000 after this description
 
                 # Skip lines containing 'LastState'
                 if 'LastState' in line:

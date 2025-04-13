@@ -3688,10 +3688,30 @@ if syntaxcheck then return end
 
 local config_enable = {
     [1] = {
-        dynamic1 = "\"ACRSP.exe\"+531431:"
+        dynamic1 = "\"ACRSP.exe\"+531431:",
+        dynamic2 = "\"ACRSP.exe\"+34F35D:",
+        dynamic3 = "\"ACRSP.exe\"+182933F:",
+        dynamic4 = "ACRSP.exe+17BB323",
+        dynamic5 = "\"ACRSP.exe\"+17BB312:",
+        dynamic6 = "ACRSP.exe+1706D29",
+        dynamic7 = "ACRSP.exe+1706D29",
+        dynamic8 = "ACRSP.exe+1706D29",
+        dynamic9 = "ACRSP.exe+1706D29",
+        dynamic10 = "ACRSP.exe+1706D29",
+        dynamic11 = "\"ACRSP.exe\"+1706CCA:"
     },
     [2] = {
-        dynamic1 = "\"ACRSP.exe\"+5633A1:"
+        dynamic1 = "\"ACRSP.exe\"+5633A1:",
+        dynamic2 = "\"ACRSP.exe\"+37D0BD:",
+        dynamic3 = "\"ACRSP.exe\"+185C90F:",
+        dynamic4 = "ACRSP.exe+17EE8E3",
+        dynamic5 = "\"ACRSP.exe\"+17EE8D2:",
+        dynamic6 = "ACRSP.exe+173A739",
+        dynamic7 = "ACRSP.exe+173A739",
+        dynamic8 = "ACRSP.exe+173A739",
+        dynamic9 = "ACRSP.exe+173A739",
+        dynamic10 = "ACRSP.exe+173A739",
+        dynamic11 = "\"ACRSP.exe\"+173A6DA:"
     }
 }
 
@@ -3704,6 +3724,10 @@ label(returnhere)
 label(exit)
 
 globalalloc(pause_f,1)
+globalalloc(buttonY,1)
+globalalloc(buttonLS,1)
+globalalloc(buttonLB,1)
+globalalloc(forced_hang_enable,1)
 
 pause:
 mov [pause_f],cl
@@ -3716,7 +3740,91 @@ jmp returnhere
 %s
 jmp pause
 returnhere:
-]==], addrE.dynamic1)
+
+
+alloc(disable_npc_interaction,2048)
+label(returnhere2)
+label(exit2)
+
+disable_npc_interaction:
+
+exit2:
+jmp returnhere2
+
+%s
+jmp disable_npc_interaction
+nop
+returnhere2:
+
+
+alloc(disable_ingame_binds,2048)
+label(returnhere3)
+label(exit3)
+
+disable_ingame_binds:
+movq [esi+00000190],xmm0
+cmp byte ptr [pause_f],01
+je exit3
+mov byte ptr [esi+18+1],00
+mov byte ptr [esi+18+2],00
+mov byte ptr [esi+18+0A],00
+mov byte ptr [esi+18+0B],00
+mov byte ptr [esi+18+0D],00
+mov byte ptr [esi+18+0E],00
+
+exit3:
+jmp returnhere3
+
+%s
+jmp disable_ingame_binds
+nop 3
+returnhere3:
+
+
+alloc(disable_combat_grab,2048)
+label(returnhere4)
+label(exit4)
+
+disable_combat_grab:
+cmp eax,03
+je %s
+cmp byte ptr [eax+esi+18],00
+
+exit4:
+jmp returnhere4
+
+%s
+jmp disable_combat_grab
+returnhere4:
+
+
+alloc(disable_drop_to_hang,2048)
+label(returnhere5)
+label(originalcode5)
+label(exit5)
+
+disable_drop_to_hang:
+cmp byte ptr [buttonY],01
+je %s
+cmp byte ptr [buttonLS],01
+je %s
+cmp byte ptr [buttonLB],01
+je %s
+cmp byte ptr [forced_hang_enable],01
+je %s
+
+originalcode5:
+test al,al
+je %s
+mov eax,[ebx+08]
+
+exit5:
+jmp returnhere5
+
+%s
+jmp disable_drop_to_hang
+returnhere5:
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -3733,10 +3841,22 @@ if syntaxcheck then return end
 
 local config_disable = {
     [1] = {
-        dynamic1 = "\"ACRSP.exe\"+531431:"
+        dynamic1 = "\"ACRSP.exe\"+531431:",
+        dynamic2 = "\"ACRSP.exe\"+34F35D:",
+        dynamic3 = "ACRSP.exe+34F1D0",
+        dynamic4 = "\"ACRSP.exe\"+182933F:",
+        dynamic5 = "\"ACRSP.exe\"+17BB312:",
+        dynamic6 = "\"ACRSP.exe\"+1706CCA:",
+        dynamic7 = "ACRSP.exe+1706D29"
     },
     [2] = {
-        dynamic1 = "\"ACRSP.exe\"+5633A1:"
+        dynamic1 = "\"ACRSP.exe\"+5633A1:",
+        dynamic2 = "\"ACRSP.exe\"+37D0BD:",
+        dynamic3 = "ACRSP.exe+37CF30",
+        dynamic4 = "\"ACRSP.exe\"+185C90F:",
+        dynamic5 = "\"ACRSP.exe\"+17EE8D2:",
+        dynamic6 = "\"ACRSP.exe\"+173A6DA:",
+        dynamic7 = "ACRSP.exe+173A739"
     }
 }
 
@@ -3744,12 +3864,34 @@ local addrD = config_disable[version]
 if not addrD then error("Could not determine disable addresses for the current game version (" .. tostring(version) .. ")") end
 
 local disableScript = string.format([==[
-dealloc(pause)
 %s
 db 8B 4E 0C 85 C9
 //mov ecx,[esi+0C]
 //test ecx,ecx
-]==], addrD.dynamic1)
+
+%s
+db 0F 85 6D FE FF FF
+//jne %s
+
+%s
+db 66 0F D6 86 90 01 00 00
+//movq [esi+00000190],xmm0
+
+%s
+db 80 7C 30 18 00
+//cmp byte ptr [eax+esi+18],00
+
+%s
+db 74 5D 8B 43 08
+//je %s
+//mov eax,[ebx+08]
+
+dealloc(pause)
+dealloc(disable_npc_interaction)
+dealloc(disable_ingame_binds)
+dealloc(disable_combat_grab)
+dealloc(disable_drop_to_hang)
+]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7)
 
 
 if disableInfo and disableInfo.info then
@@ -3766,381 +3908,19 @@ disableInfo = nil
                               <Keys>
                                 <Key>22551</Key>
                               </Keys>
-                              <ID>200</ID>
+                              <ID>300</ID>
                             </Hotkey>
                             <Hotkey>
                               <Action>Toggle Activation</Action>
                               <Keys>
                                 <Key>71</Key>
                               </Keys>
-                              <ID>201</ID>
+                              <ID>301</ID>
                             </Hotkey>
                           </Hotkeys>
-                          <CheatEntries>
-                            <CheatEntry>
-                              <ID>202</ID>
-                              <Description>"Disable NPC Targeting and Interaction and Tackle"</Description>
-                              <VariableType>Auto Assembler Script</VariableType>
-                              <AssemblerScript>[ENABLE]
-{$lua}
-if syntaxcheck then return end
-
-local config_enable = {
-    [1] = {
-        dynamic1 = "\"ACRSP.exe\"+34F35D:"
-    },
-    [2] = {
-        dynamic1 = "\"ACRSP.exe\"+37D0BD:"
-    }
-}
-
-local addrE = config_enable[version]
-if not addrE then error("Could not determine addresses for the current game version (" .. tostring(version) .. ")") end
-
-local enableScript = string.format([==[
-alloc(disable_npc_interaction,2048)
-label(returnhere)
-label(exit)
-
-disable_npc_interaction:
-
-exit:
-jmp returnhere
-
-%s
-jmp disable_npc_interaction
-nop
-returnhere:
-]==], addrE.dynamic1)
-
-local success, info = autoAssemble(enableScript)
-if not success then
-    error("Assembly failed: " .. tostring(info))
-end
-
--- Save disable info for use in the disable section
-disableInfo = { info = info } -- Store assembly info (registers, allocations)
-{$asm}
-
-[DISABLE]
-{$lua}
-if syntaxcheck then return end
-
-local config_disable = {
-    [1] = {
-        dynamic1 = "\"ACRSP.exe\"+34F35D:",
-        dynamic2 = "ACRSP.exe+34F1D0"
-    },
-    [2] = {
-        dynamic1 = "\"ACRSP.exe\"+37D0BD:",
-        dynamic2 = "ACRSP.exe+37CF30"
-    }
-}
-
-local addrD = config_disable[version]
-if not addrD then error("Could not determine disable addresses for the current game version (" .. tostring(version) .. ")") end
-
-local disableScript = string.format([==[
-dealloc(disable_npc_interaction)
-%s
-db 0F 85 6D FE FF FF
-//jne %s
-]==], addrD.dynamic1, addrD.dynamic2)
-
-
-if disableInfo and disableInfo.info then
-    autoAssemble(disableScript, disableInfo.info)
-else
-    autoAssemble(disableScript) -- Might do nothing if script is empty, that's okay
-end
-disableInfo = nil
-{$asm}
-</AssemblerScript>
-                            </CheatEntry>
-                            <CheatEntry>
-                              <ID>203</ID>
-                              <Description>"Disable Ingame Binds"</Description>
-                              <VariableType>Auto Assembler Script</VariableType>
-                              <AssemblerScript>[ENABLE]
-{$lua}
-if syntaxcheck then return end
-
-local config_enable = {
-    [1] = {
-        dynamic1 = "\"ACRSP.exe\"+182933F:"
-    },
-    [2] = {
-        dynamic1 = "\"ACRSP.exe\"+185C90F:"
-    }
-}
-
-local addrE = config_enable[version]
-if not addrE then error("Could not determine addresses for the current game version (" .. tostring(version) .. ")") end
-
-local enableScript = string.format([==[
-alloc(disable_ingame_binds,2048)
-label(returnhere)
-label(exit)
-
-globalalloc(pause_f,1)
-
-disable_ingame_binds:
-movq [esi+00000190],xmm0
-cmp byte ptr [pause_f],01
-je exit
-mov byte ptr [esi+18+1],00
-mov byte ptr [esi+18+2],00
-mov byte ptr [esi+18+0A],00
-mov byte ptr [esi+18+0B],00
-mov byte ptr [esi+18+0D],00
-mov byte ptr [esi+18+0E],00
-
-exit:
-jmp returnhere
-
-%s
-jmp disable_ingame_binds
-nop 3
-returnhere:
-]==], addrE.dynamic1)
-
-local success, info = autoAssemble(enableScript)
-if not success then
-    error("Assembly failed: " .. tostring(info))
-end
-
--- Save disable info for use in the disable section
-disableInfo = { info = info } -- Store assembly info (registers, allocations)
-{$asm}
-
-[DISABLE]
-{$lua}
-if syntaxcheck then return end
-
-local config_disable = {
-    [1] = {
-        dynamic1 = "\"ACRSP.exe\"+182933F:"
-    },
-    [2] = {
-        dynamic1 = "\"ACRSP.exe\"+185C90F:"
-    }
-}
-
-local addrD = config_disable[version]
-if not addrD then error("Could not determine disable addresses for the current game version (" .. tostring(version) .. ")") end
-
-local disableScript = string.format([==[
-dealloc(disable_ingame_binds)
-%s
-db 66 0F D6 86 90 01 00 00
-//movq [esi+00000190],xmm0
-]==], addrD.dynamic1)
-
-
-if disableInfo and disableInfo.info then
-    autoAssemble(disableScript, disableInfo.info)
-else
-    autoAssemble(disableScript) -- Might do nothing if script is empty, that's okay
-end
-disableInfo = nil
-{$asm}
-</AssemblerScript>
-                            </CheatEntry>
-                            <CheatEntry>
-                              <ID>204</ID>
-                              <Description>"Disable Combat Grab"</Description>
-                              <VariableType>Auto Assembler Script</VariableType>
-                              <AssemblerScript>[ENABLE]
-{$lua}
-if syntaxcheck then return end
-
-local config_enable = {
-    [1] = {
-        dynamic1 = "ACRSP.exe+17BB323",
-        dynamic2 = "\"ACRSP.exe\"+17BB312:"
-    },
-    [2] = {
-        dynamic1 = "ACRSP.exe+17EE8E3",
-        dynamic2 = "\"ACRSP.exe\"+17EE8D2:"
-    }
-}
-
-local addrE = config_enable[version]
-if not addrE then error("Could not determine addresses for the current game version (" .. tostring(version) .. ")") end
-
-local enableScript = string.format([==[
-alloc(disable_combat_grab,2048)
-label(returnhere)
-label(exit)
-
-disable_combat_grab:
-cmp eax,03
-je %s
-cmp byte ptr [eax+esi+18],00
-
-exit:
-jmp returnhere
-
-%s
-jmp disable_combat_grab
-returnhere:
-]==], addrE.dynamic1, addrE.dynamic2)
-
-local success, info = autoAssemble(enableScript)
-if not success then
-    error("Assembly failed: " .. tostring(info))
-end
-
--- Save disable info for use in the disable section
-disableInfo = { info = info } -- Store assembly info (registers, allocations)
-{$asm}
-
-[DISABLE]
-{$lua}
-if syntaxcheck then return end
-
-local config_disable = {
-    [1] = {
-        dynamic1 = "\"ACRSP.exe\"+17BB312:"
-    },
-    [2] = {
-        dynamic1 = "\"ACRSP.exe\"+17EE8D2:"
-    }
-}
-
-local addrD = config_disable[version]
-if not addrD then error("Could not determine disable addresses for the current game version (" .. tostring(version) .. ")") end
-
-local disableScript = string.format([==[
-dealloc(disable_combat_grab)
-%s
-db 80 7C 30 18 00
-//cmp byte ptr [eax+esi+18],00
-]==], addrD.dynamic1)
-
-
-if disableInfo and disableInfo.info then
-    autoAssemble(disableScript, disableInfo.info)
-else
-    autoAssemble(disableScript) -- Might do nothing if script is empty, that's okay
-end
-disableInfo = nil
-{$asm}
-</AssemblerScript>
-                            </CheatEntry>
-                            <CheatEntry>
-                              <ID>205</ID>
-                              <Description>"Disable Drop to Hang"</Description>
-                              <VariableType>Auto Assembler Script</VariableType>
-                              <AssemblerScript>[ENABLE]
-{$lua}
-if syntaxcheck then return end
-
-local config_enable = {
-    [1] = {
-        dynamic1 = "ACRSP.exe+1706D29",
-        dynamic2 = "ACRSP.exe+1706D29",
-        dynamic3 = "ACRSP.exe+1706D29",
-        dynamic4 = "ACRSP.exe+1706D29",
-        dynamic5 = "ACRSP.exe+1706D29",
-        dynamic6 = "\"ACRSP.exe\"+1706CCA:"
-    },
-    [2] = {
-        dynamic1 = "ACRSP.exe+173A739",
-        dynamic2 = "ACRSP.exe+173A739",
-        dynamic3 = "ACRSP.exe+173A739",
-        dynamic4 = "ACRSP.exe+173A739",
-        dynamic5 = "ACRSP.exe+173A739",
-        dynamic6 = "\"ACRSP.exe\"+173A6DA:"
-    }
-}
-
-local addrE = config_enable[version]
-if not addrE then error("Could not determine addresses for the current game version (" .. tostring(version) .. ")") end
-
-local enableScript = string.format([==[
-alloc(disable_drop_to_hang,2048)
-label(returnhere)
-label(originalcode)
-label(exit)
-
-globalalloc(buttonY,1)
-globalalloc(buttonLS,1)
-globalalloc(buttonLB,1)
-globalalloc(forced_hang_enable,1)
-
-disable_drop_to_hang:
-cmp byte ptr [buttonY],01
-je %s
-cmp byte ptr [buttonLS],01
-je %s
-cmp byte ptr [buttonLB],01
-je %s
-cmp byte ptr [forced_hang_enable],01
-je %s
-
-originalcode:
-test al,al
-je %s
-mov eax,[ebx+08]
-
-exit:
-jmp returnhere
-
-%s
-jmp disable_drop_to_hang
-returnhere:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6)
-
-local success, info = autoAssemble(enableScript)
-if not success then
-    error("Assembly failed: " .. tostring(info))
-end
-
--- Save disable info for use in the disable section
-disableInfo = { info = info } -- Store assembly info (registers, allocations)
-{$asm}
-
-[DISABLE]
-{$lua}
-if syntaxcheck then return end
-
-local config_disable = {
-    [1] = {
-        dynamic1 = "\"ACRSP.exe\"+1706CCA:",
-        dynamic2 = "ACRSP.exe+1706D29"
-    },
-    [2] = {
-        dynamic1 = "\"ACRSP.exe\"+173A6DA:",
-        dynamic2 = "ACRSP.exe+173A739"
-    }
-}
-
-local addrD = config_disable[version]
-if not addrD then error("Could not determine disable addresses for the current game version (" .. tostring(version) .. ")") end
-
-local disableScript = string.format([==[
-dealloc(disable_drop_to_hang)
-%s
-db 74 5D 8B 43 08
-//je %s
-//mov eax,[ebx+08]
-]==], addrD.dynamic1, addrD.dynamic2)
-
-
-if disableInfo and disableInfo.info then
-    autoAssemble(disableScript, disableInfo.info)
-else
-    autoAssemble(disableScript) -- Might do nothing if script is empty, that's okay
-end
-disableInfo = nil
-{$asm}
-</AssemblerScript>
-                            </CheatEntry>
-                          </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>206</ID>
+                          <ID>302</ID>
                           <Description>"Vault"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -4716,7 +4496,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>207</ID>
+                          <ID>303</ID>
                           <Description>"Forced Freeform"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -4879,7 +4659,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>208</ID>
+                          <ID>304</ID>
                           <Description>"Parkour Down / Far"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -5144,7 +4924,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>209</ID>
+                          <ID>305</ID>
                           <Description>"Forced Hang / Dive Beam / Forced Step"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -5574,7 +5354,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>210</ID>
+                          <ID>306</ID>
                           <Description>"Drop to Fall"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -5943,7 +5723,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>211</ID>
+                          <ID>307</ID>
                           <Description>"Ledge Drop"</Description>
                           <Options moHideChildren="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -6115,7 +5895,7 @@ disableInfo = nil
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>212</ID>
+                              <ID>308</ID>
                               <Description>"Activation Choice"</Description>
                               <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">0: Activate with Parkour Down or Freeform
 1: Always On
@@ -6127,7 +5907,7 @@ disableInfo = nil
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>213</ID>
+                          <ID>309</ID>
                           <Description>"Beam Drop"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -6358,7 +6138,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>214</ID>
+                          <ID>310</ID>
                           <Description>"Fix Lamp Swing Animation"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -6503,7 +6283,7 @@ disableInfo = nil
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>215</ID>
+                              <ID>311</ID>
                               <Description>"Lamp Swing Drop"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -6646,7 +6426,7 @@ disableInfo = nil
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>216</ID>
+                          <ID>312</ID>
                           <Description>"Disable Stumble"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -6730,7 +6510,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>217</ID>
+                          <ID>313</ID>
                           <Description>"Disable Snap on NSO Landing"</Description>
                           <Options moHideChildren="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -6885,7 +6665,7 @@ disableInfo = nil
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>218</ID>
+                              <ID>314</ID>
                               <Description>"Activation Choice"</Description>
                               <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">0: Dynamically Snap
 1: Always Disable Snap
@@ -6897,7 +6677,7 @@ disableInfo = nil
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>219</ID>
+                          <ID>315</ID>
                           <Description>"Disable Eject Angle Restriction"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -7312,7 +7092,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>220</ID>
+                          <ID>316</ID>
                           <Description>"Disable Water Dive"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -7402,7 +7182,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>221</ID>
+                          <ID>317</ID>
                           <Description>"Forced / Disable Ledge Grab"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -7595,7 +7375,7 @@ disableInfo = nil
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>222</ID>
+                              <ID>318</ID>
                               <Description>"Disable Wall Rebound"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -7702,7 +7482,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>223</ID>
+                              <ID>319</ID>
                               <Description>"Disable Staggered Ledge Grab"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -7804,7 +7584,7 @@ disableInfo = nil
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>224</ID>
+                          <ID>320</ID>
                           <Description>"Fix Eject Animation"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -8012,7 +7792,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>225</ID>
+                          <ID>321</ID>
                           <Description>"Horse Flip"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -8141,7 +7921,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>226</ID>
+                          <ID>322</ID>
                           <Description>"Hang to Hang"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -8435,7 +8215,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>227</ID>
+                          <ID>323</ID>
                           <Description>"Quick Eject / Pull Up"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -8706,7 +8486,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>228</ID>
+                          <ID>324</ID>
                           <Description>"Swing Off Beam / Pull up Pole"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -9093,7 +8873,7 @@ disableInfo = nil
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>229</ID>
+                              <ID>325</ID>
                               <Description>"Swing Off Instantly"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -9376,7 +9156,7 @@ disableInfo = nil
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>230</ID>
+                          <ID>326</ID>
                           <Description>"Swan Dive"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -9624,7 +9404,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>231</ID>
+                          <ID>327</ID>
                           <Description>"Forced Hook Climb"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -10038,7 +9818,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>232</ID>
+                          <ID>328</ID>
                           <Description>"Ground Landings"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -10260,7 +10040,7 @@ disableInfo = nil
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>233</ID>
+                              <ID>329</ID>
                               <Description>"Remove Hard Landing / Roll Screen Shake"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -10344,7 +10124,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>234</ID>
+                              <ID>330</ID>
                               <Description>"Smooth Vault Ground Landing"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -10449,7 +10229,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>235</ID>
+                              <ID>331</ID>
                               <Description>"Forced Ground Roll"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -10575,20 +10355,20 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>236</ID>
+                              <ID>332</ID>
                               <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                               <Options moDeactivateChildrenAsWell="1" />
                               <GroupHeader>1</GroupHeader>
                               <CheatEntries>
                                 <CheatEntry>
-                                  <ID>237</ID>
+                                  <ID>333</ID>
                                   <Description>"Values"</Description>
                                   <Options moHideChildren="1" />
                                   <Color>808080</Color>
                                   <GroupHeader>1</GroupHeader>
                                   <CheatEntries>
                                     <CheatEntry>
-                                      <ID>238</ID>
+                                      <ID>334</ID>
                                       <Description>"Drop Height"</Description>
                                       <ShowAsSigned>0</ShowAsSigned>
                                       <Color>808080</Color>
@@ -10596,7 +10376,7 @@ disableInfo = nil
                                       <Address>drop_height</Address>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>239</ID>
+                                      <ID>335</ID>
                                       <Description>"Soft Land Height Threshold"</Description>
                                       <ShowAsSigned>0</ShowAsSigned>
                                       <Color>808080</Color>
@@ -10610,7 +10390,7 @@ disableInfo = nil
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>240</ID>
+                          <ID>336</ID>
                           <Description>"Kiosk Moves"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -10868,7 +10648,7 @@ disableInfo = nil
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>241</ID>
+                              <ID>337</ID>
                               <Description>"Forced Kiosk"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -11028,7 +10808,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>242</ID>
+                              <ID>338</ID>
                               <Description>"Kiosk Cancel"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -11161,7 +10941,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>243</ID>
+                              <ID>339</ID>
                               <Description>"Smooth Prescriptive Kiosk Moves"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -11253,7 +11033,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>244</ID>
+                              <ID>340</ID>
                               <Description>"Kiosk Distance Modifier"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -11437,20 +11217,20 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>245</ID>
+                              <ID>341</ID>
                               <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                               <Options moDeactivateChildrenAsWell="1" />
                               <GroupHeader>1</GroupHeader>
                               <CheatEntries>
                                 <CheatEntry>
-                                  <ID>246</ID>
+                                  <ID>342</ID>
                                   <Description>"Values"</Description>
                                   <Options moHideChildren="1" />
                                   <Color>808080</Color>
                                   <GroupHeader>1</GroupHeader>
                                   <CheatEntries>
                                     <CheatEntry>
-                                      <ID>247</ID>
+                                      <ID>343</ID>
                                       <Description>"Kiosk Start Speed"</Description>
                                       <ShowAsSigned>0</ShowAsSigned>
                                       <Color>808080</Color>
@@ -11458,7 +11238,7 @@ disableInfo = nil
                                       <Address>kiosk_speed</Address>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>248</ID>
+                                      <ID>344</ID>
                                       <Description>"Short Kiosk Roll Value"</Description>
                                       <ShowAsSigned>0</ShowAsSigned>
                                       <Color>808080</Color>
@@ -11466,7 +11246,7 @@ disableInfo = nil
                                       <Address>short_kiosk_roll_value</Address>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>249</ID>
+                                      <ID>345</ID>
                                       <Description>"Far Kiosk Roll Value"</Description>
                                       <ShowAsSigned>0</ShowAsSigned>
                                       <Color>808080</Color>
@@ -11474,7 +11254,7 @@ disableInfo = nil
                                       <Address>far_kiosk_roll_value</Address>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>250</ID>
+                                      <ID>346</ID>
                                       <Description>"Dismount Kiosk Roll Value"</Description>
                                       <ShowAsSigned>0</ShowAsSigned>
                                       <Color>808080</Color>
@@ -11488,7 +11268,7 @@ disableInfo = nil
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>251</ID>
+                          <ID>347</ID>
                           <Description>"Enhanced Direction"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -11711,7 +11491,7 @@ disableInfo = nil
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>252</ID>
+                              <ID>348</ID>
                               <Description>"Swing"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -11946,7 +11726,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>253</ID>
+                              <ID>349</ID>
                               <Description>"Ground Roll"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -12071,7 +11851,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>254</ID>
+                              <ID>350</ID>
                               <Description>"Kiosk Roll"</Description>
                               <Options moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -12209,7 +11989,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>255</ID>
+                              <ID>351</ID>
                               <Description>"Lamp Hookblade"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -12317,7 +12097,7 @@ disableInfo = nil
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>256</ID>
+                          <ID>352</ID>
                           <Description>"Coords Modifier"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -12753,7 +12533,7 @@ disableInfo = nil
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>257</ID>
+                              <ID>353</ID>
                               <Description>"Target Modifier"</Description>
                               <Options moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -13879,7 +13659,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>258</ID>
+                              <ID>354</ID>
                               <Description>"Swing / Vault / Eject Modifier"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -14038,7 +13818,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>259</ID>
+                              <ID>355</ID>
                               <Description>"NSO Idle"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -14282,7 +14062,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>260</ID>
+                              <ID>356</ID>
                               <Description>"NSO Run"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -14472,123 +14252,123 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>261</ID>
+                              <ID>357</ID>
                               <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                               <Options moDeactivateChildrenAsWell="1" />
                               <GroupHeader>1</GroupHeader>
                               <CheatEntries>
                                 <CheatEntry>
-                                  <ID>262</ID>
+                                  <ID>358</ID>
                                   <Description>"Values"</Description>
                                   <Options moHideChildren="1" />
                                   <Color>808080</Color>
                                   <GroupHeader>1</GroupHeader>
                                   <CheatEntries>
                                     <CheatEntry>
-                                      <ID>263</ID>
+                                      <ID>359</ID>
                                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                                       <GroupHeader>1</GroupHeader>
                                       <CheatEntries>
                                         <CheatEntry>
-                                          <ID>264</ID>
+                                          <ID>360</ID>
                                           <Description>"Vault Landing Far Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_landing_far_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>400</ID>
+                                          <ID>700</ID>
                                           <Description>"Vault Landing Far Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_landing_far_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>401</ID>
+                                          <ID>701</ID>
                                           <Description>"Vault Landing Low Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_landing_low_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>402</ID>
+                                          <ID>702</ID>
                                           <Description>"Vault Landing Low Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_landing_low_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>403</ID>
+                                          <ID>703</ID>
                                           <Description>"Vault Freeform Target Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_target_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>404</ID>
+                                          <ID>704</ID>
                                           <Description>"Vault Freeform Target Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_target_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>405</ID>
+                                          <ID>705</ID>
                                           <Description>"Dive Beam Far Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>dive_beam_far_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>406</ID>
+                                          <ID>706</ID>
                                           <Description>"Dive Beam Far Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>dive_beam_far_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>407</ID>
+                                          <ID>707</ID>
                                           <Description>"Parkour Down Low Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>parkour_down_low_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>408</ID>
+                                          <ID>708</ID>
                                           <Description>"Forced Hang Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>forced_hang_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>409</ID>
+                                          <ID>709</ID>
                                           <Description>"Forced Hang Bonus Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>forced_hang_bonus_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>410</ID>
+                                          <ID>710</ID>
                                           <Description>"Swing Up Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>swing_up_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>411</ID>
+                                          <ID>711</ID>
                                           <Description>"Swing Up Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>swing_up_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>412</ID>
+                                          <ID>712</ID>
                                           <Description>"Self Swing Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>self_swing_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>413</ID>
+                                          <ID>713</ID>
                                           <Description>"Self Swing Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
@@ -14597,47 +14377,47 @@ disableInfo = nil
                                       </CheatEntries>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>414</ID>
+                                      <ID>714</ID>
                                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                                       <GroupHeader>1</GroupHeader>
                                       <CheatEntries>
                                         <CheatEntry>
-                                          <ID>415</ID>
+                                          <ID>715</ID>
                                           <Description>"NSO Jump Short Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>nso_jump_short_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>416</ID>
+                                          <ID>716</ID>
                                           <Description>"NSO Jump Far Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>nso_jump_far_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>417</ID>
+                                          <ID>717</ID>
                                           <Description>"NSO Jump Dismount Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>nso_jump_dismount_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>418</ID>
+                                          <ID>718</ID>
                                           <Description>"NSO Jump Short Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>nso_jump_short_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>419</ID>
+                                          <ID>719</ID>
                                           <Description>"NSO Jump Far Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>nso_jump_far_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>420</ID>
+                                          <ID>720</ID>
                                           <Description>"NSO Jump Dismount Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
@@ -14646,47 +14426,47 @@ disableInfo = nil
                                       </CheatEntries>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>421</ID>
+                                      <ID>721</ID>
                                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                                       <GroupHeader>1</GroupHeader>
                                       <CheatEntries>
                                         <CheatEntry>
-                                          <ID>422</ID>
+                                          <ID>722</ID>
                                           <Description>"Ground Jump Short Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>ground_jump_short_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>423</ID>
+                                          <ID>723</ID>
                                           <Description>"Ground Jump Far Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>ground_jump_far_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>424</ID>
+                                          <ID>724</ID>
                                           <Description>"Ground Jump Dismount Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>ground_jump_dismount_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>425</ID>
+                                          <ID>725</ID>
                                           <Description>"Ground Jump Short Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>ground_jump_short_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>426</ID>
+                                          <ID>726</ID>
                                           <Description>"Ground Jump Far Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>ground_jump_far_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>427</ID>
+                                          <ID>727</ID>
                                           <Description>"Ground Jump Dismount Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
@@ -14695,47 +14475,47 @@ disableInfo = nil
                                       </CheatEntries>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>428</ID>
+                                      <ID>728</ID>
                                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                                       <GroupHeader>1</GroupHeader>
                                       <CheatEntries>
                                         <CheatEntry>
-                                          <ID>429</ID>
+                                          <ID>729</ID>
                                           <Description>"Swing Short Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>swing_short_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>430</ID>
+                                          <ID>730</ID>
                                           <Description>"Swing Short Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>swing_short_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>431</ID>
+                                          <ID>731</ID>
                                           <Description>"Swing Far Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>swing_far_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>432</ID>
+                                          <ID>732</ID>
                                           <Description>"Swing Far Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>swing_far_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>433</ID>
+                                          <ID>733</ID>
                                           <Description>"Swing Dismount Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>swing_dismount_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>434</ID>
+                                          <ID>734</ID>
                                           <Description>"Swing Dismount Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
@@ -14744,47 +14524,47 @@ disableInfo = nil
                                       </CheatEntries>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>435</ID>
+                                      <ID>735</ID>
                                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                                       <GroupHeader>1</GroupHeader>
                                       <CheatEntries>
                                         <CheatEntry>
-                                          <ID>436</ID>
+                                          <ID>736</ID>
                                           <Description>"Hang Short Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>hang_short_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>437</ID>
+                                          <ID>737</ID>
                                           <Description>"Hang Short Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>hang_short_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>438</ID>
+                                          <ID>738</ID>
                                           <Description>"Hang Far Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>hang_far_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>439</ID>
+                                          <ID>739</ID>
                                           <Description>"Hang Far Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>hang_far_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>440</ID>
+                                          <ID>740</ID>
                                           <Description>"Hang Dismount Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>hang_dismount_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>441</ID>
+                                          <ID>741</ID>
                                           <Description>"Hang Dismount Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
@@ -14793,47 +14573,47 @@ disableInfo = nil
                                       </CheatEntries>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>442</ID>
+                                      <ID>742</ID>
                                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                                       <GroupHeader>1</GroupHeader>
                                       <CheatEntries>
                                         <CheatEntry>
-                                          <ID>443</ID>
+                                          <ID>743</ID>
                                           <Description>"Ledge Drop Short Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>ledge_drop_short_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>444</ID>
+                                          <ID>744</ID>
                                           <Description>"Ledge Drop Short Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>ledge_drop_short_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>445</ID>
+                                          <ID>745</ID>
                                           <Description>"Ledge Drop Far Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>ledge_drop_far_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>446</ID>
+                                          <ID>746</ID>
                                           <Description>"Ledge Drop Far Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>ledge_drop_far_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>447</ID>
+                                          <ID>747</ID>
                                           <Description>"Ledge Drop Dismount Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>ledge_drop_dismount_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>448</ID>
+                                          <ID>748</ID>
                                           <Description>"Ledge Drop Dismount Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
@@ -14842,61 +14622,61 @@ disableInfo = nil
                                       </CheatEntries>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>449</ID>
+                                      <ID>749</ID>
                                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                                       <GroupHeader>1</GroupHeader>
                                       <CheatEntries>
                                         <CheatEntry>
-                                          <ID>450</ID>
+                                          <ID>750</ID>
                                           <Description>"Parkour Down Freeform Jump Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>parkour_down_freeform_jump_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>451</ID>
+                                          <ID>751</ID>
                                           <Description>"Parkour Down Freeform Jump Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>parkour_down_freeform_jump_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>452</ID>
+                                          <ID>752</ID>
                                           <Description>"Parkour Down Freeform Swing Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>parkour_down_freeform_swing_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>453</ID>
+                                          <ID>753</ID>
                                           <Description>"Parkour Down Freeform Swing Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>parkour_down_freeform_swing_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>454</ID>
+                                          <ID>754</ID>
                                           <Description>"Parkour Down Low Freeform Jump Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>parkour_down_low_freeform_jump_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>455</ID>
+                                          <ID>755</ID>
                                           <Description>"Parkour Down Low Freeform Jump Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>parkour_down_low_freeform_jump_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>456</ID>
+                                          <ID>756</ID>
                                           <Description>"Parkour Down Low Freeform Swing Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>parkour_down_low_freeform_swing_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>457</ID>
+                                          <ID>757</ID>
                                           <Description>"Parkour Down Low Freeform Swing Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
@@ -14905,47 +14685,47 @@ disableInfo = nil
                                       </CheatEntries>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>458</ID>
+                                      <ID>758</ID>
                                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                                       <GroupHeader>1</GroupHeader>
                                       <CheatEntries>
                                         <CheatEntry>
-                                          <ID>459</ID>
+                                          <ID>759</ID>
                                           <Description>"Lamp Hook Freeform Short Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>lamp_hook_freeform_short_height</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>460</ID>
+                                          <ID>760</ID>
                                           <Description>"Lamp Hook Freeform Short Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>lamp_hook_freeform_short_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>461</ID>
+                                          <ID>761</ID>
                                           <Description>"Lamp Hook Freeform Far Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>lamp_hook_freeform_far_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>462</ID>
+                                          <ID>762</ID>
                                           <Description>"Lamp Hook Freeform Far Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>lamp_hook_freeform_far_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>463</ID>
+                                          <ID>763</ID>
                                           <Description>"Lamp Hook Freeform Dismount Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>lamp_hook_freeform_dismount_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>464</ID>
+                                          <ID>764</ID>
                                           <Description>"Lamp Hook Freeform Dismount Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
@@ -14954,75 +14734,75 @@ disableInfo = nil
                                       </CheatEntries>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>465</ID>
+                                      <ID>765</ID>
                                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                                       <GroupHeader>1</GroupHeader>
                                       <CheatEntries>
                                         <CheatEntry>
-                                          <ID>466</ID>
+                                          <ID>766</ID>
                                           <Description>"Vault Freeform Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_freeform_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>467</ID>
+                                          <ID>767</ID>
                                           <Description>"Vault Freeform Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_freeform_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>468</ID>
+                                          <ID>768</ID>
                                           <Description>"Vault Freeform Short Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_freeform_short_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>469</ID>
+                                          <ID>769</ID>
                                           <Description>"Vault Freeform Short Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_freeform_short_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>470</ID>
+                                          <ID>770</ID>
                                           <Description>"Vault Freeform Far Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_freeform_far_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>471</ID>
+                                          <ID>771</ID>
                                           <Description>"Vault Freeform Far Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_freeform_far_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>472</ID>
+                                          <ID>772</ID>
                                           <Description>"Vault Freeform Dismount Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_freeform_dismount_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>473</ID>
+                                          <ID>773</ID>
                                           <Description>"Vault Freeform Dismount Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_freeform_dismount_distance</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>474</ID>
+                                          <ID>774</ID>
                                           <Description>"Vault Inner Ledge Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vault_inner_ledge_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>475</ID>
+                                          <ID>775</ID>
                                           <Description>"Vault Inner Ledge Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
@@ -15031,19 +14811,19 @@ disableInfo = nil
                                       </CheatEntries>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>476</ID>
+                                      <ID>776</ID>
                                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                                       <GroupHeader>1</GroupHeader>
                                       <CheatEntries>
                                         <CheatEntry>
-                                          <ID>477</ID>
+                                          <ID>777</ID>
                                           <Description>"Near Miss Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>near_miss_height+8</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>478</ID>
+                                          <ID>778</ID>
                                           <Description>"Near Miss Distance"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
@@ -15052,40 +14832,40 @@ disableInfo = nil
                                       </CheatEntries>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>479</ID>
+                                      <ID>779</ID>
                                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                                       <GroupHeader>1</GroupHeader>
                                       <CheatEntries>
                                         <CheatEntry>
-                                          <ID>480</ID>
+                                          <ID>780</ID>
                                           <Description>"Freeform Jump"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Byte</VariableType>
                                           <Address>freeform_jump_f</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>481</ID>
+                                          <ID>781</ID>
                                           <Description>"Dot Product"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>dot_product</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>482</ID>
+                                          <ID>782</ID>
                                           <Description>"Dot Threshold"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>dot_threshold</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>483</ID>
+                                          <ID>783</ID>
                                           <Description>"Input Unit Vector X"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>input_vector_coords</Address>
                                           <CheatEntries>
                                             <CheatEntry>
-                                              <ID>484</ID>
+                                              <ID>784</ID>
                                               <Description>"Input Unit Vector Y"</Description>
                                               <ShowAsSigned>0</ShowAsSigned>
                                               <VariableType>Float</VariableType>
@@ -15094,14 +14874,14 @@ disableInfo = nil
                                           </CheatEntries>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>485</ID>
+                                          <ID>785</ID>
                                           <Description>"Unit Vector X"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vector_coords</Address>
                                           <CheatEntries>
                                             <CheatEntry>
-                                              <ID>486</ID>
+                                              <ID>786</ID>
                                               <Description>"Unit Vector Y"</Description>
                                               <ShowAsSigned>0</ShowAsSigned>
                                               <VariableType>Float</VariableType>
@@ -15110,42 +14890,42 @@ disableInfo = nil
                                           </CheatEntries>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>487</ID>
+                                          <ID>787</ID>
                                           <Description>"Distance Between Jump"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>distance_between_jump</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>488</ID>
+                                          <ID>788</ID>
                                           <Description>"Vertical Difference"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>vert_diff</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>489</ID>
+                                          <ID>789</ID>
                                           <Description>"Horizontal Difference"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>hori_diff</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>490</ID>
+                                          <ID>790</ID>
                                           <Description>"Target Coords X"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>target_coords</Address>
                                           <CheatEntries>
                                             <CheatEntry>
-                                              <ID>491</ID>
+                                              <ID>791</ID>
                                               <Description>"Target Coords Y"</Description>
                                               <ShowAsSigned>0</ShowAsSigned>
                                               <VariableType>Float</VariableType>
                                               <Address>+4</Address>
                                             </CheatEntry>
                                             <CheatEntry>
-                                              <ID>492</ID>
+                                              <ID>792</ID>
                                               <Description>"Target Coords Z"</Description>
                                               <ShowAsSigned>0</ShowAsSigned>
                                               <VariableType>Float</VariableType>
@@ -15154,21 +14934,21 @@ disableInfo = nil
                                           </CheatEntries>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>493</ID>
+                                          <ID>793</ID>
                                           <Description>"Start Coords X"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>start_coords</Address>
                                           <CheatEntries>
                                             <CheatEntry>
-                                              <ID>494</ID>
+                                              <ID>794</ID>
                                               <Description>"Start Coords Y"</Description>
                                               <ShowAsSigned>0</ShowAsSigned>
                                               <VariableType>Float</VariableType>
                                               <Address>+4</Address>
                                             </CheatEntry>
                                             <CheatEntry>
-                                              <ID>495</ID>
+                                              <ID>795</ID>
                                               <Description>"Start Coords Z"</Description>
                                               <ShowAsSigned>0</ShowAsSigned>
                                               <VariableType>Float</VariableType>
@@ -15177,21 +14957,21 @@ disableInfo = nil
                                           </CheatEntries>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>496</ID>
+                                          <ID>796</ID>
                                           <Description>"f_main"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>f_main</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>497</ID>
+                                          <ID>797</ID>
                                           <Description>"h_main"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
                                           <Address>h_main</Address>
                                         </CheatEntry>
                                         <CheatEntry>
-                                          <ID>498</ID>
+                                          <ID>798</ID>
                                           <Description>"k_coef_out"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
