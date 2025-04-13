@@ -11444,8 +11444,7 @@ dealloc(nso_run_coords_3)
       </CheatEntries>
     </CheatEntry>
   </CheatEntries>
-  <LuaScript>
--- Process name
+  <LuaScript>-- Process name
 local process_name = "ACRSP.exe"
 
 -- IDs or descriptions of the mod entries
@@ -11520,12 +11519,12 @@ end
 --================================================================================
 -- This function reads specific memory addresses to determine the version.
 function autodetectVersion()
-   local value1 = readInteger("ACRSP.exe+4A6C")
-   if value1 and value1 == 0x021940A4 then
+   local value1 = readInteger("ACRSP.exe+BBC866")
+   if value1 and value1 == 0xFF602516 then
       return 1
    else
-      local value2 = readInteger("ACRSP.exe+4A6C")
-      if value2 and value2 == 0x02994324 then
+      local value2 = readInteger("ACRSP.exe+BF0306")
+      if value2 and value2 == 0xFF5E9006 then
          return 2
       else
          return 1  -- Fallback to version 1 if neither address matches.

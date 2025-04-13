@@ -10779,8 +10779,7 @@ dealloc(nso_run_coords_3)
       </CheatEntries>
     </CheatEntry>
   </CheatEntries>
-  <LuaScript>
--- Process name
+  <LuaScript>-- Process name
 local process_name = "ACBSP.exe"
 
 -- IDs or descriptions of the mod entries
@@ -10855,12 +10854,12 @@ end
 --================================================================================
 -- This function reads specific memory addresses to determine the version.
 function autodetectVersion()
-   local value1 = readInteger("ACBSP.exe+D0AC")
-   if value1 and value1 == 0x02C51D08 then
+   local value1 = readInteger("ACBSP.exe+127A296")
+   if value1 and value1 == 0xFEEA3EF6 then
       return 1
    else
-      local value2 = readInteger("ACBSP.exe+C1BC")
-      if value2 and value2 == 0x02AC2054 then
+      local value2 = readInteger("ACBSP.exe+BE88C6")
+      if value2 and value2 == 0xFF6011A6 then
          return 2
       else
          return 1  -- Fallback to version 1 if neither address matches.
