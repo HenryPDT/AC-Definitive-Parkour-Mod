@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CheatTable CheatEngineTableVersion="45">
+<CheatTable CheatEngineTableVersion="46">
   <CheatEntries>
     <CheatEntry>
       <ID>0</ID>
@@ -3466,18 +3466,14 @@ db 8B 4E 0C 85 C9
                               <AssemblerScript>[ENABLE]
 alloc(disable_npc_interaction,2048)
 label(returnhere)
-label(originalcode)
 label(exit)
 
 disable_npc_interaction:
 
-originalcode:
-jmp ACBSP.exe+3AB3D4
-
 exit:
 jmp returnhere
 
-"ACBSP.exe"+3AB339:
+"ACBSP.exe"+3AB3E3:
 jmp disable_npc_interaction
 nop
 returnhere:
@@ -3487,9 +3483,9 @@ returnhere:
 
 [DISABLE]
 dealloc(disable_npc_interaction)
-"ACBSP.exe"+3AB339:
-db 0F 86 95 00 00 00
-//jbe ACBSP.exe+3AB3D4
+"ACBSP.exe"+3AB3E3:
+db 0F 85 B7 FE FF FF
+//jne ACBSP.exe+3AB2A0
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>

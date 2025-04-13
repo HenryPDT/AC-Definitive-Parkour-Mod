@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CheatTable CheatEngineTableVersion="45">
+<CheatTable CheatEngineTableVersion="46">
   <CheatEntries>
     <CheatEntry>
       <ID>0</ID>
@@ -3287,18 +3287,14 @@ db 8A 40 5C 83 EC 10
                               <AssemblerScript>[ENABLE]
 alloc(disable_npc_interaction,2048)
 label(returnhere)
-label(originalcode)
 label(exit)
 
 disable_npc_interaction:
 
-originalcode:
-jmp AssassinsCreed_Dx10.exe+91A4DC
-
 exit:
 jmp returnhere
 
-"AssassinsCreed_Dx10.exe"+91A3B6:
+"AssassinsCreed_Dx10.exe"+91A4E7:
 jmp disable_npc_interaction
 nop
 returnhere:
@@ -3308,9 +3304,9 @@ returnhere:
 
 [DISABLE]
 dealloc(disable_npc_interaction)
-"AssassinsCreed_Dx10.exe"+91A3B6:
-db 0F 86 20 01 00 00
-//jbe AssassinsCreed_Dx10.exe+91A4DC
+"AssassinsCreed_Dx10.exe"+91A4E7:
+db 0F 85 88 FD FF FF
+//jne AssassinsCreed_Dx10.exe+91A275
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>

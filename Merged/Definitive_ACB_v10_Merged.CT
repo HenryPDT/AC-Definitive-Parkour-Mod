@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<CheatTable CheatEngineTableVersion="45">
+<CheatTable CheatEngineTableVersion="46">
   <CheatEntries>
     <CheatEntry>
       <ID>0</ID>
@@ -3704,12 +3704,10 @@ if syntaxcheck then return end
 
 local config_enable = {
     [1] = {
-        dynamic1 = "ACBSP.exe+3B5984",
-        dynamic2 = "\"ACBSP.exe\"+3B58E9:"
+        dynamic1 = "\"ACBSP.exe\"+3B5993:"
     },
     [2] = {
-        dynamic1 = "ACBSP.exe+3AB3D4",
-        dynamic2 = "\"ACBSP.exe\"+3AB339:"
+        dynamic1 = "\"ACBSP.exe\"+3AB3E3:"
     }
 }
 
@@ -3719,13 +3717,9 @@ if not addrE then error("Could not determine addresses for the current game vers
 local enableScript = string.format([==[
 alloc(disable_npc_interaction,2048)
 label(returnhere)
-label(originalcode)
 label(exit)
 
 disable_npc_interaction:
-
-originalcode:
-jmp %s
 
 exit:
 jmp returnhere
@@ -3734,7 +3728,7 @@ jmp returnhere
 jmp disable_npc_interaction
 nop
 returnhere:
-]==], addrE.dynamic1, addrE.dynamic2)
+]==], addrE.dynamic1)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -3751,12 +3745,12 @@ if syntaxcheck then return end
 
 local config_disable = {
     [1] = {
-        dynamic1 = "\"ACBSP.exe\"+3B58E9:",
-        dynamic2 = "ACBSP.exe+3B5984"
+        dynamic1 = "\"ACBSP.exe\"+3B5993:",
+        dynamic2 = "ACBSP.exe+3B5850"
     },
     [2] = {
-        dynamic1 = "\"ACBSP.exe\"+3AB339:",
-        dynamic2 = "ACBSP.exe+3AB3D4"
+        dynamic1 = "\"ACBSP.exe\"+3AB3E3:",
+        dynamic2 = "ACBSP.exe+3AB2A0"
     }
 }
 
@@ -3766,8 +3760,8 @@ if not addrD then error("Could not determine disable addresses for the current g
 local disableScript = string.format([==[
 dealloc(disable_npc_interaction)
 %s
-db 0F 86 95 00 00 00
-//jbe %s
+db 0F 85 B7 FE FF FF
+//jne %s
 ]==], addrD.dynamic1, addrD.dynamic2)
 
 

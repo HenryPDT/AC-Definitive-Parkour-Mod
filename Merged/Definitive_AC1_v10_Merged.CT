@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<CheatTable CheatEngineTableVersion="45">
+<CheatTable CheatEngineTableVersion="46">
   <CheatEntries>
     <CheatEntry>
       <ID>0</ID>
@@ -3509,12 +3509,10 @@ if syntaxcheck then return end
 
 local config_enable = {
     [1] = {
-        dynamic1 = "AssassinsCreed_Dx10.exe+91A4DC",
-        dynamic2 = "\"AssassinsCreed_Dx10.exe\"+91A3B6:"
+        dynamic1 = "\"AssassinsCreed_Dx10.exe\"+91A4E7:"
     },
     [2] = {
-        dynamic1 = "AssassinsCreed_Dx9.exe+7437EC",
-        dynamic2 = "\"AssassinsCreed_Dx9.exe\"+7436C6:"
+        dynamic1 = "\"AssassinsCreed_Dx9.exe\"+7437F7:"
     }
 }
 
@@ -3524,13 +3522,9 @@ if not addrE then error("Could not determine addresses for the current game vers
 local enableScript = string.format([==[
 alloc(disable_npc_interaction,2048)
 label(returnhere)
-label(originalcode)
 label(exit)
 
 disable_npc_interaction:
-
-originalcode:
-jmp %s
 
 exit:
 jmp returnhere
@@ -3539,7 +3533,7 @@ jmp returnhere
 jmp disable_npc_interaction
 nop
 returnhere:
-]==], addrE.dynamic1, addrE.dynamic2)
+]==], addrE.dynamic1)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -3556,12 +3550,12 @@ if syntaxcheck then return end
 
 local config_disable = {
     [1] = {
-        dynamic1 = "\"AssassinsCreed_Dx10.exe\"+91A3B6:",
-        dynamic2 = "AssassinsCreed_Dx10.exe+91A4DC"
+        dynamic1 = "\"AssassinsCreed_Dx10.exe\"+91A4E7:",
+        dynamic2 = "AssassinsCreed_Dx10.exe+91A275"
     },
     [2] = {
-        dynamic1 = "\"AssassinsCreed_Dx9.exe\"+7436C6:",
-        dynamic2 = "AssassinsCreed_Dx9.exe+7437EC"
+        dynamic1 = "\"AssassinsCreed_Dx9.exe\"+7437F7:",
+        dynamic2 = "AssassinsCreed_Dx9.exe+743585"
     }
 }
 
@@ -3571,8 +3565,8 @@ if not addrD then error("Could not determine disable addresses for the current g
 local disableScript = string.format([==[
 dealloc(disable_npc_interaction)
 %s
-db 0F 86 20 01 00 00
-//jbe %s
+db 0F 85 88 FD FF FF
+//jne %s
 ]==], addrD.dynamic1, addrD.dynamic2)
 
 
