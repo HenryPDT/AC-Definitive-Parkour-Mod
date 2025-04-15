@@ -116,6 +116,7 @@ globalalloc(pVelocity,4)
 globalalloc(player_velocity,16)
 globalalloc(horizontal_velocity,4)
 globalalloc(fall_height,4)
+globalalloc(walk_strength,4)
 
 globalalloc(on_hang_f,1)
 globalalloc(on_hang_free_f,1)
@@ -141,6 +142,9 @@ globalalloc(vault_inner_ledge_f,1)
 globalalloc(dismount_hang_free_eject_f,1)
 globalalloc(freeform_jump_f,1)
 globalalloc(swan_dive_f,1)
+
+walk_strength:
+dd (float)1
 
 entity:
 mov edx,eax
@@ -235,6 +239,10 @@ absolute_input:
 movups xmm0,[eax+000001A0]
 movq [absolute_input_cam_f],xmm0
 movups xmm0,[eax+00000190]
+mulss xmm0,[walk_strength]
+shufps xmm0,xmm0,E1
+mulss xmm0,[walk_strength]
+shufps xmm0,xmm0,E1
 movq [absolute_input_f],xmm0
 cmp [absolute_input_f],00000000
 jne exit3
@@ -513,6 +521,7 @@ label(returnhere13)
 label(exit13)
 
 on_air:
+mov [walk_strength],(float)1
 mov [on_air_f],01
 mov ebp,[ebx+04]
 mov [esp+04],ebp
@@ -1251,18 +1260,25 @@ disableInfo = nil
                       <VariableType>Float</VariableType>
                       <Address>fall_height</Address>
                     </CheatEntry>
+                    <CheatEntry>
+                      <ID>61</ID>
+                      <Description>"Ground Walk Strength"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Float</VariableType>
+                      <Address>walk_strength</Address>
+                    </CheatEntry>
                   </CheatEntries>
                 </CheatEntry>
               </CheatEntries>
             </CheatEntry>
             <CheatEntry>
-              <ID>61</ID>
+              <ID>62</ID>
               <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
               <GroupHeader>1</GroupHeader>
               <CheatEntries>
                 <CheatEntry>
-                  <ID>62</ID>
+                  <ID>63</ID>
                   <Description>"Binds"</Description>
                   <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                   <VariableType>Auto Assembler Script</VariableType>
@@ -1310,6 +1326,9 @@ label(near_miss_controller)
 label(swan_dive_controller)
 
 label(vault_kbm)
+label(walk_kbm)
+label(walk_kbm_2)
+label(walk_kbm_reset)
 label(parkour_down_kbm)
 label(forced_hang_kbm)
 label(parkour_far_kbm)
@@ -1526,6 +1545,17 @@ globalalloc(forced_hang_alt_enable,1)
 
 globalalloc(on_hang_free_f,1)
 
+globalalloc(walk_mode_index,1)
+globalalloc(walk_prev,1)
+globalalloc(walk_strength_table,16)
+globalalloc(walk_strength,4)
+
+walk_strength_table:
+dd (float)1.0 (float)0.8 (float)0.6 (float)0.4
+
+walk_strength:
+dd (float)1
+
 binds:
 mov [parkour_mode_hold],00
 mov [vault_enable],00
@@ -1654,8 +1684,28 @@ mov [swan_dive_enable],01
 // KBM Activation Code
 parkour_mode_kbm:
 cmp byte ptr [keyG],00
-je vault_kbm
+je walk_kbm
 mov [parkour_mode_hold],01
+
+walk_kbm:
+cmp byte ptr [keyLeftAlt],00
+je walk_kbm_reset
+cmp byte ptr [walk_prev],00
+jne vault_kbm
+mov [walk_prev],01
+inc byte ptr [walk_mode_index]
+cmp byte ptr [walk_mode_index],4
+jb walk_kbm_2
+mov [walk_mode_index],0
+
+walk_kbm_2:
+movzx eax, byte [walk_mode_index]
+mov eax,[walk_strength_table+eax*4]
+mov [walk_strength],eax
+jmp vault_kbm
+
+walk_kbm_reset:
+mov byte ptr [walk_prev],00
 
 vault_kbm:
 cmp byte ptr [keyCapsLock],00
