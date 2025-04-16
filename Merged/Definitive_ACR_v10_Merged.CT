@@ -12224,10 +12224,133 @@ disableInfo = nil
 {$asm}
 </AssemblerScript>
                             </CheatEntry>
+                            <CheatEntry>
+                              <ID>350</ID>
+                              <Description>"Zip Line"</Description>
+                              <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
+                              <VariableType>Auto Assembler Script</VariableType>
+                              <AssemblerScript>[ENABLE]
+{$lua}
+if syntaxcheck then return end
+
+local config_enable = {
+    [1] = {
+        dynamic1 = "\"ACRSP.exe\"+171A255:"
+    },
+    [2] = {
+        dynamic1 = "\"ACRSP.exe\"+174DC55:"
+    }
+}
+
+local addrE = config_enable[version]
+if not addrE then error("Could not determine addresses for the current game version (" .. tostring(version) .. ")") end
+
+local enableScript = string.format([==[
+alloc(enhanced_zip_line,2048)
+label(returnhere)
+label(originalcode)
+label(clamp_code)
+label(exit)
+
+globalalloc(diag_swing_f,1)
+globalalloc(clamp_f,1)
+globalalloc(direction_input_f,16)
+globalalloc(relative_input_f,4)
+globalalloc(angle_radians,4)
+alloc(angle_restriction_back,4)
+alloc(angle_restriction_side,4)
+
+angle_restriction_back:
+dd (float)2.5
+
+angle_restriction_side:
+dd (float)0.53
+
+enhanced_zip_line:
+mov [diag_swing_f],00
+mov [clamp_f],00
+cmp [direction_input_f],00000000
+je originalcode
+fld dword ptr [relative_input_f]
+fabs
+fld dword ptr [angle_restriction_back]
+fcomip st(0),st(1)
+fstp st(0)
+jb originalcode
+fld dword ptr [relative_input_f]
+fabs
+fld dword ptr [angle_restriction_side]
+fcomip st(0),st(1)
+fstp st(0)
+ja clamp_code
+mov [clamp_f],01
+mov eax,[angle_restriction_side]
+mov [angle_radians],eax
+
+clamp_code:
+mov [diag_swing_f],01
+
+originalcode:
+mov eax,[esi]
+mov edx,[eax+04]
+
+exit:
+jmp returnhere
+
+%s
+jmp enhanced_zip_line
+returnhere:
+]==], addrE.dynamic1)
+
+local success, info = autoAssemble(enableScript)
+if not success then
+    error("Assembly failed: " .. tostring(info))
+end
+
+-- Save disable info for use in the disable section
+disableInfo = { info = info } -- Store assembly info (registers, allocations)
+{$asm}
+
+[DISABLE]
+{$lua}
+if syntaxcheck then return end
+
+local config_disable = {
+    [1] = {
+        dynamic1 = "\"ACRSP.exe\"+171A255:"
+    },
+    [2] = {
+        dynamic1 = "\"ACRSP.exe\"+174DC55:"
+    }
+}
+
+local addrD = config_disable[version]
+if not addrD then error("Could not determine disable addresses for the current game version (" .. tostring(version) .. ")") end
+
+local disableScript = string.format([==[
+dealloc(enhanced_zip_line)
+dealloc(angle_restriction_back)
+dealloc(angle_restriction_side)
+%s
+db 8B 06 8B 50 04
+//mov eax,[esi]
+//mov edx,[eax+04]
+]==], addrD.dynamic1)
+
+
+if disableInfo and disableInfo.info then
+    autoAssemble(disableScript, disableInfo.info)
+else
+    autoAssemble(disableScript) -- Might do nothing if script is empty, that's okay
+end
+disableInfo = nil
+{$asm}
+</AssemblerScript>
+                            </CheatEntry>
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>350</ID>
+                          <ID>351</ID>
                           <Description>"Coords Modifier"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -12663,7 +12786,7 @@ disableInfo = nil
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>351</ID>
+                              <ID>352</ID>
                               <Description>"Target Modifier"</Description>
                               <Options moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -13789,7 +13912,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>352</ID>
+                              <ID>353</ID>
                               <Description>"Swing / Vault / Eject Modifier"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -13948,7 +14071,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>353</ID>
+                              <ID>354</ID>
                               <Description>"NSO Idle"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -14192,7 +14315,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>354</ID>
+                              <ID>355</ID>
                               <Description>"NSO Run"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -14382,25 +14505,25 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>355</ID>
+                              <ID>356</ID>
                               <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                               <Options moDeactivateChildrenAsWell="1" />
                               <GroupHeader>1</GroupHeader>
                               <CheatEntries>
                                 <CheatEntry>
-                                  <ID>356</ID>
+                                  <ID>357</ID>
                                   <Description>"Values"</Description>
                                   <Options moHideChildren="1" />
                                   <Color>808080</Color>
                                   <GroupHeader>1</GroupHeader>
                                   <CheatEntries>
                                     <CheatEntry>
-                                      <ID>357</ID>
+                                      <ID>358</ID>
                                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                                       <GroupHeader>1</GroupHeader>
                                       <CheatEntries>
                                         <CheatEntry>
-                                          <ID>358</ID>
+                                          <ID>359</ID>
                                           <Description>"Vault Landing Far Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
