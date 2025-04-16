@@ -7349,30 +7349,6 @@ nop 2
 returnhere:
 
 
-alloc(forced_hook_climb_2,2048)
-label(returnhere2)
-label(exit2)
-
-forced_hook_climb_2:
-lea ecx,[ebp-00000200]
-cmp byte ptr [forced_hook_climb_leap_enable],01
-je ACRSP.exe+6A27F2
-cmp byte ptr [forced_hook_climb_leap_double_enable],01
-je ACRSP.exe+6A27F2
-cmp byte ptr [forced_hook_climb_leap_hang_enable],01
-je ACRSP.exe+6A27F2
-cmp byte ptr [forced_hook_pull_up_enable],01
-je ACRSP.exe+6A27F2
-
-exit2:
-jmp returnhere2
-
-"ACRSP.exe"+6A27E8:
-jmp forced_hook_climb_2
-nop
-returnhere2:
-
-
 alloc(forced_hook_climb_double,2048)
 label(returnhere3)
 label(originalcode3)
@@ -7537,10 +7513,6 @@ db F3 0F 5A C0 0F 5A C9
 //cvtss2sd xmm0,xmm0
 //cvtps2pd xmm1,xmm1
 
-"ACRSP.exe"+6A27E8:
-db 8D 8D 00 FE FF FF
-//lea ecx,[ebp-00000200]
-
 "ACRSP.exe"+69BF83:
 db 75 14 89 48 08
 //jne ACRSP.exe+69BF99
@@ -7571,7 +7543,6 @@ db 80 BE D1 01 00 00 00
 //cmp byte ptr [esi+000001D1],00
 
 dealloc(forced_hook_climb)
-dealloc(forced_hook_climb_2)
 dealloc(forced_hook_climb_double)
 dealloc(forced_hook_climb_hang)
 dealloc(forced_hook_climb_pull_up)
