@@ -112,6 +112,9 @@ for root, _, files in os.walk(directory):
                 processed_lines.append(line)
 
             # Overwrite the original file with processed content
+            if processed_lines:
+                # Remove the final newline from the last line only
+                processed_lines[-1] = processed_lines[-1].rstrip('\n')
             with open(input_file, 'w') as f:
                 f.writelines(processed_lines)
 
