@@ -1452,6 +1452,7 @@ globalalloc(forced_hang_alt_enable,1)
 globalalloc(horse_flip_enable,1)
 
 globalalloc(on_hang_free_f,1)
+globalalloc(on_vault_f,1)
 
 globalalloc(walk_mode_index,1)
 globalalloc(walk_prev,1)
@@ -1627,15 +1628,15 @@ cmp byte ptr [walk_prev],00
 jne vault_kbm
 mov [walk_prev],01
 inc byte ptr [walk_mode_index]
-mov al,[walk_mode_index]
-cmp al,[walk_mode_cycle]
+mov dl,[walk_mode_index]
+cmp dl,[walk_mode_cycle]
 jb walk_kbm_2
 mov [walk_mode_index],0
 
 walk_kbm_2:
-movzx eax, byte [walk_mode_index]
-mov eax,[walk_strength_table+eax*4]
-mov [walk_strength],eax
+movzx edx, byte [walk_mode_index]
+mov edx,[walk_strength_table+edx*4]
+mov [walk_strength],edx
 jmp vault_kbm
 
 walk_kbm_reset:

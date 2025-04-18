@@ -1605,6 +1605,7 @@ globalalloc(forced_hook_climb_leap_hang_enable,1)
 globalalloc(forced_hook_pull_up_enable,1)
 
 globalalloc(on_hang_free_f,1)
+globalalloc(on_vault_f,1)
 
 globalalloc(walk_mode_index,1)
 globalalloc(walk_prev,1)
