@@ -804,153 +804,160 @@ dealloc(on_water)
                     </CheatEntry>
                     <CheatEntry>
                       <ID>15</ID>
+                      <Description>"Legs Tap"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Byte</VariableType>
+                      <Address>bindLegsTap</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>16</ID>
                       <Description>"Armed Hand"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>bindArmedHand</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>16</ID>
+                      <ID>17</ID>
                       <Description>"Head"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>bindHead</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>17</ID>
+                      <ID>18</ID>
                       <Description>"Empty Hand"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>bindEmptyHand</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>18</ID>
+                      <ID>19</ID>
                       <Description>"Fists"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>bindFists</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>19</ID>
+                      <ID>20</ID>
                       <Description>"Medicine"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>bindMedicine</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>20</ID>
+                      <ID>21</ID>
                       <Description>"Hidden Blade"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>bindHiddenBlade</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>21</ID>
+                      <ID>22</ID>
                       <Description>"Sword"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>bindSword</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>22</ID>
+                      <ID>23</ID>
                       <Description>"Maps"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>bindMaps</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>23</ID>
+                      <ID>24</ID>
                       <Description>"Menu"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>bindMenu</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>24</ID>
+                      <ID>25</ID>
                       <Description>"Target Lock"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>bindTargetLock</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>25</ID>
+                      <ID>26</ID>
                       <Description>"Contextual Cam"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>bindContextualCam</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>26</ID>
+                      <ID>27</ID>
                       <Description>"High Profile"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>bindHighProfile</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>27</ID>
+                      <ID>28</ID>
                       <Description>"Weapon Wheel"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>bindWeaponWheel</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>28</ID>
+                      <ID>29</ID>
                       <Description>"First Person"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>bindFirstPerson</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>29</ID>
+                      <ID>30</ID>
                       <Description>"Center Cam"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>bindCenterCam</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>30</ID>
+                      <ID>31</ID>
                       <Description>"Input Horizontal"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Float</VariableType>
                       <Address>absolute_input_f</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>31</ID>
+                      <ID>32</ID>
                       <Description>"Input Vertical"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Float</VariableType>
                       <Address>absolute_input_f+4</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>32</ID>
+                      <ID>33</ID>
                       <Description>"Cam Input Horizontal"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Float</VariableType>
                       <Address>absolute_input_cam_f</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>33</ID>
+                      <ID>34</ID>
                       <Description>"Cam Input Vertical"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Float</VariableType>
                       <Address>absolute_input_cam_f+4</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>34</ID>
+                      <ID>35</ID>
                       <Description>"Relative Input Direction"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Float</VariableType>
                       <Address>relative_input_f</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>35</ID>
+                      <ID>36</ID>
                       <Description>"X-Axis Input"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Float</VariableType>
                       <Address>direction_input_f</Address>
                       <CheatEntries>
                         <CheatEntry>
-                          <ID>36</ID>
+                          <ID>37</ID>
                           <Description>"Y-Axis Input"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <VariableType>Float</VariableType>
@@ -961,14 +968,14 @@ dealloc(on_water)
                   </CheatEntries>
                 </CheatEntry>
                 <CheatEntry>
-                  <ID>37</ID>
+                  <ID>38</ID>
                   <Description>"Player Values"</Description>
                   <Options moHideChildren="1"/>
                   <Color>808080</Color>
                   <GroupHeader>1</GroupHeader>
                   <CheatEntries>
                     <CheatEntry>
-                      <ID>38</ID>
+                      <ID>39</ID>
                       <Description>"pEntity"</Description>
                       <ShowAsHex>1</ShowAsHex>
                       <ShowAsSigned>0</ShowAsSigned>
@@ -976,7 +983,7 @@ dealloc(on_water)
                       <Address>pEntity</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>39</ID>
+                      <ID>40</ID>
                       <Description>"X-axis Pointer (South Positive)"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Float</VariableType>
@@ -986,7 +993,7 @@ dealloc(on_water)
                       </Offsets>
                       <CheatEntries>
                         <CheatEntry>
-                          <ID>40</ID>
+                          <ID>41</ID>
                           <Description>"Y-Axis (East Positive)"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <Color>C0C0C0</Color>
@@ -994,7 +1001,7 @@ dealloc(on_water)
                           <Address>+4</Address>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>41</ID>
+                          <ID>42</ID>
                           <Description>"Z-Axis (Height)"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <Color>C0C0C0</Color>
@@ -1002,7 +1009,7 @@ dealloc(on_water)
                           <Address>+8</Address>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>42</ID>
+                          <ID>43</ID>
                           <Description>"Face South"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <Color>C0C0C0</Color>
@@ -1010,7 +1017,7 @@ dealloc(on_water)
                           <Address>-20</Address>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>43</ID>
+                          <ID>44</ID>
                           <Description>"Face East"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <Color>C0C0C0</Color>
@@ -1018,7 +1025,7 @@ dealloc(on_water)
                           <Address>-1C</Address>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>44</ID>
+                          <ID>45</ID>
                           <Description>"Face East"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <Color>C0C0C0</Color>
@@ -1026,7 +1033,7 @@ dealloc(on_water)
                           <Address>-30</Address>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>45</ID>
+                          <ID>46</ID>
                           <Description>"Face North"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <Color>C0C0C0</Color>
@@ -1036,21 +1043,21 @@ dealloc(on_water)
                       </CheatEntries>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>46</ID>
+                      <ID>47</ID>
                       <Description>"X-Axis Speed"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Float</VariableType>
                       <Address>player_velocity</Address>
                       <CheatEntries>
                         <CheatEntry>
-                          <ID>47</ID>
+                          <ID>48</ID>
                           <Description>"Y-Axis Speed"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <VariableType>Float</VariableType>
                           <Address>+4</Address>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>48</ID>
+                          <ID>49</ID>
                           <Description>"Z-Axis / Vertical Speed"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <VariableType>Float</VariableType>
@@ -1059,56 +1066,56 @@ dealloc(on_water)
                       </CheatEntries>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>49</ID>
+                      <ID>50</ID>
                       <Description>"Horizontal Speed"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Float</VariableType>
                       <Address>horizontal_velocity</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>50</ID>
+                      <ID>51</ID>
                       <Description>"On Ground"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>on_ground_f</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>51</ID>
+                      <ID>52</ID>
                       <Description>"On NSO"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>on_nso_f</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>52</ID>
+                      <ID>53</ID>
                       <Description>"On Hang"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>on_hang_f</Address>
                       <CheatEntries>
                         <CheatEntry>
-                          <ID>53</ID>
+                          <ID>54</ID>
                           <Description>"On Hang Free"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <VariableType>Byte</VariableType>
                           <Address>on_hang_free_f</Address>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>54</ID>
+                          <ID>55</ID>
                           <Description>"On Hang Wall"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <VariableType>Byte</VariableType>
                           <Address>on_hang_wall_f</Address>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>55</ID>
+                              <ID>56</ID>
                               <Description>"On Hang Crouch"</Description>
                               <ShowAsSigned>0</ShowAsSigned>
                               <VariableType>Byte</VariableType>
                               <Address>on_hang_crouch_f</Address>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>56</ID>
+                              <ID>57</ID>
                               <Description>"On Hang Stand"</Description>
                               <ShowAsSigned>0</ShowAsSigned>
                               <VariableType>Byte</VariableType>
@@ -1119,70 +1126,70 @@ dealloc(on_water)
                       </CheatEntries>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>57</ID>
+                      <ID>58</ID>
                       <Description>"On Vault"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>on_vault_f</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>58</ID>
+                      <ID>59</ID>
                       <Description>"On Air"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>on_air_f</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>59</ID>
+                      <ID>60</ID>
                       <Description>"On Water"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>on_water_f</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>60</ID>
+                      <ID>61</ID>
                       <Description>"Fall Height"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Float</VariableType>
                       <Address>fall_height</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>61</ID>
+                      <ID>62</ID>
                       <Description>"Ground Walk Strength"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Float</VariableType>
                       <Address>walk_strength</Address>
                       <CheatEntries>
                         <CheatEntry>
-                          <ID>62</ID>
+                          <ID>63</ID>
                           <Description>"Walk Cycle Max"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <VariableType>Byte</VariableType>
                           <Address>walk_mode_cycle</Address>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>63</ID>
+                              <ID>64</ID>
                               <Description>"Walk Strength Default"</Description>
                               <ShowAsSigned>0</ShowAsSigned>
                               <VariableType>Float</VariableType>
                               <Address>walk_strength_table</Address>
                               <CheatEntries>
                                 <CheatEntry>
-                                  <ID>64</ID>
+                                  <ID>65</ID>
                                   <Description>"Walk Strength 2"</Description>
                                   <ShowAsSigned>0</ShowAsSigned>
                                   <VariableType>Float</VariableType>
                                   <Address>+4</Address>
                                 </CheatEntry>
                                 <CheatEntry>
-                                  <ID>65</ID>
+                                  <ID>66</ID>
                                   <Description>"Walk Strength 3"</Description>
                                   <ShowAsSigned>0</ShowAsSigned>
                                   <VariableType>Float</VariableType>
                                   <Address>+8</Address>
                                 </CheatEntry>
                                 <CheatEntry>
-                                  <ID>66</ID>
+                                  <ID>67</ID>
                                   <Description>"Walk Strength 4"</Description>
                                   <ShowAsSigned>0</ShowAsSigned>
                                   <VariableType>Float</VariableType>
@@ -1199,13 +1206,13 @@ dealloc(on_water)
               </CheatEntries>
             </CheatEntry>
             <CheatEntry>
-              <ID>67</ID>
+              <ID>68</ID>
               <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
               <GroupHeader>1</GroupHeader>
               <CheatEntries>
                 <CheatEntry>
-                  <ID>68</ID>
+                  <ID>69</ID>
                   <Description>"Binds"</Description>
                   <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                   <VariableType>Auto Assembler Script</VariableType>
@@ -2455,33 +2462,18 @@ label(returnhere4)
 label(exit4)
 
 bind_legs_tap:
-mov byte ptr [bindLegsTap],00
-mov byte ptr [esi+00001FAE],00
+mov ecx,[esi+00001FAE]
+mov [bindLegsTap],ecx
+mov ecx,edi
+call ACBSP.exe+FAC40
 
 exit4:
 jmp returnhere4
 
-"ACBSP.exe"+1993EF8:
+"ACBSP.exe"+1993F01:
 jmp bind_legs_tap
 nop 2
 returnhere4:
-
-
-alloc(bind_legs_tap_2,2048)
-label(returnhere5)
-label(exit5)
-
-bind_legs_tap_2:
-mov byte ptr [bindLegsTap],01
-mov byte ptr [esi+00001FAE],01
-
-exit5:
-jmp returnhere5
-
-"ACBSP.exe"+1993EC8:
-jmp bind_legs_tap_2
-nop 2
-returnhere5:
 
 
 [DISABLE]
@@ -2497,19 +2489,15 @@ db F3 0F 7E 46 18
 db 0F B6 91 31 20 02 00
 //movzx edx,byte ptr [ecx+00022031]
 
-"ACBSP.exe"+1993EF8:
-db C6 86 AE 1F 00 00 00
-//mov byte ptr [esi+00001FAE],00
-
-"ACBSP.exe"+1993EC8:
-db C6 86 AE 1F 00 00 01
-//mov byte ptr [esi+00001FAE],01
+"ACBSP.exe"+1993F01:
+db 8B CF E8 38 6D 76 FE
+//mov ecx,edi
+//call ACBSP.exe+FAC40
 
 dealloc(binds)
 dealloc(controller)
 dealloc(keyboard)
 dealloc(bind_legs_tap)
-dealloc(bind_legs_tap_2)
 </AssemblerScript>
                   <CheatEntries>
                     <CheatEntry>
@@ -4227,6 +4215,7 @@ globalalloc(vault_inner_ledge_enable,1)
 globalalloc(forced_step_enable,1)
 globalalloc(dive_beam_alt_enable,1)
 globalalloc(self_swing_enable,1)
+globalalloc(on_vault_f,1)
 
 parkour_down:
 cmp byte ptr [on_vault_f],01
@@ -7342,6 +7331,7 @@ jmp returnhere
 jmp forced_ground_roll
 nop
 returnhere:
+
 
 alloc(forced_ground_roll_2,2048)
 label(returnhere2)
