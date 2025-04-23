@@ -117,6 +117,7 @@ globalalloc(player_velocity,16)
 globalalloc(horizontal_velocity,4)
 globalalloc(fall_height,4)
 globalalloc(walk_strength,4)
+globalalloc(walk_mode_index,1)
 
 globalalloc(on_hang_f,1)
 globalalloc(on_hang_free_f,1)
@@ -145,6 +146,9 @@ globalalloc(swan_dive_f,1)
 
 walk_strength:
 dd (float)1
+
+walk_mode_index:
+db 00
 
 entity:
 mov edx,eax
@@ -522,6 +526,7 @@ label(exit13)
 
 on_air:
 mov [walk_strength],(float)1
+mov [walk_mode_index],00
 mov [on_air_f],01
 mov ebp,[ebx+04]
 mov [esp+04],ebp
@@ -564,6 +569,8 @@ label(returnhere15)
 label(exit15)
 
 on_run:
+mov [walk_strength],(float)1
+mov [walk_mode_index],00
 mov [already_rolled_f],00
 mov [dive_beam_f],00
 mov [near_miss_f],00
