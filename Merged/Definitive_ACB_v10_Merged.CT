@@ -12217,6 +12217,7 @@ globalalloc(zero,4)
 globalalloc(one,4)
 globalalloc(two,4)
 globalalloc(freeform_distance,4)
+globalalloc(beam_drop_distance,4)
 globalalloc(dot_threshold,4)
 
 height_offset:
@@ -12281,6 +12282,8 @@ two:
 dd (float)2
 freeform_distance:
 dd (float)8
+beam_drop_distance:
+dd (float)3.5
 dot_threshold:
 dd (float)0.99
 
@@ -12339,6 +12342,8 @@ mov [eax],00000001
 ledge_drop_check:
 comiss xmm4,[freeform_distance]
 ja freeform_jump_diff_check
+comiss xmm4,[beam_drop_distance]
+jb math
 cmp byte ptr [ledge_drop_f],01
 je ledge_drop
 
