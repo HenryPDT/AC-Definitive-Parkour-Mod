@@ -11185,6 +11185,7 @@ mulps xmm1,xmm4
 addps xmm0,xmm1
 addps xmm0,xmm5
 mov [dismount_hang_free_eject_f],00
+mov [ledge_drop_f],00
 
 math:
 movaps [target_coords],xmm0
@@ -11330,7 +11331,6 @@ movss [swing_far_distance],xmm1     // Store the final swing up value (k)
 
 originalcode:
 mov [target_f],00
-mov [ledge_drop_f],00
 movaps [eax],xmm0
 movaps [esi],xmm0
 movaps xmm0,[eax+10]
