@@ -9075,7 +9075,6 @@ label(exit5)
 self_swing:
 cmp byte ptr [self_swing_enable],01
 je AssassinsCreed_Dx10.exe+CBD8D0
-
 test al,al
 je AssassinsCreed_Dx10.exe+CBD8D0
 
@@ -9086,6 +9085,25 @@ jmp returnhere5
 jmp self_swing
 nop
 returnhere5:
+
+
+alloc(self_swing_2,2048)
+label(returnhere6)
+label(exit6)
+
+self_swing_2:
+cmp byte ptr [self_swing_enable],01
+je AssassinsCreed_Dx10.exe+CBD704
+test al,al
+je AssassinsCreed_Dx10.exe+CBD704
+
+exit6:
+jmp returnhere6
+
+"AssassinsCreed_Dx10.exe"+CBD5E6:
+jmp self_swing_2
+nop
+returnhere6:
 
 
 [DISABLE]
@@ -9112,11 +9130,16 @@ db 76 39 83 7C 24 28 02
 db 0F 84 C4 00 00 00
 //je AssassinsCreed_Dx10.exe+CBD8D0
 
+"AssassinsCreed_Dx10.exe"+CBD5E6:
+db 0F 84 18 01 00 00
+//je AssassinsCreed_Dx10.exe+CBD704
+
 dealloc(nso_idle_coords)
 dealloc(nso_idle_coords_2)
 dealloc(nso_idle_coords_3)
 dealloc(nso_idle_coords_4)
 dealloc(self_swing)
+dealloc(self_swing_2)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>

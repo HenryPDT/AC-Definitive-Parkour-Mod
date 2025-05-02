@@ -14051,7 +14051,10 @@ local config_enable = {
         dynamic6 = "\"ACRSP.exe\"+1706299:",
         dynamic7 = "ACRSP.exe+17061FA",
         dynamic8 = "ACRSP.exe+17061FA",
-        dynamic9 = "\"ACRSP.exe\"+1706125:"
+        dynamic9 = "\"ACRSP.exe\"+1706125:",
+        dynamic10 = "ACRSP.exe+1705F93",
+        dynamic11 = "ACRSP.exe+1705F93",
+        dynamic12 = "\"ACRSP.exe\"+1705E67:"
     },
     [2] = {
         dynamic1 = "ACRSP.exe+7700",
@@ -14062,7 +14065,10 @@ local config_enable = {
         dynamic6 = "\"ACRSP.exe\"+1739CA9:",
         dynamic7 = "ACRSP.exe+1739C0A",
         dynamic8 = "ACRSP.exe+1739C0A",
-        dynamic9 = "\"ACRSP.exe\"+1739B35:"
+        dynamic9 = "\"ACRSP.exe\"+1739B35:",
+        dynamic10 = "ACRSP.exe+17399A3",
+        dynamic11 = "ACRSP.exe+17399A3",
+        dynamic12 = "\"ACRSP.exe\"+1739877:"
     }
 }
 
@@ -14182,7 +14188,6 @@ label(exit5)
 self_swing:
 cmp byte ptr [self_swing_enable],01
 je %s
-
 test al,al
 je %s
 
@@ -14193,7 +14198,26 @@ jmp returnhere5
 jmp self_swing
 nop
 returnhere5:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9)
+
+
+alloc(self_swing_2,2048)
+label(returnhere6)
+label(exit6)
+
+self_swing_2:
+cmp byte ptr [self_swing_enable],01
+je %s
+test al,al
+je %s
+
+exit6:
+jmp returnhere6
+
+%s
+jmp self_swing_2
+nop
+returnhere6:
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -14218,7 +14242,9 @@ local config_disable = {
         dynamic6 = "\"ACRSP.exe\"+1706299:",
         dynamic7 = "ACRSP.exe+17062CB",
         dynamic8 = "\"ACRSP.exe\"+1706125:",
-        dynamic9 = "ACRSP.exe+17061FA"
+        dynamic9 = "ACRSP.exe+17061FA",
+        dynamic10 = "\"ACRSP.exe\"+1705E67:",
+        dynamic11 = "ACRSP.exe+1705F93"
     },
     [2] = {
         dynamic1 = "\"ACRSP.exe\"+1738E39:",
@@ -14229,7 +14255,9 @@ local config_disable = {
         dynamic6 = "\"ACRSP.exe\"+1739CA9:",
         dynamic7 = "ACRSP.exe+1739CDB",
         dynamic8 = "\"ACRSP.exe\"+1739B35:",
-        dynamic9 = "ACRSP.exe+1739C0A"
+        dynamic9 = "ACRSP.exe+1739C0A",
+        dynamic10 = "\"ACRSP.exe\"+1739877:",
+        dynamic11 = "ACRSP.exe+17399A3"
     }
 }
 
@@ -14259,12 +14287,17 @@ db 76 30 83 7D D4 02
 db 0F 84 CF 00 00 00
 //je %s
 
+%s
+db 0F 84 26 01 00 00
+//je %s
+
 dealloc(nso_idle_coords)
 dealloc(nso_idle_coords_2)
 dealloc(nso_idle_coords_3)
 dealloc(nso_idle_coords_4)
 dealloc(self_swing)
-]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7, addrD.dynamic8, addrD.dynamic9)
+dealloc(self_swing_2)
+]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7, addrD.dynamic8, addrD.dynamic9, addrD.dynamic10, addrD.dynamic11)
 
 
 if disableInfo and disableInfo.info then

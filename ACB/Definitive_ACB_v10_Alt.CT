@@ -10002,7 +10002,6 @@ label(exit5)
 self_swing:
 cmp byte ptr [self_swing_enable],01
 je ACBSP.exe+1654770
-
 test al,al
 je ACBSP.exe+1654770
 
@@ -10013,6 +10012,25 @@ jmp returnhere5
 jmp self_swing
 nop
 returnhere5:
+
+
+alloc(self_swing_2,2048)
+label(returnhere6)
+label(exit6)
+
+self_swing_2:
+cmp byte ptr [self_swing_enable],01
+je ACBSP.exe+1654585
+test al,al
+je ACBSP.exe+1654585
+
+exit6:
+jmp returnhere6
+
+"ACBSP.exe"+1654450:
+jmp self_swing_2
+nop
+returnhere6:
 
 
 [DISABLE]
@@ -10038,11 +10056,16 @@ db 76 30 83 7D E8 02
 db 0F 84 DB 00 00 00
 //je ACBSP.exe+1654770
 
+"ACBSP.exe"+1654450:
+db 0F 84 2F 01 00 00
+//je ACBSP.exe+1654585
+
 dealloc(nso_idle_coords)
 dealloc(nso_idle_coords_2)
 dealloc(nso_idle_coords_3)
 dealloc(nso_idle_coords_4)
 dealloc(self_swing)
+dealloc(self_swing_2)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>

@@ -12816,7 +12816,10 @@ local config_enable = {
         dynamic6 = "\"AssassinsCreedIIGame.exe\"+E0004B:",
         dynamic7 = "AssassinsCreedIIGame.exe+DFFFC6",
         dynamic8 = "AssassinsCreedIIGame.exe+DFFFC6",
-        dynamic9 = "\"AssassinsCreedIIGame.exe\"+DFFEF4:"
+        dynamic9 = "\"AssassinsCreedIIGame.exe\"+DFFEF4:",
+        dynamic10 = "AssassinsCreedIIGame.exe+DFFE0D",
+        dynamic11 = "AssassinsCreedIIGame.exe+DFFE0D",
+        dynamic12 = "\"AssassinsCreedIIGame.exe\"+DFFCD5:"
     },
     [2] = {
         dynamic1 = "AssassinsCreedIIGame.exe+161F0",
@@ -12827,7 +12830,10 @@ local config_enable = {
         dynamic6 = "\"AssassinsCreedIIGame.exe\"+13D9F4B:",
         dynamic7 = "AssassinsCreedIIGame.exe+13D9EC6",
         dynamic8 = "AssassinsCreedIIGame.exe+13D9EC6",
-        dynamic9 = "\"AssassinsCreedIIGame.exe\"+13D9DF4:"
+        dynamic9 = "\"AssassinsCreedIIGame.exe\"+13D9DF4:",
+        dynamic10 = "AssassinsCreedIIGame.exe+13D9D0D",
+        dynamic11 = "AssassinsCreedIIGame.exe+13D9D0D",
+        dynamic12 = "\"AssassinsCreedIIGame.exe\"+13D9BD5:"
     }
 }
 
@@ -12947,7 +12953,6 @@ label(exit5)
 self_swing:
 cmp byte ptr [self_swing_enable],01
 je %s
-
 test al,al
 je %s
 
@@ -12958,7 +12963,26 @@ jmp returnhere5
 jmp self_swing
 nop
 returnhere5:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9)
+
+
+alloc(self_swing_2,2048)
+label(returnhere6)
+label(exit6)
+
+self_swing_2:
+cmp byte ptr [self_swing_enable],01
+je %s
+test al,al
+je %s
+
+exit6:
+jmp returnhere6
+
+%s
+jmp self_swing_2
+nop
+returnhere6:
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -12983,7 +13007,9 @@ local config_disable = {
         dynamic6 = "\"AssassinsCreedIIGame.exe\"+E0004B:",
         dynamic7 = "AssassinsCreedIIGame.exe+E0007D",
         dynamic8 = "\"AssassinsCreedIIGame.exe\"+DFFEF4:",
-        dynamic9 = "AssassinsCreedIIGame.exe+DFFFC6"
+        dynamic9 = "AssassinsCreedIIGame.exe+DFFFC6",
+        dynamic10 = "\"AssassinsCreedIIGame.exe\"+DFFCD5:",
+        dynamic11 = "AssassinsCreedIIGame.exe+DFFE0D"
     },
     [2] = {
         dynamic1 = "\"AssassinsCreedIIGame.exe\"+13D9399:",
@@ -12994,7 +13020,9 @@ local config_disable = {
         dynamic6 = "\"AssassinsCreedIIGame.exe\"+13D9F4B:",
         dynamic7 = "AssassinsCreedIIGame.exe+13D9F7D",
         dynamic8 = "\"AssassinsCreedIIGame.exe\"+13D9DF4:",
-        dynamic9 = "AssassinsCreedIIGame.exe+13D9EC6"
+        dynamic9 = "AssassinsCreedIIGame.exe+13D9EC6",
+        dynamic10 = "\"AssassinsCreedIIGame.exe\"+13D9BD5:",
+        dynamic11 = "AssassinsCreedIIGame.exe+13D9D0D"
     }
 }
 
@@ -13024,12 +13052,17 @@ db 76 30 83 7D E8 02
 db 0F 84 CC 00 00 00
 //je %s
 
+%s
+db 0F 84 32 01 00 00
+//je %s
+
 dealloc(nso_idle_coords)
 dealloc(nso_idle_coords_2)
 dealloc(nso_idle_coords_3)
 dealloc(nso_idle_coords_4)
 dealloc(self_swing)
-]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7, addrD.dynamic8, addrD.dynamic9)
+dealloc(self_swing_2)
+]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7, addrD.dynamic8, addrD.dynamic9, addrD.dynamic10, addrD.dynamic11)
 
 
 if disableInfo and disableInfo.info then
