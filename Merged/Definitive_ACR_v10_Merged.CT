@@ -8362,9 +8362,11 @@ local config_enable = {
         dynamic8 = "ACRSP.exe+665D91",
         dynamic9 = "ACRSP.exe+665D91",
         dynamic10 = "\"ACRSP.exe\"+665D88:",
-        dynamic11 = "ACRSP.exe+1810D0",
-        dynamic12 = "ACRSP.exe+6638FC",
-        dynamic13 = "\"ACRSP.exe\"+6638F3:"
+        dynamic11 = "ACRSP.exe+665D53",
+        dynamic12 = "\"ACRSP.exe\"+665D49:",
+        dynamic13 = "ACRSP.exe+1810D0",
+        dynamic14 = "ACRSP.exe+6638FC",
+        dynamic15 = "\"ACRSP.exe\"+6638F3:"
     },
     [2] = {
         dynamic1 = "\"ACRSP.exe\"+6BA409:",
@@ -8377,9 +8379,11 @@ local config_enable = {
         dynamic8 = "ACRSP.exe+697521",
         dynamic9 = "ACRSP.exe+697521",
         dynamic10 = "\"ACRSP.exe\"+697518:",
-        dynamic11 = "ACRSP.exe+1995C0",
-        dynamic12 = "ACRSP.exe+69508C",
-        dynamic13 = "\"ACRSP.exe\"+695083:"
+        dynamic11 = "ACRSP.exe+6974E3",
+        dynamic12 = "\"ACRSP.exe\"+6974D9:",
+        dynamic13 = "ACRSP.exe+1995C0",
+        dynamic14 = "ACRSP.exe+69508C",
+        dynamic15 = "\"ACRSP.exe\"+695083:"
     }
 }
 
@@ -8507,22 +8511,37 @@ jmp manual_ledge_grab
 returnhere5:
 
 
-alloc(prescriptive_ledge_grab,2048)
+alloc(manual_ledge_grab_2,2048)
 label(returnhere6)
 label(exit6)
+
+manual_ledge_grab_2:
+jmp %s
+
+exit6:
+jmp returnhere6
+
+%s
+jmp manual_ledge_grab_2
+returnhere6:
+
+
+alloc(prescriptive_ledge_grab,2048)
+label(returnhere7)
+label(exit7)
 
 prescriptive_ledge_grab:
 call %s
 cmp byte ptr [bindLegsTap],01
 je %s
 
-exit6:
-jmp returnhere6
+exit7:
+jmp returnhere7
 
 %s
 jmp prescriptive_ledge_grab
-returnhere6:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13)
+returnhere7:
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -8546,8 +8565,10 @@ local config_disable = {
         dynamic5 = "\"ACRSP.exe\"+688B70:",
         dynamic6 = "\"ACRSP.exe\"+665D88:",
         dynamic7 = "ACRSP.exe+181070",
-        dynamic8 = "\"ACRSP.exe\"+6638F3:",
-        dynamic9 = "ACRSP.exe+1810D0"
+        dynamic8 = "\"ACRSP.exe\"+665D49:",
+        dynamic9 = "ACRSP.exe+665D53",
+        dynamic10 = "\"ACRSP.exe\"+6638F3:",
+        dynamic11 = "ACRSP.exe+1810D0"
     },
     [2] = {
         dynamic1 = "\"ACRSP.exe\"+6BA409:",
@@ -8557,8 +8578,10 @@ local config_disable = {
         dynamic5 = "\"ACRSP.exe\"+6BA300:",
         dynamic6 = "\"ACRSP.exe\"+697518:",
         dynamic7 = "ACRSP.exe+199560",
-        dynamic8 = "\"ACRSP.exe\"+695083:",
-        dynamic9 = "ACRSP.exe+1995C0"
+        dynamic8 = "\"ACRSP.exe\"+6974D9:",
+        dynamic9 = "ACRSP.exe+6974E3",
+        dynamic10 = "\"ACRSP.exe\"+695083:",
+        dynamic11 = "ACRSP.exe+1995C0"
     }
 }
 
@@ -8591,6 +8614,11 @@ db E8 E3 B2 B1 FF
 //call %s
 
 %s
+db 83 F8 03 74 05
+//cmp eax,03
+//je %s
+
+%s
 db E8 D8 D7 B1 FF
 //call %s
 
@@ -8599,8 +8627,9 @@ dealloc(drop_to_hang_2)
 dealloc(drop_to_hang_3)
 dealloc(drop_to_hang_4)
 dealloc(manual_ledge_grab)
+dealloc(manual_ledge_grab_2)
 dealloc(prescriptive_ledge_grab)
-]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7, addrD.dynamic8, addrD.dynamic9)
+]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7, addrD.dynamic8, addrD.dynamic9, addrD.dynamic10, addrD.dynamic11)
 
 
 if disableInfo and disableInfo.info then

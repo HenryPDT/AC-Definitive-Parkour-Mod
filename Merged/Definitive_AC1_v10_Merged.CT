@@ -7146,9 +7146,11 @@ local config_enable = {
         dynamic7 = "AssassinsCreed_Dx10.exe+B8C4AB",
         dynamic8 = "AssassinsCreed_Dx10.exe+B8C4AB",
         dynamic9 = "\"AssassinsCreed_Dx10.exe\"+B8C4A2:",
-        dynamic10 = "AssassinsCreed_Dx10.exe+140A00",
-        dynamic11 = "AssassinsCreed_Dx10.exe+B78870",
-        dynamic12 = "\"AssassinsCreed_Dx10.exe\"+B78867:"
+        dynamic10 = "AssassinsCreed_Dx10.exe+B8C479",
+        dynamic11 = "\"AssassinsCreed_Dx10.exe\"+B8C46F:",
+        dynamic12 = "AssassinsCreed_Dx10.exe+140A00",
+        dynamic13 = "AssassinsCreed_Dx10.exe+B78870",
+        dynamic14 = "\"AssassinsCreed_Dx10.exe\"+B78867:"
     },
     [2] = {
         dynamic1 = "\"AssassinsCreed_Dx9.exe\"+9E359B:",
@@ -7160,9 +7162,11 @@ local config_enable = {
         dynamic7 = "AssassinsCreed_Dx9.exe+9DFE1B",
         dynamic8 = "AssassinsCreed_Dx9.exe+9DFE1B",
         dynamic9 = "\"AssassinsCreed_Dx9.exe\"+9DFE12:",
-        dynamic10 = "AssassinsCreed_Dx9.exe+101760",
-        dynamic11 = "AssassinsCreed_Dx9.exe+9CC1E0",
-        dynamic12 = "\"AssassinsCreed_Dx9.exe\"+9CC1D7:"
+        dynamic10 = "AssassinsCreed_Dx9.exe+9DFDE9",
+        dynamic11 = "\"AssassinsCreed_Dx9.exe\"+9DFDDF:",
+        dynamic12 = "AssassinsCreed_Dx9.exe+101760",
+        dynamic13 = "AssassinsCreed_Dx9.exe+9CC1E0",
+        dynamic14 = "\"AssassinsCreed_Dx9.exe\"+9CC1D7:"
     }
 }
 
@@ -7287,22 +7291,37 @@ jmp manual_ledge_grab
 returnhere5:
 
 
-alloc(prescriptive_ledge_grab,2048)
+alloc(manual_ledge_grab_2,2048)
 label(returnhere6)
 label(exit6)
+
+manual_ledge_grab_2:
+jmp %s
+
+exit6:
+jmp returnhere6
+
+%s
+jmp manual_ledge_grab_2
+returnhere6:
+
+
+alloc(prescriptive_ledge_grab,2048)
+label(returnhere7)
+label(exit7)
 
 prescriptive_ledge_grab:
 call %s
 cmp byte ptr [bindLegsTap],01
 je %s
 
-exit6:
-jmp returnhere6
+exit7:
+jmp returnhere7
 
 %s
 jmp prescriptive_ledge_grab
-returnhere6:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12)
+returnhere7:
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -7325,8 +7344,10 @@ local config_disable = {
         dynamic4 = "\"AssassinsCreed_Dx10.exe\"+B8FF80:",
         dynamic5 = "\"AssassinsCreed_Dx10.exe\"+B8C4A2:",
         dynamic6 = "AssassinsCreed_Dx10.exe+140A50",
-        dynamic7 = "\"AssassinsCreed_Dx10.exe\"+B78867:",
-        dynamic8 = "AssassinsCreed_Dx10.exe+140A00"
+        dynamic7 = "\"AssassinsCreed_Dx10.exe\"+B8C46F:",
+        dynamic8 = "AssassinsCreed_Dx10.exe+B8C479",
+        dynamic9 = "\"AssassinsCreed_Dx10.exe\"+B78867:",
+        dynamic10 = "AssassinsCreed_Dx10.exe+140A00"
     },
     [2] = {
         dynamic1 = "\"AssassinsCreed_Dx9.exe\"+9E359B:",
@@ -7335,8 +7356,10 @@ local config_disable = {
         dynamic4 = "\"AssassinsCreed_Dx9.exe\"+9E38F0:",
         dynamic5 = "\"AssassinsCreed_Dx9.exe\"+9DFE12:",
         dynamic6 = "AssassinsCreed_Dx9.exe+1017B0",
-        dynamic7 = "\"AssassinsCreed_Dx9.exe\"+9CC1D7:",
-        dynamic8 = "AssassinsCreed_Dx9.exe+101760"
+        dynamic7 = "\"AssassinsCreed_Dx9.exe\"+9DFDDF:",
+        dynamic8 = "AssassinsCreed_Dx9.exe+9DFDE9",
+        dynamic9 = "\"AssassinsCreed_Dx9.exe\"+9CC1D7:",
+        dynamic10 = "AssassinsCreed_Dx9.exe+101760"
     }
 }
 
@@ -7367,6 +7390,11 @@ db E8 A9 45 5B FF
 //call %s
 
 %s
+db 83 F8 03 74 05
+//cmp eax,03
+//je %s
+
+%s
 db E8 94 81 5C FF
 //call %s
 
@@ -7375,8 +7403,9 @@ dealloc(drop_to_hang_2)
 dealloc(drop_to_hang_3)
 dealloc(drop_to_hang_4)
 dealloc(manual_ledge_grab)
+dealloc(manual_ledge_grab_2)
 dealloc(prescriptive_ledge_grab)
-]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7, addrD.dynamic8)
+]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7, addrD.dynamic8, addrD.dynamic9, addrD.dynamic10)
 
 
 if disableInfo and disableInfo.info then

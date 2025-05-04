@@ -6299,21 +6299,36 @@ jmp manual_ledge_grab
 returnhere5:
 
 
-alloc(prescriptive_ledge_grab,2048)
+alloc(manual_ledge_grab_2,2048)
 label(returnhere6)
 label(exit6)
+
+manual_ledge_grab_2:
+jmp AssassinsCreedIIGame.exe+C2BC83
+
+exit6:
+jmp returnhere6
+
+"AssassinsCreedIIGame.exe"+C2BC79:
+jmp manual_ledge_grab_2
+returnhere6:
+
+
+alloc(prescriptive_ledge_grab,2048)
+label(returnhere7)
+label(exit7)
 
 prescriptive_ledge_grab:
 call AssassinsCreedIIGame.exe+18F090
 cmp byte ptr [bindLegsTap],01
 je AssassinsCreedIIGame.exe+C2DD39
 
-exit6:
-jmp returnhere6
+exit7:
+jmp returnhere7
 
 "AssassinsCreedIIGame.exe"+C2DD30:
 jmp prescriptive_ledge_grab
-returnhere6:
+returnhere7:
 
 
 [DISABLE]
@@ -6341,6 +6356,11 @@ db 55 8B EC 83 7D 08 00
 db E8 56 33 56 FF
 //call AssassinsCreedIIGame.exe+18F010
 
+"AssassinsCreedIIGame.exe"+C2BC79:
+db 83 F8 03 74 05
+//cmp eax,03
+//je AssassinsCreedIIGame.exe+C2BC83
+
 "AssassinsCreedIIGame.exe"+C2DD30:
 db E8 5B 13 56 FF
 //call AssassinsCreedIIGame.exe+18F090
@@ -6350,6 +6370,7 @@ dealloc(drop_to_hang_2)
 dealloc(drop_to_hang_3)
 dealloc(drop_to_hang_4)
 dealloc(manual_ledge_grab)
+dealloc(manual_ledge_grab_2)
 dealloc(prescriptive_ledge_grab)
 </AssemblerScript>
                         </CheatEntry>

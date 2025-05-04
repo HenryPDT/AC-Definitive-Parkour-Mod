@@ -8071,9 +8071,11 @@ local config_enable = {
         dynamic8 = "ACBSP.exe+DB35E1",
         dynamic9 = "ACBSP.exe+DB35E1",
         dynamic10 = "\"ACBSP.exe\"+DB35D8:",
-        dynamic11 = "ACBSP.exe+122820",
-        dynamic12 = "ACBSP.exe+DB1C9C",
-        dynamic13 = "\"ACBSP.exe\"+DB1C93:"
+        dynamic11 = "ACBSP.exe+DB35A3",
+        dynamic12 = "\"ACBSP.exe\"+DB3599:",
+        dynamic13 = "ACBSP.exe+122820",
+        dynamic14 = "ACBSP.exe+DB1C9C",
+        dynamic15 = "\"ACBSP.exe\"+DB1C93:"
     },
     [2] = {
         dynamic1 = "\"ACBSP.exe\"+73DF59:",
@@ -8086,9 +8088,11 @@ local config_enable = {
         dynamic8 = "ACBSP.exe+71F521",
         dynamic9 = "ACBSP.exe+71F521",
         dynamic10 = "\"ACBSP.exe\"+71F518:",
-        dynamic11 = "ACBSP.exe+1A84E0",
-        dynamic12 = "ACBSP.exe+71DBDC",
-        dynamic13 = "\"ACBSP.exe\"+71DBD3:"
+        dynamic11 = "ACBSP.exe+71F4E3",
+        dynamic12 = "\"ACBSP.exe\"+71F4D9:",
+        dynamic13 = "ACBSP.exe+1A84E0",
+        dynamic14 = "ACBSP.exe+71DBDC",
+        dynamic15 = "\"ACBSP.exe\"+71DBD3:"
     }
 }
 
@@ -8216,22 +8220,37 @@ jmp manual_ledge_grab
 returnhere5:
 
 
-alloc(prescriptive_ledge_grab,2048)
+alloc(manual_ledge_grab_2,2048)
 label(returnhere6)
 label(exit6)
+
+manual_ledge_grab_2:
+jmp %s
+
+exit6:
+jmp returnhere6
+
+%s
+jmp manual_ledge_grab_2
+returnhere6:
+
+
+alloc(prescriptive_ledge_grab,2048)
+label(returnhere7)
+label(exit7)
 
 prescriptive_ledge_grab:
 call %s
 cmp byte ptr [bindLegsTap],01
 je %s
 
-exit6:
-jmp returnhere6
+exit7:
+jmp returnhere7
 
 %s
 jmp prescriptive_ledge_grab
-returnhere6:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13)
+returnhere7:
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -8255,8 +8274,10 @@ local config_disable = {
         dynamic5 = "\"ACBSP.exe\"+DD1F10:",
         dynamic6 = "\"ACBSP.exe\"+DB35D8:",
         dynamic7 = "ACBSP.exe+1227C0",
-        dynamic8 = "\"ACBSP.exe\"+DB1C93:",
-        dynamic9 = "ACBSP.exe+122820"
+        dynamic8 = "\"ACBSP.exe\"+DB3599:",
+        dynamic9 = "ACBSP.exe+DB35A3",
+        dynamic10 = "\"ACBSP.exe\"+DB1C93:",
+        dynamic11 = "ACBSP.exe+122820"
     },
     [2] = {
         dynamic1 = "\"ACBSP.exe\"+73DF59:",
@@ -8266,8 +8287,10 @@ local config_disable = {
         dynamic5 = "\"ACBSP.exe\"+73DE50:",
         dynamic6 = "\"ACBSP.exe\"+71F518:",
         dynamic7 = "ACBSP.exe+1A8480",
-        dynamic8 = "\"ACBSP.exe\"+71DBD3:",
-        dynamic9 = "ACBSP.exe+1A84E0"
+        dynamic8 = "\"ACBSP.exe\"+71F4D9:",
+        dynamic9 = "ACBSP.exe+71F4E3",
+        dynamic10 = "\"ACBSP.exe\"+71DBD3:",
+        dynamic11 = "ACBSP.exe+1A84E0"
     }
 }
 
@@ -8300,6 +8323,11 @@ db E8 E3 F1 36 FF
 //call %s
 
 %s
+db 83 F8 03 74 05
+//cmp eax,03
+//je %s
+
+%s
 db E8 88 0B 37 FF
 //call %s
 
@@ -8308,8 +8336,9 @@ dealloc(drop_to_hang_2)
 dealloc(drop_to_hang_3)
 dealloc(drop_to_hang_4)
 dealloc(manual_ledge_grab)
+dealloc(manual_ledge_grab_2)
 dealloc(prescriptive_ledge_grab)
-]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7, addrD.dynamic8, addrD.dynamic9)
+]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7, addrD.dynamic8, addrD.dynamic9, addrD.dynamic10, addrD.dynamic11)
 
 
 if disableInfo and disableInfo.info then

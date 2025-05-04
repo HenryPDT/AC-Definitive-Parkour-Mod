@@ -6405,21 +6405,36 @@ jmp manual_ledge_grab
 returnhere5:
 
 
-alloc(prescriptive_ledge_grab,2048)
+alloc(manual_ledge_grab_2,2048)
 label(returnhere6)
 label(exit6)
+
+manual_ledge_grab_2:
+jmp ACBSP.exe+71F4E3
+
+exit6:
+jmp returnhere6
+
+"ACBSP.exe"+71F4D9:
+jmp manual_ledge_grab_2
+returnhere6:
+
+
+alloc(prescriptive_ledge_grab,2048)
+label(returnhere7)
+label(exit7)
 
 prescriptive_ledge_grab:
 call ACBSP.exe+1A84E0
 cmp byte ptr [bindLegsTap],01
 je ACBSP.exe+71DBDC
 
-exit6:
-jmp returnhere6
+exit7:
+jmp returnhere7
 
 "ACBSP.exe"+71DBD3:
 jmp prescriptive_ledge_grab
-returnhere6:
+returnhere7:
 
 
 [DISABLE]
@@ -6447,6 +6462,11 @@ db 55 8B EC 83 7D 08 00
 db E8 63 8F A8 FF
 //call ACBSP.exe+1A8480
 
+"ACBSP.exe"+71F4D9:
+db 83 F8 03 74 05
+//cmp eax,03
+//je ACBSP.exe+71F4E3
+
 "ACBSP.exe"+71DBD3:
 db E8 08 A9 A8 FF
 //call ACBSP.exe+1A84E0
@@ -6456,6 +6476,7 @@ dealloc(drop_to_hang_2)
 dealloc(drop_to_hang_3)
 dealloc(drop_to_hang_4)
 dealloc(manual_ledge_grab)
+dealloc(manual_ledge_grab_2)
 dealloc(prescriptive_ledge_grab)
 </AssemblerScript>
                         </CheatEntry>
