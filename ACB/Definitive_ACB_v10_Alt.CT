@@ -6410,7 +6410,11 @@ label(returnhere6)
 label(exit6)
 
 manual_ledge_grab_2:
-jmp ACBSP.exe+71F4E3
+mov ecx,[esi+08]
+mov ecx,[ecx+00000108]
+call ACBSP.exe+1E9A90
+mov ecx,[eax+000004F8]
+jmp ACBSP.exe+71F506
 
 exit6:
 jmp returnhere6

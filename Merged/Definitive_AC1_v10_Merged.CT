@@ -7146,7 +7146,7 @@ local config_enable = {
         dynamic7 = "AssassinsCreed_Dx10.exe+B8C4AB",
         dynamic8 = "AssassinsCreed_Dx10.exe+B8C4AB",
         dynamic9 = "\"AssassinsCreed_Dx10.exe\"+B8C4A2:",
-        dynamic10 = "AssassinsCreed_Dx10.exe+B8C479",
+        dynamic10 = "AssassinsCreed_Dx10.exe+B8C48D",
         dynamic11 = "\"AssassinsCreed_Dx10.exe\"+B8C46F:",
         dynamic12 = "AssassinsCreed_Dx10.exe+140A00",
         dynamic13 = "AssassinsCreed_Dx10.exe+B78870",
@@ -7162,7 +7162,7 @@ local config_enable = {
         dynamic7 = "AssassinsCreed_Dx9.exe+9DFE1B",
         dynamic8 = "AssassinsCreed_Dx9.exe+9DFE1B",
         dynamic9 = "\"AssassinsCreed_Dx9.exe\"+9DFE12:",
-        dynamic10 = "AssassinsCreed_Dx9.exe+9DFDE9",
+        dynamic10 = "AssassinsCreed_Dx9.exe+9DFDFD",
         dynamic11 = "\"AssassinsCreed_Dx9.exe\"+9DFDDF:",
         dynamic12 = "AssassinsCreed_Dx9.exe+101760",
         dynamic13 = "AssassinsCreed_Dx9.exe+9CC1E0",
@@ -7296,6 +7296,8 @@ label(returnhere6)
 label(exit6)
 
 manual_ledge_grab_2:
+mov edx,[esi+0C]
+movss xmm0,[edx+00000108]
 jmp %s
 
 exit6:

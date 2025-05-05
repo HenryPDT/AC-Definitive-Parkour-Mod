@@ -6304,7 +6304,11 @@ label(returnhere6)
 label(exit6)
 
 manual_ledge_grab_2:
-jmp AssassinsCreedIIGame.exe+C2BC83
+mov ecx,[esi+08]
+mov ecx,[ecx+000000FC]
+call AssassinsCreedIIGame.exe+1EB010
+mov ecx,[eax+20]
+jmp AssassinsCreedIIGame.exe+C2BCA3
 
 exit6:
 jmp returnhere6

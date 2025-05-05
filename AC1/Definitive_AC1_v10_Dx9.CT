@@ -5789,7 +5789,9 @@ label(returnhere6)
 label(exit6)
 
 manual_ledge_grab_2:
-jmp AssassinsCreed_Dx9.exe+9DFDE9
+mov edx,[esi+0C]
+movss xmm0,[edx+00000108]
+jmp AssassinsCreed_Dx9.exe+9DFDFD
 
 exit6:
 jmp returnhere6
