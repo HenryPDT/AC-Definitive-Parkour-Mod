@@ -7484,14 +7484,14 @@ globalalloc(kiosk_roll_enable,1)
 globalalloc(kiosk_swing_enable,1)
 globalalloc(already_rolled_f,1)
 globalalloc(player_velocity,16)
-globalalloc(zero,4)
+globalalloc(falling_height,4)
 
-zero:
-dd (float)0
+falling_height:
+dd (float)0.5
 
 forced_kiosk:
 fld dword ptr [player_velocity+8]
-fld dword ptr [zero]
+fld dword ptr [falling_height]
 fcomip st(0),st(1)
 fstp st(0)
 ja originalcode
