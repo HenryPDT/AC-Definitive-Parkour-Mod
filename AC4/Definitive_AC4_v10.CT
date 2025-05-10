@@ -9454,7 +9454,10 @@ function process_checker(t)
       for i = 0, AddressList.Count - 1 do
          AddressList[i].Active = false
       end
-      openProcess(process_name)
+      if getProcessIDFromProcessName(process_name) ~= nil then
+         sleep(2000)
+         openProcess(process_name)
+      end
    else
       -- Attached to process
       getMainForm().Caption = 'Attached to ' .. process_name
