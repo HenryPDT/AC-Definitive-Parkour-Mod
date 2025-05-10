@@ -6304,6 +6304,8 @@ label(returnhere6)
 label(exit6)
 
 manual_ledge_grab_2:
+cmp eax,05
+je AssassinsCreedIIGame.exe+64FC73
 mov ecx,[esi+08]
 mov ecx,[ecx+000000FC]
 call AssassinsCreedIIGame.exe+1C2360

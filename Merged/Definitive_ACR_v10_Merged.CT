@@ -8362,12 +8362,13 @@ local config_enable = {
         dynamic8 = "ACRSP.exe+665D91",
         dynamic9 = "ACRSP.exe+665D91",
         dynamic10 = "\"ACRSP.exe\"+665D88:",
-        dynamic11 = "ACRSP.exe+1BEDA0",
-        dynamic12 = "ACRSP.exe+665D76",
-        dynamic13 = "\"ACRSP.exe\"+665D49:",
-        dynamic14 = "ACRSP.exe+1810D0",
-        dynamic15 = "ACRSP.exe+6638FC",
-        dynamic16 = "\"ACRSP.exe\"+6638F3:"
+        dynamic11 = "ACRSP.exe+665D53",
+        dynamic12 = "ACRSP.exe+1BEDA0",
+        dynamic13 = "ACRSP.exe+665D76",
+        dynamic14 = "\"ACRSP.exe\"+665D49:",
+        dynamic15 = "ACRSP.exe+1810D0",
+        dynamic16 = "ACRSP.exe+6638FC",
+        dynamic17 = "\"ACRSP.exe\"+6638F3:"
     },
     [2] = {
         dynamic1 = "\"ACRSP.exe\"+6BA409:",
@@ -8380,12 +8381,13 @@ local config_enable = {
         dynamic8 = "ACRSP.exe+697521",
         dynamic9 = "ACRSP.exe+697521",
         dynamic10 = "\"ACRSP.exe\"+697518:",
-        dynamic11 = "ACRSP.exe+1D9330",
-        dynamic12 = "ACRSP.exe+697506",
-        dynamic13 = "\"ACRSP.exe\"+6974D9:",
-        dynamic14 = "ACRSP.exe+1995C0",
-        dynamic15 = "ACRSP.exe+69508C",
-        dynamic16 = "\"ACRSP.exe\"+695083:"
+        dynamic11 = "ACRSP.exe+6974E3",
+        dynamic12 = "ACRSP.exe+1D9330",
+        dynamic13 = "ACRSP.exe+697506",
+        dynamic14 = "\"ACRSP.exe\"+6974D9:",
+        dynamic15 = "ACRSP.exe+1995C0",
+        dynamic16 = "ACRSP.exe+69508C",
+        dynamic17 = "\"ACRSP.exe\"+695083:"
     }
 }
 
@@ -8518,6 +8520,8 @@ label(returnhere6)
 label(exit6)
 
 manual_ledge_grab_2:
+cmp eax,05
+je %s
 mov ecx,[esi+08]
 mov ecx,[ecx+00000108]
 call %s
@@ -8547,7 +8551,7 @@ jmp returnhere7
 %s
 jmp prescriptive_ledge_grab
 returnhere7:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16)
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16, addrE.dynamic17)
 
 local success, info = autoAssemble(enableScript)
 if not success then
