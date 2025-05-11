@@ -2019,9 +2019,6 @@ ground_roll:
 cmp byte ptr [bindEmptyHand],00
 je forced_ground_roll
 mov [ground_roll_enable],01
-cmp byte ptr [bindLegs],00
-je forced_ground_roll
-mov [ground_roll_alt_enable],01
 
 forced_ground_roll:
 cmp byte ptr [ground_roll_enable],00

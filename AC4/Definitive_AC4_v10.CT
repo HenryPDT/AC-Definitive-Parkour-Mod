@@ -1963,9 +1963,6 @@ ground_roll:
 cmp byte ptr [bindEmptyHand],00
 je forced_ground_roll
 mov [ground_roll_enable],01
-cmp byte ptr [bindLegs],00
-je forced_ground_roll
-mov [ground_roll_alt_enable],01
 
 forced_ground_roll:
 cmp byte ptr [ground_roll_enable],00
@@ -5350,22 +5347,24 @@ jmp ledge_drop_3
 nop
 returnhere3:
 
-{
+
 alloc(ledge_drop_4,2048)
 label(returnhere4)
 label(exit4)
 
 ledge_drop_4:
 mov [ledge_drop_f],00
-call ACBSP.exe+E40110
+je AC4BFSP.exe+16F2FFA
+mov [ledge_drop_f],01
 
 exit4:
 jmp returnhere4
 
-"ACBSP.exe"+1BDA8AF:
+"AC4BFSP.exe"+16F2D69:
 jmp ledge_drop_4
+nop
 returnhere4:
-}
+
 
 [DISABLE]
 "AC4BFSP.exe"+16F0E85:
@@ -5382,11 +5381,11 @@ db 0F 2F C8 76 5D
 db 0F 2F 4D FC 76 6A
 //comiss xmm1,[ebp-04]
 //jna AC4BFSP.exe+16F2FFA
-{
-"ACBSP.exe"+1BDA8AF:
-db E8 5C 58 26 FF
-//call ACBSP.exe+E40110
-}
+
+"AC4BFSP.exe"+16F2D69:
+db 0F 84 8B 02 00 00
+//je AC4BFSP.exe+16F2FFA
+
 dealloc(ledge_drop)
 dealloc(ledge_drop_2)
 dealloc(ledge_drop_3)
@@ -9348,8 +9347,9 @@ db 83 FF 04 74 09
     <CheatEntry>
       <ID>798</ID>
       <Description>"No Description"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
       <VariableType>Byte</VariableType>
-      <Address>36172A68</Address>
+      <Address>ledge_drop_F</Address>
     </CheatEntry>
   </CheatEntries>
   <LuaScript>-- Process name
