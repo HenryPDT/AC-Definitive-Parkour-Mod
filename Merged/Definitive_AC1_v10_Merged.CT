@@ -7146,12 +7146,13 @@ local config_enable = {
         dynamic7 = "AssassinsCreed_Dx10.exe+B8C4AB",
         dynamic8 = "AssassinsCreed_Dx10.exe+B8C4AB",
         dynamic9 = "\"AssassinsCreed_Dx10.exe\"+B8C4A2:",
-        dynamic10 = "AssassinsCreed_Dx10.exe+B8C479",
-        dynamic11 = "AssassinsCreed_Dx10.exe+B8C48D",
-        dynamic12 = "\"AssassinsCreed_Dx10.exe\"+B8C46F:",
-        dynamic13 = "AssassinsCreed_Dx10.exe+140A00",
-        dynamic14 = "AssassinsCreed_Dx10.exe+B78870",
-        dynamic15 = "\"AssassinsCreed_Dx10.exe\"+B78867:"
+        dynamic10 = "AssassinsCreed_Dx10.exe+B8C4C9",
+        dynamic11 = "AssassinsCreed_Dx10.exe+B8C479",
+        dynamic12 = "AssassinsCreed_Dx10.exe+B8C48D",
+        dynamic13 = "\"AssassinsCreed_Dx10.exe\"+B8C46F:",
+        dynamic14 = "AssassinsCreed_Dx10.exe+140A00",
+        dynamic15 = "AssassinsCreed_Dx10.exe+B78870",
+        dynamic16 = "\"AssassinsCreed_Dx10.exe\"+B78867:"
     },
     [2] = {
         dynamic1 = "\"AssassinsCreed_Dx9.exe\"+9E359B:",
@@ -7163,12 +7164,13 @@ local config_enable = {
         dynamic7 = "AssassinsCreed_Dx9.exe+9DFE1B",
         dynamic8 = "AssassinsCreed_Dx9.exe+9DFE1B",
         dynamic9 = "\"AssassinsCreed_Dx9.exe\"+9DFE12:",
-        dynamic10 = "AssassinsCreed_Dx9.exe+9DFDE9",
-        dynamic11 = "AssassinsCreed_Dx9.exe+9DFDFD",
-        dynamic12 = "\"AssassinsCreed_Dx9.exe\"+9DFDDF:",
-        dynamic13 = "AssassinsCreed_Dx9.exe+101760",
-        dynamic14 = "AssassinsCreed_Dx9.exe+9CC1E0",
-        dynamic15 = "\"AssassinsCreed_Dx9.exe\"+9CC1D7:"
+        dynamic10 = "AssassinsCreed_Dx9.exe+9DFE39",
+        dynamic11 = "AssassinsCreed_Dx9.exe+9DFDE9",
+        dynamic12 = "AssassinsCreed_Dx9.exe+9DFDFD",
+        dynamic13 = "\"AssassinsCreed_Dx9.exe\"+9DFDDF:",
+        dynamic14 = "AssassinsCreed_Dx9.exe+101760",
+        dynamic15 = "AssassinsCreed_Dx9.exe+9CC1E0",
+        dynamic16 = "\"AssassinsCreed_Dx9.exe\"+9CC1D7:"
     }
 }
 
@@ -7298,6 +7300,8 @@ label(returnhere6)
 label(exit6)
 
 manual_ledge_grab_2:
+cmp eax,04
+je %s
 cmp eax,05
 je %s
 mov edx,[esi+0C]
@@ -7327,7 +7331,7 @@ jmp returnhere7
 %s
 jmp prescriptive_ledge_grab
 returnhere7:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15)
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16)
 
 local success, info = autoAssemble(enableScript)
 if not success then

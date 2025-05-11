@@ -7888,13 +7888,14 @@ local config_enable = {
         dynamic8 = "AssassinsCreedIIGame.exe+64FCAE",
         dynamic9 = "AssassinsCreedIIGame.exe+64FCAE",
         dynamic10 = "\"AssassinsCreedIIGame.exe\"+64FCA5:",
-        dynamic11 = "AssassinsCreedIIGame.exe+64FC73",
-        dynamic12 = "AssassinsCreedIIGame.exe+1C2360",
-        dynamic13 = "AssassinsCreedIIGame.exe+64FC93",
-        dynamic14 = "\"AssassinsCreedIIGame.exe\"+64FC69:",
-        dynamic15 = "AssassinsCreedIIGame.exe+165C20",
-        dynamic16 = "AssassinsCreedIIGame.exe+651D29",
-        dynamic17 = "\"AssassinsCreedIIGame.exe\"+651D20:"
+        dynamic11 = "AssassinsCreedIIGame.exe+64FCB2",
+        dynamic12 = "AssassinsCreedIIGame.exe+64FC73",
+        dynamic13 = "AssassinsCreedIIGame.exe+1C2360",
+        dynamic14 = "AssassinsCreedIIGame.exe+64FC93",
+        dynamic15 = "\"AssassinsCreedIIGame.exe\"+64FC69:",
+        dynamic16 = "AssassinsCreedIIGame.exe+165C20",
+        dynamic17 = "AssassinsCreedIIGame.exe+651D29",
+        dynamic18 = "\"AssassinsCreedIIGame.exe\"+651D20:"
     },
     [2] = {
         dynamic1 = "\"AssassinsCreedIIGame.exe\"+C4B646:",
@@ -7907,13 +7908,14 @@ local config_enable = {
         dynamic8 = "AssassinsCreedIIGame.exe+C2BCBE",
         dynamic9 = "AssassinsCreedIIGame.exe+C2BCBE",
         dynamic10 = "\"AssassinsCreedIIGame.exe\"+C2BCB5:",
-        dynamic11 = "AssassinsCreedIIGame.exe+C2BC83",
-        dynamic12 = "AssassinsCreedIIGame.exe+1EB010",
-        dynamic13 = "AssassinsCreedIIGame.exe+C2BCA3",
-        dynamic14 = "\"AssassinsCreedIIGame.exe\"+C2BC79:",
-        dynamic15 = "AssassinsCreedIIGame.exe+18F090",
-        dynamic16 = "AssassinsCreedIIGame.exe+C2DD39",
-        dynamic17 = "\"AssassinsCreedIIGame.exe\"+C2DD30:"
+        dynamic11 = "AssassinsCreedIIGame.exe+C2BCC2",
+        dynamic12 = "AssassinsCreedIIGame.exe+C2BC83",
+        dynamic13 = "AssassinsCreedIIGame.exe+1EB010",
+        dynamic14 = "AssassinsCreedIIGame.exe+C2BCA3",
+        dynamic15 = "\"AssassinsCreedIIGame.exe\"+C2BC79:",
+        dynamic16 = "AssassinsCreedIIGame.exe+18F090",
+        dynamic17 = "AssassinsCreedIIGame.exe+C2DD39",
+        dynamic18 = "\"AssassinsCreedIIGame.exe\"+C2DD30:"
     }
 }
 
@@ -8046,6 +8048,8 @@ label(returnhere6)
 label(exit6)
 
 manual_ledge_grab_2:
+cmp eax,04
+je %s
 cmp eax,05
 je %s
 mov ecx,[esi+08]
@@ -8077,7 +8081,7 @@ jmp returnhere7
 %s
 jmp prescriptive_ledge_grab
 returnhere7:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16, addrE.dynamic17)
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16, addrE.dynamic17, addrE.dynamic18)
 
 local success, info = autoAssemble(enableScript)
 if not success then

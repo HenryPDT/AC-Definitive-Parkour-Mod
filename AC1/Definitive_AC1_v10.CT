@@ -5789,6 +5789,8 @@ label(returnhere6)
 label(exit6)
 
 manual_ledge_grab_2:
+cmp eax,04
+je AssassinsCreed_Dx10.exe+B8C4C9
 cmp eax,05
 je AssassinsCreed_Dx10.exe+B8C479
 mov edx,[esi+0C]

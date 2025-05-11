@@ -6630,6 +6630,8 @@ label(returnhere6)
 label(exit6)
 
 manual_ledge_grab_2:
+cmp eax,04
+je ACRSP.exe+665D95
 cmp eax,05
 je ACRSP.exe+665D53
 mov ecx,[esi+08]
