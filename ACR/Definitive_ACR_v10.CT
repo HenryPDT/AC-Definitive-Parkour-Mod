@@ -7342,6 +7342,7 @@ globalalloc(forced_hook_climb_leap_enable,1)
 globalalloc(forced_hook_climb_leap_double_enable,1)
 globalalloc(forced_hook_climb_leap_hang_enable,1)
 globalalloc(forced_hook_pull_up_enable,1)
+globalalloc(forced_hook_climb_leap_rehook_enable,1)
 globalalloc(hook_tap_f,1)
 globalalloc(bindLegsTap,1)
 
@@ -7373,160 +7374,179 @@ returnhere:
 
 
 alloc(forced_hook_climb_double,2048)
-label(returnhere3)
-label(originalcode3)
-label(exit3)
+label(returnhere2)
+label(originalcode2)
+label(exit2)
 
 forced_hook_climb_double:
 cmp byte ptr [forced_hook_climb_leap_enable],01
-je originalcode3
+je originalcode2
 cmp byte ptr [forced_hook_climb_leap_double_enable],01
 jne ACRSP.exe+66A809
 mov [eax+08],ecx
-jmp exit3
+jmp exit2
 
-originalcode3:
+originalcode2:
 cmp [esi+000001C0],ecx
 jne ACRSP.exe+66A809
 mov [eax+08],ecx
 
-exit3:
-jmp returnhere3
+exit2:
+jmp returnhere2
 
 "ACRSP.exe"+66A7F3:
 jmp forced_hook_climb_double
-returnhere3:
+returnhere2:
 
 
 alloc(forced_hook_climb_hang,2048)
-label(returnhere4)
-label(exit4)
+label(returnhere3)
+label(exit3)
 
 forced_hook_climb_hang:
 call ACRSP.exe+68CE80
 cmp byte ptr [forced_hook_climb_leap_hang_enable],01
 je ACRSP.exe+684012
 
-exit4:
-jmp returnhere4
+exit3:
+jmp returnhere3
 
 "ACRSP.exe"+684009:
 jmp forced_hook_climb_hang
-returnhere4:
+returnhere3:
 
 
 alloc(forced_hook_climb_pull_up,2048)
-label(returnhere5)
-label(exit5)
+label(returnhere4)
+label(exit4)
 
 forced_hook_climb_pull_up:
 cmp byte ptr [forced_hook_pull_up_enable],01
-je exit5
+je exit4
 
 test al,al
 je ACRSP.exe+6713FD
 
-exit5:
-jmp returnhere5
+exit4:
+jmp returnhere4
 
 "ACRSP.exe"+671309:
 jmp forced_hook_climb_pull_up
 nop
-returnhere5:
+returnhere4:
 
 
 alloc(forced_hook_climb_hang_pull_up,2048)
-label(returnhere6)
-label(exit6)
+label(returnhere5)
+label(exit5)
 
 forced_hook_climb_hang_pull_up:
 call ACRSP.exe+BC6D80
 cmp byte ptr [forced_hook_pull_up_enable],01
-jne exit6
+jne exit5
 cmp byte ptr [forced_hook_pull_up_enable],01
-jne exit6
+jne exit5
 jmp ACRSP.exe+671458
 
-exit6:
-jmp returnhere6
+exit5:
+jmp returnhere5
 
 "ACRSP.exe"+6713F4:
 jmp forced_hook_climb_hang_pull_up
-returnhere6:
+returnhere5:
 
 
 alloc(forced_hook_climb_hang_pull_up_2,2048)
-label(returnhere7)
-label(exit7)
+label(returnhere6)
+label(exit6)
 
 forced_hook_climb_hang_pull_up_2:
 call ACRSP.exe+BC6400
 cmp byte ptr [forced_hook_pull_up_enable],01
-jne exit7
+jne exit6
 cmp byte ptr [forced_hook_pull_up_enable],01
-jne exit7
+jne exit6
 jmp ACRSP.exe+671516
 
-exit7:
-jmp returnhere7
+exit6:
+jmp returnhere6
 
 "ACRSP.exe"+671509:
 jmp forced_hook_climb_hang_pull_up_2
-returnhere7:
+returnhere6:
 
 
 alloc(forced_hook_climb_tap,2048)
-label(returnhere8)
-label(originalcode8)
-label(exit8)
+label(returnhere7)
+label(originalcode7)
+label(exit7)
 
 forced_hook_climb_tap:
 mov [hook_tap_f],00
 cmp byte ptr [forced_hook_climb_leap_rehook_enable],01
 je ACRSP.exe+66A821
 cmp byte ptr [esi+000001D0],01
-jne originalcode8
+jne originalcode7
 cmp byte ptr [bindLegsTap],01
-jne originalcode8
+jne originalcode7
 mov [hook_tap_f],01
 jmp ACRSP.exe+66A821
 
-originalcode8:
+originalcode7:
 cmp byte ptr [esi+000001D0],00
 
-exit8:
-jmp returnhere8
+exit7:
+jmp returnhere7
 
 "ACRSP.exe"+66A7D8:
 jmp forced_hook_climb_tap
 nop 2
-returnhere8:
+returnhere7:
 
 
 alloc(forced_hook_climb_tap_2,2048)
-label(returnhere9)
-label(originalcode9)
-label(exit9)
+label(returnhere8)
+label(originalcode8)
+label(exit8)
 
 forced_hook_climb_tap_2:
 cmp byte ptr [forced_hook_climb_leap_rehook_enable],01
 je ACRSP.exe+66A82A
 cmp byte ptr [hook_tap_f],01
-jne originalcode9
+jne originalcode8
 cmp byte ptr [forced_hook_climb_leap_enable],01
 je ACRSP.exe+66A88E
 cmp byte ptr [forced_hook_climb_leap_double_enable],01
 je ACRSP.exe+66A8AD
 
-originalcode9:
+originalcode8:
 cmp byte ptr [esi+000001D1],00
 
-exit9:
-jmp returnhere9
+exit8:
+jmp returnhere8
 
 "ACRSP.exe"+66A821:
 jmp forced_hook_climb_tap_2
 nop 2
+returnhere8:
+
+
+alloc(forced_hook_climb_tap_3,2048)
+label(returnhere9)
+label(exit9)
+
+forced_hook_climb_tap_3:
+cmp byte ptr [hook_tap_f],01
+jne exit9
+mov [ecx+0000202A],al
+mov [hook_tap_f],00
+
+exit9:
+jmp returnhere9
+
+"ACRSP.exe"+16FE98D:
+jmp forced_hook_climb_tap_3
+nop
 returnhere9:
 
 
@@ -7565,6 +7585,10 @@ db 80 BE D0 01 00 00 00
 db 80 BE D1 01 00 00 00
 //cmp byte ptr [esi+000001D1],00
 
+"ACRSP.exe"+16FE98D:
+db 88 81 2A 20 00 00
+//mov [ecx+0000202A],al
+
 dealloc(forced_hook_climb)
 dealloc(forced_hook_climb_double)
 dealloc(forced_hook_climb_hang)
@@ -7573,6 +7597,7 @@ dealloc(forced_hook_climb_hang_pull_up)
 dealloc(forced_hook_climb_hang_pull_up_2)
 dealloc(forced_hook_climb_tap)
 dealloc(forced_hook_climb_tap_2)
+dealloc(forced_hook_climb_tap_3)
 dealloc(value)
 </AssemblerScript>
                         </CheatEntry>

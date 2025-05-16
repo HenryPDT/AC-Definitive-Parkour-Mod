@@ -9606,7 +9606,8 @@ local config_enable = {
         dynamic23 = "ACRSP.exe+66A82A",
         dynamic24 = "ACRSP.exe+66A88E",
         dynamic25 = "ACRSP.exe+66A8AD",
-        dynamic26 = "\"ACRSP.exe\"+66A821:"
+        dynamic26 = "\"ACRSP.exe\"+66A821:",
+        dynamic27 = "\"ACRSP.exe\"+16FE98D:"
     },
     [2] = {
         dynamic1 = "ACRSP.exe+69BB15",
@@ -9634,7 +9635,8 @@ local config_enable = {
         dynamic23 = "ACRSP.exe+69BFBA",
         dynamic24 = "ACRSP.exe+69C01E",
         dynamic25 = "ACRSP.exe+69C03D",
-        dynamic26 = "\"ACRSP.exe\"+69BFB1:"
+        dynamic26 = "\"ACRSP.exe\"+69BFB1:",
+        dynamic27 = "\"ACRSP.exe\"+173239D:"
     }
 }
 
@@ -9650,6 +9652,7 @@ globalalloc(forced_hook_climb_leap_enable,1)
 globalalloc(forced_hook_climb_leap_double_enable,1)
 globalalloc(forced_hook_climb_leap_hang_enable,1)
 globalalloc(forced_hook_pull_up_enable,1)
+globalalloc(forced_hook_climb_leap_rehook_enable,1)
 globalalloc(hook_tap_f,1)
 globalalloc(bindLegsTap,1)
 
@@ -9681,73 +9684,93 @@ returnhere:
 
 
 alloc(forced_hook_climb_double,2048)
-label(returnhere3)
-label(originalcode3)
-label(exit3)
+label(returnhere2)
+label(originalcode2)
+label(exit2)
 
 forced_hook_climb_double:
 cmp byte ptr [forced_hook_climb_leap_enable],01
-je originalcode3
+je originalcode2
 cmp byte ptr [forced_hook_climb_leap_double_enable],01
 jne %s
 mov [eax+08],ecx
-jmp exit3
+jmp exit2
 
-originalcode3:
+originalcode2:
 cmp [esi+000001C0],ecx
 jne %s
 mov [eax+08],ecx
 
-exit3:
-jmp returnhere3
+exit2:
+jmp returnhere2
 
 %s
 jmp forced_hook_climb_double
-returnhere3:
+returnhere2:
 
 
 alloc(forced_hook_climb_hang,2048)
-label(returnhere4)
-label(exit4)
+label(returnhere3)
+label(exit3)
 
 forced_hook_climb_hang:
 call %s
 cmp byte ptr [forced_hook_climb_leap_hang_enable],01
 je %s
 
+exit3:
+jmp returnhere3
+
+%s
+jmp forced_hook_climb_hang
+returnhere3:
+
+
+alloc(forced_hook_climb_pull_up,2048)
+label(returnhere4)
+label(exit4)
+
+forced_hook_climb_pull_up:
+cmp byte ptr [forced_hook_pull_up_enable],01
+je exit4
+
+test al,al
+je %s
+
 exit4:
 jmp returnhere4
 
 %s
-jmp forced_hook_climb_hang
+jmp forced_hook_climb_pull_up
+nop
 returnhere4:
 
 
-alloc(forced_hook_climb_pull_up,2048)
+alloc(forced_hook_climb_hang_pull_up,2048)
 label(returnhere5)
 label(exit5)
 
-forced_hook_climb_pull_up:
+forced_hook_climb_hang_pull_up:
+call %s
 cmp byte ptr [forced_hook_pull_up_enable],01
-je exit5
-
-test al,al
-je %s
+jne exit5
+cmp byte ptr [forced_hook_pull_up_enable],01
+jne exit5
+jmp %s
 
 exit5:
 jmp returnhere5
 
 %s
-jmp forced_hook_climb_pull_up
-nop
+jmp forced_hook_climb_hang_pull_up
 returnhere5:
 
 
-alloc(forced_hook_climb_hang_pull_up,2048)
+alloc(forced_hook_climb_hang_pull_up_2,2048)
 label(returnhere6)
 label(exit6)
 
-forced_hook_climb_hang_pull_up:
+forced_hook_climb_hang_pull_up_2:
 call %s
 cmp byte ptr [forced_hook_pull_up_enable],01
 jne exit6
@@ -9759,84 +9782,83 @@ exit6:
 jmp returnhere6
 
 %s
-jmp forced_hook_climb_hang_pull_up
+jmp forced_hook_climb_hang_pull_up_2
 returnhere6:
 
 
-alloc(forced_hook_climb_hang_pull_up_2,2048)
-label(returnhere7)
-label(exit7)
-
-forced_hook_climb_hang_pull_up_2:
-call %s
-cmp byte ptr [forced_hook_pull_up_enable],01
-jne exit7
-cmp byte ptr [forced_hook_pull_up_enable],01
-jne exit7
-jmp %s
-
-exit7:
-jmp returnhere7
-
-%s
-jmp forced_hook_climb_hang_pull_up_2
-returnhere7:
-
-
 alloc(forced_hook_climb_tap,2048)
-label(returnhere8)
-label(originalcode8)
-label(exit8)
+label(returnhere7)
+label(originalcode7)
+label(exit7)
 
 forced_hook_climb_tap:
 mov [hook_tap_f],00
 cmp byte ptr [forced_hook_climb_leap_rehook_enable],01
 je %s
 cmp byte ptr [esi+000001D0],01
-jne originalcode8
+jne originalcode7
 cmp byte ptr [bindLegsTap],01
-jne originalcode8
+jne originalcode7
 mov [hook_tap_f],01
 jmp %s
 
-originalcode8:
+originalcode7:
 cmp byte ptr [esi+000001D0],00
 
-exit8:
-jmp returnhere8
+exit7:
+jmp returnhere7
 
 %s
 jmp forced_hook_climb_tap
 nop 2
-returnhere8:
+returnhere7:
 
 
 alloc(forced_hook_climb_tap_2,2048)
-label(returnhere9)
-label(originalcode9)
-label(exit9)
+label(returnhere8)
+label(originalcode8)
+label(exit8)
 
 forced_hook_climb_tap_2:
 cmp byte ptr [forced_hook_climb_leap_rehook_enable],01
 je %s
 cmp byte ptr [hook_tap_f],01
-jne originalcode9
+jne originalcode8
 cmp byte ptr [forced_hook_climb_leap_enable],01
 je %s
 cmp byte ptr [forced_hook_climb_leap_double_enable],01
 je %s
 
-originalcode9:
+originalcode8:
 cmp byte ptr [esi+000001D1],00
+
+exit8:
+jmp returnhere8
+
+%s
+jmp forced_hook_climb_tap_2
+nop 2
+returnhere8:
+
+
+alloc(forced_hook_climb_tap_3,2048)
+label(returnhere9)
+label(exit9)
+
+forced_hook_climb_tap_3:
+cmp byte ptr [hook_tap_f],01
+jne exit9
+mov [ecx+0000202A],al
+mov [hook_tap_f],00
 
 exit9:
 jmp returnhere9
 
 %s
-jmp forced_hook_climb_tap_2
-nop 2
+jmp forced_hook_climb_tap_3
+nop
 returnhere9:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16, addrE.dynamic17, addrE.dynamic18, addrE.dynamic19, addrE.dynamic20, addrE.dynamic21, addrE.dynamic22, addrE.dynamic23, addrE.dynamic24, addrE.dynamic25, addrE.dynamic26)
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16, addrE.dynamic17, addrE.dynamic18, addrE.dynamic19, addrE.dynamic20, addrE.dynamic21, addrE.dynamic22, addrE.dynamic23, addrE.dynamic24, addrE.dynamic25, addrE.dynamic26, addrE.dynamic27)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -9865,7 +9887,8 @@ local config_disable = {
         dynamic10 = "\"ACRSP.exe\"+671509:",
         dynamic11 = "ACRSP.exe+BC6400",
         dynamic12 = "\"ACRSP.exe\"+66A7D8:",
-        dynamic13 = "\"ACRSP.exe\"+66A821:"
+        dynamic13 = "\"ACRSP.exe\"+66A821:",
+        dynamic14 = "\"ACRSP.exe\"+16FE98D:"
     },
     [2] = {
         dynamic1 = "\"ACRSP.exe\"+69BB04:",
@@ -9880,7 +9903,8 @@ local config_disable = {
         dynamic10 = "\"ACRSP.exe\"+6A2C99:",
         dynamic11 = "ACRSP.exe+BF9EA0",
         dynamic12 = "\"ACRSP.exe\"+69BF68:",
-        dynamic13 = "\"ACRSP.exe\"+69BFB1:"
+        dynamic13 = "\"ACRSP.exe\"+69BFB1:",
+        dynamic14 = "\"ACRSP.exe\"+173239D:"
     }
 }
 
@@ -9922,6 +9946,10 @@ db 80 BE D0 01 00 00 00
 db 80 BE D1 01 00 00 00
 //cmp byte ptr [esi+000001D1],00
 
+%s
+db 88 81 2A 20 00 00
+//mov [ecx+0000202A],al
+
 dealloc(forced_hook_climb)
 dealloc(forced_hook_climb_double)
 dealloc(forced_hook_climb_hang)
@@ -9930,8 +9958,9 @@ dealloc(forced_hook_climb_hang_pull_up)
 dealloc(forced_hook_climb_hang_pull_up_2)
 dealloc(forced_hook_climb_tap)
 dealloc(forced_hook_climb_tap_2)
+dealloc(forced_hook_climb_tap_3)
 dealloc(value)
-]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7, addrD.dynamic8, addrD.dynamic9, addrD.dynamic10, addrD.dynamic11, addrD.dynamic12, addrD.dynamic13)
+]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7, addrD.dynamic8, addrD.dynamic9, addrD.dynamic10, addrD.dynamic11, addrD.dynamic12, addrD.dynamic13, addrD.dynamic14)
 
 
 if disableInfo and disableInfo.info then
