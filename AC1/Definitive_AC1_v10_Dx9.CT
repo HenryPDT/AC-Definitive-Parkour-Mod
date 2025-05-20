@@ -95,6 +95,8 @@ globalalloc(instant_swingoff_f,1)
 globalalloc(vault_inner_ledge_f,1)
 globalalloc(dismount_hang_free_eject_f,1)
 globalalloc(freeform_jump_f,1)
+globalalloc(ledge_drop_f,1)
+globalalloc(eject_clamp_f,1)
 
 walk_strength:
 dd (float)1
@@ -323,6 +325,7 @@ mov [on_ground_f],00
 mov [on_nso_f],00
 mov [on_air_f],00
 mov [on_vault_f],00
+mov [ledge_drop_f],00
 mov esi,ecx
 mov eax,[esi+10]
 cmp dword ptr [eax+68],01
@@ -363,6 +366,7 @@ mov [on_hang_wall_f],01
 mov [on_hang_crouch_f],00
 mov [on_hang_stand_f],01
 mov [on_vault_f],00
+mov [ledge_drop_f],00
 mov eax,[edx+000000B0]
 
 exit9:
@@ -390,6 +394,7 @@ mov [on_hang_stand_f],00
 mov [on_vault_f],00
 mov [dive_beam_f],00
 mov [freeform_jump_f],00
+mov [eject_clamp_f],00
 push ebp
 mov ebp,esp
 and esp,-10
@@ -441,6 +446,8 @@ mov [already_rolled_f],00
 mov [dive_beam_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
+mov [ledge_drop_f],00
+mov [eject_clamp_f],00
 cmp dword ptr [esp+04],00
 
 exit12:
@@ -481,6 +488,7 @@ mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [on_vault_f],00
 mov [vault_inner_ledge_f],00
+mov [ledge_drop_f],00
 cmp dword ptr [esp+04],00
 
 exit14:
@@ -554,6 +562,8 @@ mov [already_rolled_f],00
 mov [dive_beam_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
+mov [ledge_drop_f],00
+mov [eject_clamp_f],00
 cmp dword ptr [esp+14],00
 
 exit17:

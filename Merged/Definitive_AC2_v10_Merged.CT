@@ -142,6 +142,8 @@ globalalloc(instant_swingoff_f,1)
 globalalloc(vault_inner_ledge_f,1)
 globalalloc(dismount_hang_free_eject_f,1)
 globalalloc(freeform_jump_f,1)
+globalalloc(ledge_drop_f,1)
+globalalloc(eject_clamp_f,1)
 globalalloc(swan_dive_f,1)
 
 walk_strength:
@@ -382,6 +384,7 @@ mov [on_ground_f],00
 mov [on_nso_f],00
 mov [on_air_f],00
 mov [on_vault_f],00
+mov [ledge_drop_f],00
 mov [on_water_f],00
 mov ecx,[edi+10]
 mov edx,[ecx+68]
@@ -424,6 +427,7 @@ mov [on_hang_wall_f],01
 mov [on_hang_crouch_f],00
 mov [on_hang_stand_f],01
 mov [on_vault_f],00
+mov [ledge_drop_f],00
 mov [on_water_f],00
 mov ebp,[ebx+04]
 mov [esp+04],ebp
@@ -453,6 +457,7 @@ mov [on_hang_stand_f],00
 mov [on_vault_f],00
 mov [dive_beam_f],00
 mov [freeform_jump_f],00
+mov [eject_clamp_f],00
 mov [on_water_f],00
 push ebp
 mov ebp,esp
@@ -505,6 +510,8 @@ mov [already_rolled_f],00
 mov [dive_beam_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
+mov [ledge_drop_f],00
+mov [eject_clamp_f],00
 mov [swan_dive_f],00
 mov [on_water_f],00
 push ebp
@@ -551,6 +558,7 @@ mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [on_vault_f],00
 mov [vault_inner_ledge_f],00
+mov [ledge_drop_f],00
 mov [swan_dive_f],00
 mov ebp,esp
 cmp dword ptr [ebp+08],00
@@ -627,6 +635,8 @@ mov [already_rolled_f],00
 mov [dive_beam_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
+mov [ledge_drop_f],00
+mov [eject_clamp_f],00
 mov [on_water_f],00
 mov [swan_dive_f],00
 push ebp
@@ -661,6 +671,8 @@ mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [on_vault_f],00
 mov [vault_inner_ledge_f],00
+mov [ledge_drop_f],00
+mov [eject_clamp_f],00
 mov [on_water_f],01
 mov [swan_dive_f],00
 push ebx
