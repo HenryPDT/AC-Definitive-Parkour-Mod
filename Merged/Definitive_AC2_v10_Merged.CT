@@ -5764,12 +5764,19 @@ returnhere:
 
 alloc(ledge_drop_2,2048)
 label(returnhere2)
+label(code2)
 label(exit2)
 
 ledge_drop_2:
 mov [ledge_drop_f],00
 cmp byte ptr [ebp-20],00
 je %s
+cmp byte ptr [bindHighProfile],01
+jne code2
+cmp byte ptr [bindLegs],01
+je exit2
+
+code2:
 mov [ledge_drop_f],01
 
 exit2:
@@ -11836,7 +11843,7 @@ vault_inner_ledge_height:
 dd (float)0 (float)0 (float)0 (float)0
 
 near_miss_height:
-dd (float)0 (float)0 (float)-2 (float)0
+dd (float)0 (float)0 (float)-1.5 (float)0
 
 parkour_down_freeform_jump_height:
 dd (float)0 (float)0 (float)1 (float)0

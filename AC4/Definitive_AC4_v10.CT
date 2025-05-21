@@ -341,6 +341,7 @@ on_hang:
 mov [on_ground_f],00
 mov [on_nso_f],00
 mov [on_air_f],00
+mov [ledge_drop_f],00
 //mov [on_vault_f],00
 mov [on_water_f],00
 mov eax,[esi+00000AA0]
@@ -472,6 +473,7 @@ mov [already_rolled_f],00
 mov [dive_beam_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
+mov [ledge_drop_f],00
 mov [swan_dive_f],00
 mov [on_water_f],00
 mov ebp,[ebx+04]
@@ -3850,17 +3852,19 @@ returnhere:
 
 alloc(vault_1,2048)
 label(returnhere1)
-label(code1)
+label(vault_code_1)
 label(exit1)
 
 vault_1:
 cmp byte ptr [vault_kenway_enable],01
-je code1
+je vault_code_1
+//cmp byte ptr [vault_enable],01
+//je vault_code_1
 cmp eax,-01
 je AC4BFSP.exe+DC7C72
 jmp exit1
 
-code1:
+vault_code_1:
 mov [ebp-000000B0],00000000
 imul eax,eax,00000230
 add eax,[edi]
@@ -3879,9 +3883,14 @@ returnhere1:
 alloc(vault_2,2048)
 label(returnhere2)
 label(originalcode2)
+label(vault_code_2)
 label(exit2)
 
 vault_2:
+//cmp byte ptr [parkour_far_enable],00
+//je originalcode2
+cmp byte ptr [vault_inner_ledge_f],01
+je vault_code_2
 cmp byte ptr [vault_kenway_enable],01
 je originalcode2
 cmp byte ptr [vault_enable],00
@@ -3890,6 +3899,8 @@ cmp [ebx+14],00000080
 je originalcode2
 cmp [ebx+14],00000100
 je originalcode2
+
+vault_code_2:
 mov [ebx+14],00000002
 
 originalcode2:
@@ -4359,6 +4370,80 @@ nop
 returnhere7:
 
 
+alloc(ground_arm,2048)
+label(returnhere8)
+label(exit8)
+
+ground_arm:
+cmp byte ptr [freeform_enable],01
+je AC4BFSP.exe+16F2275
+comiss xmm0,[ebp-04]
+jna AC4BFSP.exe+16F223B
+
+exit8:
+jmp returnhere8
+
+"AC4BFSP.exe"+16F222C:
+jmp ground_arm
+nop
+returnhere8:
+
+
+alloc(ground_arm_2,2048)
+label(returnhere9)
+label(exit9)
+
+ground_arm_2:
+cmp byte ptr [freeform_enable],01
+je exit9
+cmp byte ptr [ebp-20],00
+je AC4BFSP.exe+16F238B
+
+exit9:
+jmp returnhere9
+
+"AC4BFSP.exe"+16F21E4:
+jmp ground_arm_2
+nop
+returnhere9:
+
+
+alloc(nso_arm,2048)
+label(returnhere10)
+label(exit10)
+
+nso_arm:
+cmp byte ptr [freeform_enable],01
+je AC4BFSP.exe+1575383
+cmp edx,03
+jne AC4BFSP.exe+15753C9
+
+exit10:
+jmp returnhere10
+
+"AC4BFSP.exe"+157536A:
+jmp nso_arm
+returnhere10:
+
+
+alloc(nso_arm_2,2048)
+label(returnhere11)
+label(exit11)
+
+nso_arm_2:
+cmp byte ptr [freeform_enable],01
+je AC4BFSP.exe+1567C48
+cmp edx,03
+jne AC4BFSP.exe+1567C28
+
+exit11:
+jmp returnhere11
+
+"AC4BFSP.exe"+1567C0D:
+jmp nso_arm_2
+returnhere11:
+
+
 [DISABLE]
 "AC4BFSP.exe"+DC73D6:
 db 0F 84 FF 06 00 00
@@ -4388,6 +4473,25 @@ db E8 AA E6 93 FF
 db 0F 84 F8 02 00 00
 //je AC4BFSP.exe+19B166E
 
+"AC4BFSP.exe"+16F222C:
+db 0F 2F 45 FC 76 09
+//comiss xmm0,[ebp-04]
+//jna AC4BFSP.exe+16F223B
+
+"AC4BFSP.exe"+16F21E4:
+db 0F 84 A1 01 00 00
+//je AC4BFSP.exe+16F238B
+
+"AC4BFSP.exe"+157536A:
+db 83 FA 03 75 5A
+//cmp edx,03
+//jne AC4BFSP.exe+15753C9
+
+"AC4BFSP.exe"+1567C0D:
+db 83 FA 03 75 16
+//cmp edx,03
+//jne AC4BFSP.exe+1567C28
+
 dealloc(freeform)
 dealloc(disable_leap_of_faith)
 dealloc(disable_wallrun_grab)
@@ -4395,6 +4499,10 @@ dealloc(disable_wallrun_grab_2)
 dealloc(disable_nso_snap)
 dealloc(disable_stumble)
 dealloc(freeform_corner_swing)
+dealloc(ground_arm)
+dealloc(ground_arm_2)
+dealloc(nso_arm)
+dealloc(nso_arm_2)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
@@ -5341,12 +5449,19 @@ returnhere2:
 
 alloc(ledge_drop_3,2048)
 label(returnhere3)
+label(code3)
 label(exit3)
 
 ledge_drop_3:
 mov [ledge_drop_f],00
 comiss xmm1,[ebp-04]
 jna AC4BFSP.exe+16F2FFA
+cmp byte ptr [bindHighProfile],01
+jne code3
+cmp byte ptr [bindLegs],01
+je exit3
+
+code3:
 mov [ledge_drop_f],01
 
 exit3:
@@ -5360,11 +5475,18 @@ returnhere3:
 
 alloc(ledge_drop_4,2048)
 label(returnhere4)
+label(code4)
 label(exit4)
 
 ledge_drop_4:
 mov [ledge_drop_f],00
 je AC4BFSP.exe+16F2FFA
+cmp byte ptr [bindHighProfile],01
+jne code4
+cmp byte ptr [bindLegs],01
+je exit4
+
+code4:
 mov [ledge_drop_f],01
 
 exit4:
@@ -5772,6 +5894,8 @@ label(returnhere6)
 label(exit6)
 
 high_profile_swing:
+cmp byte ptr [swing_up_enable],01
+je AC4BFSP.exe+D3DEB4
 cmp byte ptr [bindHighProfile],00
 je AC4BFSP.exe+D3DED1
 cmp byte ptr [bindLegs],01
@@ -6142,6 +6266,13 @@ label(returnhere)
 label(originalcode)
 label(exit)
 
+globalalloc(forced_hang_enable,1)
+globalalloc(vanilla_beam_entry_enable,1)
+globalalloc(manual_catch_speed,4)
+
+manual_catch_speed:
+dd (float)0.2
+
 pole_to_beam:
 cmp byte ptr [forced_hang_enable],01
 je originalcode
@@ -6238,6 +6369,30 @@ nop
 returnhere5:
 
 
+alloc(instant_swing_off,2048)
+label(returnhere6)
+label(originalcode6)
+label(exit6)
+
+instant_swing_off:
+fstp dword ptr [ebp+08]
+cmp [ebp+08],3F5DDDDE
+jne originalcode6
+movss xmm0,[manual_catch_speed]
+jmp exit6
+
+originalcode6:
+movss xmm0,[ebp+08]
+
+exit6:
+jmp returnhere6
+
+"AC4BFSP.exe"+FB6A16:
+jmp instant_swing_off
+nop 3
+returnhere6:
+
+
 [DISABLE]
 "AC4BFSP.exe"+19D6411:
 db 89 4D EC 89 85 68 FF FF FF
@@ -6264,12 +6419,18 @@ db 8B 45 C4 83 F8 04
 //mov eax,[ebp-3C]
 //cmp eax,04
 
+"AC4BFSP.exe"+FB6A16:
+db D9 5D 08 F3 0F 10 45 08
+//fstp dword ptr [ebp+08]
+//movss xmm0,[ebp+08]
+
 dealloc(hang)
 dealloc(pole_to_beam)
 dealloc(pull_up)
 dealloc(swing_idle)
 dealloc(swing_entry)
 dealloc(vanilla_beam_entry)
+dealloc(instant_swing_off)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
@@ -7026,7 +7187,6 @@ globalalloc(smooth_fall_f,1)
 globalalloc(on_hang_free_f,1)
 globalalloc(dismount_hang_free_eject_f,1)
 globalalloc(already_rolled_f,1)
-globalalloc(move_type_f,4)
 globalalloc(eject_clamp_f,1)
 
 globalalloc(parkour_down_enable,1)
@@ -7123,7 +7283,7 @@ vault_inner_ledge_height:
 dd (float)0 (float)0 (float)0 (float)0
 
 near_miss_height:
-dd (float)0 (float)0 (float)-2 (float)0
+dd (float)0 (float)0 (float)-1.5 (float)0
 
 parkour_down_freeform_jump_height:
 dd (float)0 (float)0 (float)1 (float)0
@@ -7392,8 +7552,7 @@ jne checks
 cmp [edi+88],00000000
 jne checks
 mov [freeform_jump_f],01
-mov eax,[move_type_f]
-mov [eax],00000001
+mov [ebp+5C],00000001
 
 ledge_drop_check:
 comiss xmm4,[freeform_distance]
@@ -7813,87 +7972,79 @@ call AC4BFSP.exe+C5E720
 exit2:
 jmp returnhere2
 
-"AC4BFSP.exe"+12CCA25:
+"AC4BFSP.exe"+12CC872:
 jmp target_modifier_2
 returnhere2:
 
-{
-alloc(smooth_fall,2048)
+
+alloc(target_modifier_3,2048)
 label(returnhere3)
-label(originalcode3)
 label(exit3)
 
-smooth_fall:
-cmp byte ptr [smooth_fall_f],01
-jne originalcode3
-mov [smooth_fall_f],00
-jmp ACBSP.exe+E0D0B7
-
-originalcode3:
-call ACBSP.exe+DFBE80
-
+target_modifier_3:
+jmp AC4BFSP.exe+DC9CE1
+mov ecx,[edx+08]
 
 exit3:
 jmp returnhere3
 
-"ACBSP.exe"+E0D0AE:
-jmp smooth_fall
+"AC4BFSP.exe"+DC9C76:
+jmp target_modifier_3
 returnhere3:
 
 
-alloc(swing_up_cycle,2048)
+alloc(smooth_fall,2048)
 label(returnhere4)
+label(originalcode4)
 label(exit4)
 
-swing_up_cycle:
-mov ecx,[swing_up_height_cycle]
-mov [swing_up_height+8],ecx
-push 00
-mov ecx,edi
-call ACBSP.exe+122F10
+smooth_fall:
+cmp byte ptr [smooth_fall_f],01
+jne originalcode4
+mov [smooth_fall_f],00
+jmp AC4BFSP.exe+19C27E0
+
+originalcode4:
+cmp dword ptr [ebp-24],00
+je AC4BFSP.exe+19C27E0
 
 exit4:
 jmp returnhere4
 
-"ACBSP.exe"+DB234C:
-jmp swing_up_cycle
-nop 4
+"AC4BFSP.exe"+19C1DA6:
+jmp smooth_fall
+nop 5
 returnhere4:
 
 
-alloc(swing_up_drop,2048)
+alloc(swing_up_cycle,2048)
 label(returnhere5)
+label(originalcode5)
+label(swing_up_drop)
 label(exit5)
 
+swing_up_cycle:
+cmp byte ptr [ebp-10],15
+jne swing_up_drop
+mov ecx,[swing_up_height_cycle]
+mov [swing_up_height+8],ecx
+
 swing_up_drop:
-call ACBSP.exe+DCD1E0
+cmp byte ptr [ebp-10],77
+jne originalcode5
 mov [swing_up_height+8],00000000
+
+originalcode5:
+cmp byte ptr [ebp-0A],00
+jne AC4BFSP.exe+176758D
 
 exit5:
 jmp returnhere5
 
-"ACBSP.exe"+DCDE4C:
-jmp swing_up_drop
-returnhere5:
-}
-
-alloc(move_type,2048)
-label(returnhere6)
-label(exit6)
-
-move_type:
-lea esi,[ebx+14]
-mov [move_type_f],esi
-mov esi,[ebx+08]
-mov [ebp-10],eax
-
-exit6:
-jmp returnhere6
-
-"AC4BFSP.exe"+130D995:
-jmp move_type
+"AC4BFSP.exe"+1767538:
+jmp swing_up_cycle
 nop
-returnhere6:
+returnhere5:
 
 
 [DISABLE]
@@ -7902,35 +8053,30 @@ db 0F 29 46 70 0F 28 87 80 00 00 00
 //movaps [esi+70],xmm0
 //movaps xmm0,[edi+00000080]
 
-"AC4BFSP.exe"+12CCA25:
-db E8 F6 1C 99 FF
+"AC4BFSP.exe"+12CC872:
+db E8 A9 1E 99 FF
 //call AC4BFSP.exe+C5E720
-{
-"ACBSP.exe"+E0D0AE:
-db E8 CD ED FE FF
-//call ACBSP.exe+DFBE80
 
-"ACBSP.exe"+DB234C:
-db 6A 00 8B CF E8 BB 0B 37 FF
-//push 00
-//mov ecx,edi
-//call ACBSP.exe+122F10
+"AC4BFSP.exe"+DC9C76:
+db 74 69 8B 4A 08
+//je AC4BFSP.exe+DC9CE1
+//mov ecx,[edx+08]
 
-"ACBSP.exe"+DCDE4C:
-db E8 8F F3 FF FF
-//call ACBSP.exe+DCD1E0
-}
-"AC4BFSP.exe"+130D995:
-db 8B 73 08 89 45 F0
-//mov esi,[ebx+08]
-//mov [ebp-10],eax
+"AC4BFSP.exe"+19C1DA6:
+db 83 7D DC 00 0F 84 30 0A 00 00
+//cmp dword ptr [ebp-24],00
+//je AC4BFSP.exe+19C27E0
+
+"AC4BFSP.exe"+1767538:
+db 80 7D F6 00 75 4F
+//cmp byte ptr [ebp-0A],00
+//jne AC4BFSP.exe+176758D
 
 dealloc(target_modifier)
 dealloc(target_modifier_2)
+dealloc(target_modifier_3)
 dealloc(smooth_fall)
 dealloc(swing_up_cycle)
-dealloc(swing_up_drop)
-dealloc(move_type)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
@@ -9079,7 +9225,7 @@ mov eax,[ecx]
 exit:
 jmp returnhere
 
-"ACBSP.exe"+4BD8C:
+"AC4BFSP.exe"+12C23B:
 jmp hang_to_hang
 returnhere:
 
@@ -9195,7 +9341,7 @@ returnhere7:
 
 
 [DISABLE]
-"ACBSP.exe"+4BD8C:
+"AC4BFSP.exe"+12C23B:
 db 8B 4E 14 8B 01
 //mov ecx,[esi+14]
 //mov eax,[ecx]
@@ -9369,13 +9515,6 @@ db 83 FF 04 74 09
           </Hotkeys>
         </CheatEntry>
       </CheatEntries>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>799</ID>
-      <Description>"No Description"</Description>
-      <ShowAsSigned>0</ShowAsSigned>
-      <VariableType>Byte</VariableType>
-      <Address>ledge_drop_F</Address>
     </CheatEntry>
   </CheatEntries>
   <LuaScript>-- Process name
