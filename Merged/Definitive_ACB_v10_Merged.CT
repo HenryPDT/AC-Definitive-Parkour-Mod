@@ -4286,6 +4286,10 @@ label(code9)
 label(exit9)
 
 vault_inner_ledge_3:
+cmp byte ptr [vault_landing_low_enable],01
+je originalcode9
+cmp byte ptr [vault_landing_far_enable],01
+je originalcode9
 cmp byte ptr [vault_enable],01
 je code9
 cmp byte ptr [bindEmptyHand],01
@@ -4323,6 +4327,10 @@ label(originalcode10)
 label(exit10)
 
 vault_inner_ledge_4:
+cmp byte ptr [vault_landing_low_enable],01
+je originalcode10
+cmp byte ptr [vault_landing_far_enable],01
+je originalcode10
 cmp byte ptr [vault_inner_ledge_f],01
 jne originalcode10
 movaps xmm0,[vault_inner_ledge_to_hang_coords]
