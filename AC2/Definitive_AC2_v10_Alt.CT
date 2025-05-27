@@ -3525,6 +3525,10 @@ globalalloc(buttonLS,1)
 globalalloc(buttonLB,1)
 globalalloc(parkour_mode_enable,1)
 globalalloc(forced_hang_enable,1)
+globalalloc(hud_scale,4)
+
+hud_scale:
+dd (float)0
 
 pause:
 mov [pause_f],cl
@@ -3635,6 +3639,31 @@ nop
 returnhere5:
 
 
+alloc(hide_hud,2048)
+label(returnhere6)
+label(exit6)
+
+hide_hud:
+cmp byte ptr [parkour_mode_enable],01
+jne originalcode
+cmp byte ptr [pause_f],01
+je originalcode
+fst st(0)
+fld dword ptr [hud_scale]
+
+originalcode:
+fst dword ptr [esp+04]
+fstp dword ptr [esp]
+
+exit6:
+jmp returnhere6
+
+"AssassinsCreedIIGame.exe"+1775F0C:
+jmp hide_hud
+nop 2
+returnhere6:
+
+
 [DISABLE]
 "AssassinsCreedIIGame.exe"+D50B53:
 db 8B 4E 0C 85 C9
@@ -3657,11 +3686,17 @@ db 80 7C 08 18 00
 db 0F 84 8F 01 00 00
 //je AssassinsCreedIIGame.exe+13DA858
 
+"AssassinsCreedIIGame.exe"+1775F0C:
+db D9 54 24 04 D9 1C 24
+//fst dword ptr [esp+04]
+//fstp dword ptr [esp]
+
 dealloc(pause)
 dealloc(disable_npc_interaction)
 dealloc(disable_ingame_binds)
 dealloc(disable_combat_grab)
 dealloc(disable_drop_to_hang)
+dealloc(hide_hud)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>

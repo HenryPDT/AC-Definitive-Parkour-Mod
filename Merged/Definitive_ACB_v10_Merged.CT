@@ -3751,7 +3751,8 @@ local config_enable = {
         dynamic9 = "ACBSP.exe+1CE1607",
         dynamic10 = "ACBSP.exe+1CE1607",
         dynamic11 = "ACBSP.exe+1CE1607",
-        dynamic12 = "\"ACBSP.exe\"+1CE15B2:"
+        dynamic12 = "\"ACBSP.exe\"+1CE15B2:",
+        dynamic13 = "\"ACBSP.exe\"+1D3E54C:"
     },
     [2] = {
         dynamic1 = "\"ACBSP.exe\"+641474:",
@@ -3765,7 +3766,8 @@ local config_enable = {
         dynamic9 = "ACBSP.exe+1655217",
         dynamic10 = "ACBSP.exe+1655217",
         dynamic11 = "ACBSP.exe+1655217",
-        dynamic12 = "\"ACBSP.exe\"+16551C2:"
+        dynamic12 = "\"ACBSP.exe\"+16551C2:",
+        dynamic13 = "\"ACBSP.exe\"+1D95A3C:"
     }
 }
 
@@ -3783,6 +3785,10 @@ globalalloc(buttonLS,1)
 globalalloc(buttonLB,1)
 globalalloc(parkour_mode_enable,1)
 globalalloc(forced_hang_enable,1)
+globalalloc(hud_scale,4)
+
+hud_scale:
+dd (float)0
 
 pause:
 mov [pause_f],al
@@ -3891,7 +3897,32 @@ jmp returnhere5
 %s
 jmp disable_drop_to_hang
 returnhere5:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12)
+
+
+alloc(hide_hud,2048)
+label(returnhere6)
+label(exit6)
+
+hide_hud:
+cmp byte ptr [parkour_mode_enable],01
+jne originalcode
+cmp byte ptr [pause_f],01
+je originalcode
+fst st(0)
+fld dword ptr [hud_scale]
+
+originalcode:
+fst dword ptr [esp+04]
+fstp dword ptr [esp]
+
+exit6:
+jmp returnhere6
+
+%s
+jmp hide_hud
+nop 2
+returnhere6:
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -3914,7 +3945,8 @@ local config_disable = {
         dynamic4 = "\"ACBSP.exe\"+822B0F:",
         dynamic5 = "\"ACBSP.exe\"+7A6012:",
         dynamic6 = "\"ACBSP.exe\"+1CE15B2:",
-        dynamic7 = "ACBSP.exe+1CE1607"
+        dynamic7 = "ACBSP.exe+1CE1607",
+        dynamic8 = "\"ACBSP.exe\"+1D3E54C:"
     },
     [2] = {
         dynamic1 = "\"ACBSP.exe\"+641474:",
@@ -3923,7 +3955,8 @@ local config_disable = {
         dynamic4 = "\"ACBSP.exe\"+177876F:",
         dynamic5 = "\"ACBSP.exe\"+17061B2:",
         dynamic6 = "\"ACBSP.exe\"+16551C2:",
-        dynamic7 = "ACBSP.exe+1655217"
+        dynamic7 = "ACBSP.exe+1655217",
+        dynamic8 = "\"ACBSP.exe\"+1D95A3C:"
     }
 }
 
@@ -3953,12 +3986,18 @@ db 74 53 8B 43 08
 //je %s
 //mov eax,[ebx+08]
 
+%s
+db D9 54 24 04 D9 1C 24
+//fst dword ptr [esp+04]
+//fstp dword ptr [esp]
+
 dealloc(pause)
 dealloc(disable_npc_interaction)
 dealloc(disable_ingame_binds)
 dealloc(disable_combat_grab)
 dealloc(disable_drop_to_hang)
-]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7)
+dealloc(hide_hud)
+]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7, addrD.dynamic8)
 
 
 if disableInfo and disableInfo.info then
@@ -4046,7 +4085,7 @@ local config_enable = {
         dynamic22 = "ACBSP.exe+1E9A70",
         dynamic23 = "ACBSP.exe+1A8480",
         dynamic24 = "ACBSP.exe+723C7C",
-        dynamic25 = "ACBSP.exe+DB7DF7",
+        dynamic25 = "ACBSP.exe+723D37",
         dynamic26 = "\"ACBSP.exe\"+723C55:",
         dynamic27 = "\"ACBSP.exe\"+733754:",
         dynamic28 = "\"ACBSP.exe\"+7383A9:",

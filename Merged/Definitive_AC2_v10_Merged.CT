@@ -3704,7 +3704,8 @@ local config_enable = {
         dynamic8 = "AssassinsCreedIIGame.exe+E00958",
         dynamic9 = "AssassinsCreedIIGame.exe+E00958",
         dynamic10 = "AssassinsCreedIIGame.exe+E00958",
-        dynamic11 = "\"AssassinsCreedIIGame.exe\"+E007C3:"
+        dynamic11 = "\"AssassinsCreedIIGame.exe\"+E007C3:",
+        dynamic12 = "\"AssassinsCreedIIGame.exe\"+1706F9C:"
     },
     [2] = {
         dynamic1 = "\"AssassinsCreedIIGame.exe\"+D50B53:",
@@ -3717,7 +3718,8 @@ local config_enable = {
         dynamic8 = "AssassinsCreedIIGame.exe+13DA858",
         dynamic9 = "AssassinsCreedIIGame.exe+13DA858",
         dynamic10 = "AssassinsCreedIIGame.exe+13DA858",
-        dynamic11 = "\"AssassinsCreedIIGame.exe\"+13DA6C3:"
+        dynamic11 = "\"AssassinsCreedIIGame.exe\"+13DA6C3:",
+        dynamic12 = "\"AssassinsCreedIIGame.exe\"+1775F0C:"
     }
 }
 
@@ -3735,6 +3737,10 @@ globalalloc(buttonLS,1)
 globalalloc(buttonLB,1)
 globalalloc(parkour_mode_enable,1)
 globalalloc(forced_hang_enable,1)
+globalalloc(hud_scale,4)
+
+hud_scale:
+dd (float)0
 
 pause:
 mov [pause_f],cl
@@ -3843,7 +3849,32 @@ jmp returnhere5
 jmp disable_drop_to_hang
 nop
 returnhere5:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11)
+
+
+alloc(hide_hud,2048)
+label(returnhere6)
+label(exit6)
+
+hide_hud:
+cmp byte ptr [parkour_mode_enable],01
+jne originalcode
+cmp byte ptr [pause_f],01
+je originalcode
+fst st(0)
+fld dword ptr [hud_scale]
+
+originalcode:
+fst dword ptr [esp+04]
+fstp dword ptr [esp]
+
+exit6:
+jmp returnhere6
+
+%s
+jmp hide_hud
+nop 2
+returnhere6:
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -3865,7 +3896,8 @@ local config_disable = {
         dynamic3 = "AssassinsCreedIIGame.exe+3600C0",
         dynamic4 = "\"AssassinsCreedIIGame.exe\"+10B17A2:",
         dynamic5 = "\"AssassinsCreedIIGame.exe\"+E007C3:",
-        dynamic6 = "AssassinsCreedIIGame.exe+E00958"
+        dynamic6 = "AssassinsCreedIIGame.exe+E00958",
+        dynamic7 = "\"AssassinsCreedIIGame.exe\"+1706F9C:"
     },
     [2] = {
         dynamic1 = "\"AssassinsCreedIIGame.exe\"+D50B53:",
@@ -3873,7 +3905,8 @@ local config_disable = {
         dynamic3 = "AssassinsCreedIIGame.exe+3889C0",
         dynamic4 = "\"AssassinsCreedIIGame.exe\"+5EDEB2:",
         dynamic5 = "\"AssassinsCreedIIGame.exe\"+13DA6C3:",
-        dynamic6 = "AssassinsCreedIIGame.exe+13DA858"
+        dynamic6 = "AssassinsCreedIIGame.exe+13DA858",
+        dynamic7 = "\"AssassinsCreedIIGame.exe\"+1775F0C:"
     }
 }
 
@@ -3902,12 +3935,18 @@ db 80 7C 08 18 00
 db 0F 84 8F 01 00 00
 //je %s
 
+%s
+db D9 54 24 04 D9 1C 24
+//fst dword ptr [esp+04]
+//fstp dword ptr [esp]
+
 dealloc(pause)
 dealloc(disable_npc_interaction)
 dealloc(disable_ingame_binds)
 dealloc(disable_combat_grab)
 dealloc(disable_drop_to_hang)
-]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6)
+dealloc(hide_hud)
+]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7)
 
 
 if disableInfo and disableInfo.info then

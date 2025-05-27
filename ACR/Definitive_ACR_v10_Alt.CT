@@ -3642,6 +3642,10 @@ globalalloc(buttonLS,1)
 globalalloc(buttonLB,1)
 globalalloc(parkour_mode_enable,1)
 globalalloc(forced_hang_enable,1)
+globalalloc(hud_scale,4)
+
+hud_scale:
+dd (float)0
 
 pause:
 mov [pause_f],cl
@@ -3753,6 +3757,31 @@ jmp disable_drop_to_hang
 returnhere5:
 
 
+alloc(hide_hud,2048)
+label(returnhere6)
+label(exit6)
+
+hide_hud:
+cmp byte ptr [parkour_mode_enable],01
+jne originalcode
+cmp byte ptr [pause_f],01
+je originalcode
+fst st(0)
+fld dword ptr [hud_scale]
+
+originalcode:
+fst dword ptr [esp+04]
+fstp dword ptr [esp]
+
+exit6:
+jmp returnhere6
+
+"ACRSP.exe"+1FAE3AC:
+jmp hide_hud
+nop 2
+returnhere6:
+
+
 [DISABLE]
 "ACRSP.exe"+5633A1:
 db 8B 4E 0C 85 C9
@@ -3776,11 +3805,17 @@ db 74 5D 8B 43 08
 //je ACRSP.exe+173A739
 //mov eax,[ebx+08]
 
+"ACRSP.exe"+1FAE3AC:
+db D9 54 24 04 D9 1C 24
+//fst dword ptr [esp+04]
+//fstp dword ptr [esp]
+
 dealloc(pause)
 dealloc(disable_npc_interaction)
 dealloc(disable_ingame_binds)
 dealloc(disable_combat_grab)
 dealloc(disable_drop_to_hang)
+dealloc(hide_hud)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
@@ -7460,6 +7495,8 @@ globalalloc(forced_hook_climb_leap_double_enable,1)
 globalalloc(forced_hook_climb_leap_hang_enable,1)
 globalalloc(forced_hook_pull_up_enable,1)
 globalalloc(forced_hook_climb_leap_rehook_enable,1)
+globalalloc(freeform_enable,1)
+globalalloc(climb_leap_f,1)
 globalalloc(hook_tap_f,1)
 globalalloc(bindLegsTap,1)
 
@@ -7522,6 +7559,10 @@ label(exit3)
 
 forced_hook_climb_hang:
 call ACRSP.exe+6BE610
+cmp byte ptr [freeform_enable],01
+je ACRSP.exe+6B57C2
+cmp byte ptr [bindLegsTap],01
+je ACRSP.exe+6B57C2
 cmp byte ptr [forced_hook_climb_leap_hang_enable],01
 je ACRSP.exe+6B57A2
 
@@ -7667,6 +7708,131 @@ nop
 returnhere9:
 
 
+alloc(forced_hand_climb_tap,2048)
+label(returnhere10)
+label(originalcode10)
+label(exit10)
+
+forced_hand_climb_tap:
+cmp byte ptr [climb_leap_f],01
+jne originalcode10
+cmp byte ptr [freeform_enable],01
+jne originalcode10
+cmp byte ptr [bindLegsTap],01
+jne originalcode10
+mov [climb_leap_f],00
+mov [eax],00
+
+originalcode10:
+cmp byte ptr [eax],00
+je ACRSP.exe+69BE3C
+
+exit10:
+jmp returnhere10
+
+"ACRSP.exe"+69BA9F:
+jmp forced_hand_climb_tap
+nop
+returnhere10:
+
+
+alloc(forced_hand_climb_tap_2,2048)
+label(returnhere11)
+label(originalcode11)
+label(exit11)
+
+forced_hand_climb_tap_2:
+cmp byte ptr [climb_leap_f],00
+jne originalcode11
+cmp byte ptr [freeform_enable],01
+je ACRSP.exe+69BE34
+
+originalcode11:
+test al,al
+je ACRSP.exe+69BE34
+
+exit11:
+jmp returnhere11
+
+"ACRSP.exe"+69BA8B:
+jmp forced_hand_climb_tap_2
+nop 3
+returnhere11:
+
+
+alloc(forced_hand_climb_tap_crouch,2048)
+label(returnhere12)
+label(exit12)
+
+forced_hand_climb_tap_crouch:
+mov [climb_leap_f],01
+push ecx
+mov ecx,edi
+call edx
+
+exit12:
+jmp returnhere12
+
+"ACRSP.exe"+173232A:
+jmp forced_hand_climb_tap_crouch
+returnhere12:
+
+
+alloc(forced_hand_climb_tap_stand,2048)
+label(returnhere13)
+label(exit13)
+
+forced_hand_climb_tap_stand:
+mov [climb_leap_f],01
+lea eax,[ebp-24]
+push eax
+call edx
+
+exit13:
+jmp returnhere13
+
+"ACRSP.exe"+1733D97:
+jmp forced_hand_climb_tap_stand
+nop
+returnhere13:
+
+
+alloc(forced_hand_climb_tap_wallrun,2048)
+label(returnhere14)
+label(exit14)
+
+forced_hand_climb_tap_wallrun:
+mov [climb_leap_f],00
+mov byte ptr [ebp-13],01
+call edx
+
+exit14:
+jmp returnhere14
+
+"ACRSP.exe"+6A27E2:
+jmp forced_hand_climb_tap_wallrun
+nop
+returnhere14:
+
+
+alloc(forced_hand_climb_tap_wallrun_2,2048)
+label(returnhere15)
+label(exit15)
+
+forced_hand_climb_tap_wallrun_2:
+cmp byte ptr [freeform_enable],01
+je ACRSP.exe+6A69D3
+cmp edi,01
+je ACRSP.exe+6A69D3
+
+exit15:
+jmp returnhere15
+
+"ACRSP.exe"+6A69C2:
+jmp forced_hand_climb_tap_wallrun_2
+returnhere15:
+
+
 [DISABLE]
 "ACRSP.exe"+69BB04:
 db F3 0F 5A C0 0F 5A C9
@@ -7706,6 +7872,37 @@ db 80 BE D1 01 00 00 00
 db 88 81 2A 20 00 00
 //mov [ecx+0000202A],al
 
+"ACRSP.exe"+69BA9F:
+db 0F 84 97 03 00 00
+//je ACRSP.exe+69BE3C
+
+"ACRSP.exe"+69BA8B:
+db 84 C0 0F 84 A1 03 00 00
+//test al,al
+//je ACRSP.exe+69BE34
+
+"ACRSP.exe"+173232A:
+db 51 8B CF FF D2
+//push ecx
+//mov ecx,edi
+//call edx
+
+"ACRSP.exe"+1733D97:
+db 8D 45 DC 50 FF D2
+//lea eax,[ebp-24]
+//push eax
+//call edx
+
+"ACRSP.exe"+6A27E2:
+db C6 45 ED 01 FF D2
+//mov byte ptr [ebp-13],01
+//call edx
+
+"ACRSP.exe"+6A69C2:
+db 83 FF 01 74 0C
+//cmp edi,01
+//je ACRSP.exe+6A69D3
+
 dealloc(forced_hook_climb)
 dealloc(forced_hook_climb_double)
 dealloc(forced_hook_climb_hang)
@@ -7715,6 +7912,12 @@ dealloc(forced_hook_climb_hang_pull_up_2)
 dealloc(forced_hook_climb_tap)
 dealloc(forced_hook_climb_tap_2)
 dealloc(forced_hook_climb_tap_3)
+dealloc(forced_hand_climb_tap)
+dealloc(forced_hand_climb_tap_2)
+dealloc(forced_hand_climb_tap_crouch)
+dealloc(forced_hand_climb_tap_stand)
+dealloc(forced_hand_climb_tap_wallrun)
+dealloc(forced_hand_climb_tap_wallrun_2)
 dealloc(value)
 </AssemblerScript>
                         </CheatEntry>
