@@ -1305,7 +1305,7 @@ label(dive_beam_alt_2)
 label(forced_hang_alt)
 label(forced_hook_climb_leap)
 label(forced_hook_climb_leap_double)
-label(forced_hook_climb_leap_rehook)
+label(forced_hook_climb_leap_hand)
 label(forced_hook_climb_leap_hang)
 label(forced_hook_pull_up)
 
@@ -1327,7 +1327,7 @@ label(swan_dive_disable)
 label(forced_ledge_grab_disable)
 label(dive_beam_alt_disable)
 label(forced_hang_alt_disable)
-label(forced_hook_climb_leap_rehook_disable)
+label(forced_hook_climb_leap_hand_disable)
 
 globalalloc(buttonA,1)          // Button A
 globalalloc(buttonX,1)          // Button X
@@ -1483,7 +1483,7 @@ globalalloc(forced_hang_alt_enable,1)
 globalalloc(horse_flip_enable,1)
 globalalloc(forced_hook_climb_leap_enable,1)
 globalalloc(forced_hook_climb_leap_double_enable,1)
-globalalloc(forced_hook_climb_leap_rehook_enable,1)
+globalalloc(forced_hook_climb_leap_hand_enable,1)
 globalalloc(forced_hook_climb_leap_hang_enable,1)
 globalalloc(forced_hook_pull_up_enable,1)
 
@@ -1551,7 +1551,7 @@ mov [forced_hang_alt_enable],00
 mov [horse_flip_enable],00
 mov [forced_hook_climb_leap_enable],00
 mov [forced_hook_climb_leap_double_enable],00
-mov [forced_hook_climb_leap_rehook_enable],00
+mov [forced_hook_climb_leap_hand_enable],00
 mov [forced_hook_climb_leap_hang_enable],00
 mov [forced_hook_pull_up_enable],00
 
@@ -2028,15 +2028,15 @@ mov [forced_hook_climb_leap_enable],01
 
 forced_hook_climb_leap_double:
 cmp byte ptr [parkour_far_enable],00
-je forced_hook_climb_leap_rehook
+je forced_hook_climb_leap_hand
 mov [forced_hook_climb_leap_double_enable],01
 
-forced_hook_climb_leap_rehook:
+forced_hook_climb_leap_hand:
 cmp byte ptr [parkour_down_enable],00
 je forced_hook_climb_leap_hang
 cmp byte ptr [parkour_far_enable],00
 je forced_hook_climb_leap_hang
-mov [forced_hook_climb_leap_rehook_enable],01
+mov [forced_hook_climb_leap_hand_enable],01
 
 forced_hook_climb_leap_hang:
 cmp byte ptr [forced_hang_enable],00
@@ -2154,11 +2154,11 @@ mov [forced_ground_roll_enable],00
 
 forced_ledge_grab_disable:
 cmp byte ptr [forced_ledge_grab_enable],00
-je forced_hook_climb_leap_rehook_disable
+je forced_hook_climb_leap_hand_disable
 mov [disable_ledge_grab_enable],00
 
-forced_hook_climb_leap_rehook_disable:
-cmp byte ptr [forced_hook_climb_leap_rehook_enable],00
+forced_hook_climb_leap_hand_disable:
+cmp byte ptr [forced_hook_climb_leap_hand_enable],00
 je originalcode
 mov [forced_hook_climb_leap_enable],00
 mov [forced_hook_climb_leap_double_enable],00
@@ -3598,10 +3598,10 @@ dealloc(bind_legs_tap)
                             </CheatEntry>
                             <CheatEntry>
                               <ID>247</ID>
-                              <Description>"Forced Hook Climb Leap Rehook"</Description>
+                              <Description>"Forced Hook Climb Leap Hand"</Description>
                               <ShowAsSigned>0</ShowAsSigned>
                               <VariableType>Byte</VariableType>
-                              <Address>forced_hook_climb_leap_rehook_enable</Address>
+                              <Address>forced_hook_climb_leap_hand_enable</Address>
                             </CheatEntry>
                             <CheatEntry>
                               <ID>248</ID>
@@ -3642,10 +3642,12 @@ globalalloc(buttonLS,1)
 globalalloc(buttonLB,1)
 globalalloc(parkour_mode_enable,1)
 globalalloc(forced_hang_enable,1)
-globalalloc(hud_scale,4)
+globalalloc(parkour_mode_hud_hide_f,1)
 
-hud_scale:
-dd (float)0
+parkour_mode_hud_hide_f:
+db 01
+//00: No Hud Hide
+//01: Hud Hide with Parkour Mode
 
 pause:
 mov [pause_f],cl
@@ -3762,21 +3764,20 @@ label(returnhere6)
 label(exit6)
 
 hide_hud:
+cmp byte ptr [parkour_mode_hud_hide_f],01
+jne originalcode
 cmp byte ptr [parkour_mode_enable],01
 jne originalcode
-cmp byte ptr [pause_f],01
-je originalcode
-fst st(0)
-fld dword ptr [hud_scale]
+cmp byte ptr [pause_f],00
+je ACRSP.exe+1B3EB07
 
 originalcode:
-fst dword ptr [esp+04]
-fstp dword ptr [esp]
+cmp dword ptr [esi+00000F60],00
 
 exit6:
 jmp returnhere6
 
-"ACRSP.exe"+1FAE3AC:
+"ACRSP.exe"+1B3EA88:
 jmp hide_hud
 nop 2
 returnhere6:
@@ -3805,10 +3806,9 @@ db 74 5D 8B 43 08
 //je ACRSP.exe+173A739
 //mov eax,[ebx+08]
 
-"ACRSP.exe"+1FAE3AC:
-db D9 54 24 04 D9 1C 24
-//fst dword ptr [esp+04]
-//fstp dword ptr [esp]
+"ACRSP.exe"+1B3EA88:
+db 83 BE 60 0F 00 00 00
+//cmp dword ptr [esi+00000F60],00
 
 dealloc(pause)
 dealloc(disable_npc_interaction)
@@ -3817,9 +3817,21 @@ dealloc(disable_combat_grab)
 dealloc(disable_drop_to_hang)
 dealloc(hide_hud)
 </AssemblerScript>
+                          <CheatEntries>
+                            <CheatEntry>
+                              <ID>300</ID>
+                              <Description>"Hud Hide"</Description>
+                              <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">0: No Hud Hide
+1: Hud Hide with Parkour Mode
+</DropDownList>
+                              <ShowAsSigned>0</ShowAsSigned>
+                              <VariableType>Byte</VariableType>
+                              <Address>parkour_mode_hud_hide_f</Address>
+                            </CheatEntry>
+                          </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>300</ID>
+                          <ID>301</ID>
                           <Description>"Vault"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -4334,7 +4346,7 @@ dealloc(vault_to_fall)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>301</ID>
+                          <ID>302</ID>
                           <Description>"Forced Freeform"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -4424,7 +4436,7 @@ dealloc(disable_wallrun_grab)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>302</ID>
+                          <ID>303</ID>
                           <Description>"Parkour Down / Far"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -4589,7 +4601,7 @@ dealloc(parkour_far_2)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>303</ID>
+                          <ID>304</ID>
                           <Description>"Forced Hang / Dive Beam / Forced Step"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -4900,7 +4912,7 @@ dealloc(inner_ledge)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>304</ID>
+                          <ID>305</ID>
                           <Description>"Drop to Fall"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -5164,7 +5176,7 @@ dealloc(drop_to_fall_6)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>305</ID>
+                          <ID>306</ID>
                           <Description>"Ledge Drop"</Description>
                           <Options moHideChildren="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -5268,7 +5280,7 @@ dealloc(ledge_drop_3)
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>306</ID>
+                              <ID>307</ID>
                               <Description>"Activation Choice"</Description>
                               <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">0: Activate with Parkour Down or Freeform
 1: Always On
@@ -5280,7 +5292,7 @@ dealloc(ledge_drop_3)
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>307</ID>
+                          <ID>308</ID>
                           <Description>"Beam Drop"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -5436,7 +5448,7 @@ dealloc(nso_step_hp)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>308</ID>
+                          <ID>309</ID>
                           <Description>"Fix Lamp Swing Animation"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -5518,7 +5530,7 @@ db 55 8B EC 83 7D 08 00
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>309</ID>
+                              <ID>310</ID>
                               <Description>"Lamp Swing Drop"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -5596,7 +5608,7 @@ dealloc(lamp_drop_2)
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>310</ID>
+                          <ID>311</ID>
                           <Description>"Disable Stumble"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -5627,7 +5639,7 @@ db 0F 84 17 02 00 00
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>311</ID>
+                          <ID>312</ID>
                           <Description>"Disable Snap on NSO Landing"</Description>
                           <Options moHideChildren="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -5715,7 +5727,7 @@ db 74 65 8B 4E 08
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>312</ID>
+                              <ID>313</ID>
                               <Description>"Activation Choice"</Description>
                               <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">0: Dynamically Snap
 1: Always Disable Snap
@@ -5727,7 +5739,7 @@ db 74 65 8B 4E 08
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>313</ID>
+                          <ID>314</ID>
                           <Description>"Disable Eject Angle Restriction"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -6005,7 +6017,7 @@ dealloc(stand_climb_leap)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>314</ID>
+                          <ID>315</ID>
                           <Description>"Disable Water Dive"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -6040,7 +6052,7 @@ db 75 10 80 7D E7 00
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>315</ID>
+                          <ID>316</ID>
                           <Description>"Forced / Disable Ledge Grab"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -6154,7 +6166,7 @@ dealloc(forced_hands_ledge_grab)
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>316</ID>
+                              <ID>317</ID>
                               <Description>"Disable Wall Rebound"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
@@ -6202,7 +6214,7 @@ db 84 C0 74 15 8B 07
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>317</ID>
+                              <ID>318</ID>
                               <Description>"Disable Staggered Ledge Grab"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -6251,7 +6263,7 @@ db 0F 86 A1 01 00 00
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>318</ID>
+                          <ID>319</ID>
                           <Description>"Fix Eject Animation"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -6392,7 +6404,7 @@ dealloc(back_eject)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>319</ID>
+                          <ID>320</ID>
                           <Description>"Horse Flip"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -6460,7 +6472,7 @@ dealloc(horse_flip_2)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>320</ID>
+                          <ID>321</ID>
                           <Description>"Hang to Hang"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -6649,7 +6661,7 @@ dealloc(hang_to_hang_crouch_2)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>321</ID>
+                          <ID>322</ID>
                           <Description>"Quick Eject / Pull Up"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -6858,7 +6870,7 @@ dealloc(prescriptive_ledge_grab)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>322</ID>
+                          <ID>323</ID>
                           <Description>"Swing Off Beam / Pull up Pole"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -7128,7 +7140,7 @@ dealloc(vanilla_beam_entry)
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>323</ID>
+                              <ID>324</ID>
                               <Description>"Swing Off Instantly"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
@@ -7316,7 +7328,7 @@ dealloc(backward_input)
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>324</ID>
+                          <ID>325</ID>
                           <Description>"Swan Dive"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -7481,7 +7493,7 @@ dealloc(higher_height_threshold)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>325</ID>
+                          <ID>326</ID>
                           <Description>"Forced Hook Climb"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -7494,10 +7506,9 @@ globalalloc(forced_hook_climb_leap_enable,1)
 globalalloc(forced_hook_climb_leap_double_enable,1)
 globalalloc(forced_hook_climb_leap_hang_enable,1)
 globalalloc(forced_hook_pull_up_enable,1)
-globalalloc(forced_hook_climb_leap_rehook_enable,1)
+globalalloc(forced_hook_climb_leap_hand_enable,1)
 globalalloc(freeform_enable,1)
 globalalloc(climb_leap_f,1)
-globalalloc(hook_tap_f,1)
 globalalloc(bindLegsTap,1)
 
 alloc(value,4)
@@ -7574,263 +7585,230 @@ jmp forced_hook_climb_hang
 returnhere3:
 
 
-alloc(forced_hook_climb_pull_up,2048)
+alloc(forced_hook_climb_hand,2048)
 label(returnhere4)
+label(originalcode4)
 label(exit4)
 
-forced_hook_climb_pull_up:
-cmp byte ptr [forced_hook_pull_up_enable],01
-je exit4
+forced_hook_climb_hand:
+cmp byte ptr [esi+000001D0],01
+jne originalcode4
+cmp byte ptr [forced_hook_climb_leap_hand_enable],01
+je ACRSP.exe+69C01E
 
-test al,al
-je ACRSP.exe+6A2B8D
+originalcode4:
+cmp byte ptr [esi+000001D0],00
 
 exit4:
 jmp returnhere4
 
-"ACRSP.exe"+6A2A99:
-jmp forced_hook_climb_pull_up
-nop
+"ACRSP.exe"+69BF68:
+jmp forced_hook_climb_hand
+nop 2
 returnhere4:
 
 
-alloc(forced_hook_climb_hang_pull_up,2048)
+alloc(forced_hook_climb_pull_up,2048)
 label(returnhere5)
 label(exit5)
 
-forced_hook_climb_hang_pull_up:
-call ACRSP.exe+BFA820
+forced_hook_climb_pull_up:
 cmp byte ptr [forced_hook_pull_up_enable],01
-jne exit5
-cmp byte ptr [forced_hook_pull_up_enable],01
-jne exit5
-jmp ACRSP.exe+6A2BE8
+je exit5
+
+test al,al
+je ACRSP.exe+6A2B8D
 
 exit5:
 jmp returnhere5
 
-"ACRSP.exe"+6A2B84:
-jmp forced_hook_climb_hang_pull_up
+"ACRSP.exe"+6A2A99:
+jmp forced_hook_climb_pull_up
+nop
 returnhere5:
 
 
-alloc(forced_hook_climb_hang_pull_up_2,2048)
+alloc(forced_hook_climb_hang_pull_up,2048)
 label(returnhere6)
 label(exit6)
 
-forced_hook_climb_hang_pull_up_2:
-call ACRSP.exe+BF9EA0
+forced_hook_climb_hang_pull_up:
+call ACRSP.exe+BFA820
 cmp byte ptr [forced_hook_pull_up_enable],01
 jne exit6
 cmp byte ptr [forced_hook_pull_up_enable],01
 jne exit6
-jmp ACRSP.exe+6A2CA6
+jmp ACRSP.exe+6A2BE8
 
 exit6:
 jmp returnhere6
 
-"ACRSP.exe"+6A2C99:
-jmp forced_hook_climb_hang_pull_up_2
+"ACRSP.exe"+6A2B84:
+jmp forced_hook_climb_hang_pull_up
 returnhere6:
 
 
-alloc(forced_hook_climb_tap,2048)
+alloc(forced_hook_climb_hang_pull_up_2,2048)
 label(returnhere7)
-label(originalcode7)
 label(exit7)
 
-forced_hook_climb_tap:
-mov [hook_tap_f],00
-cmp byte ptr [forced_hook_climb_leap_rehook_enable],01
-je ACRSP.exe+69BFB1
-cmp byte ptr [esi+000001D0],01
-jne originalcode7
-cmp byte ptr [bindLegsTap],01
-jne originalcode7
-mov [hook_tap_f],01
-jmp ACRSP.exe+69BFB1
-
-originalcode7:
-cmp byte ptr [esi+000001D0],00
+forced_hook_climb_hang_pull_up_2:
+call ACRSP.exe+BF9EA0
+cmp byte ptr [forced_hook_pull_up_enable],01
+jne exit7
+cmp byte ptr [forced_hook_pull_up_enable],01
+jne exit7
+jmp ACRSP.exe+6A2CA6
 
 exit7:
 jmp returnhere7
 
-"ACRSP.exe"+69BF68:
-jmp forced_hook_climb_tap
-nop 2
+"ACRSP.exe"+6A2C99:
+jmp forced_hook_climb_hang_pull_up_2
 returnhere7:
 
 
-alloc(forced_hook_climb_tap_2,2048)
+alloc(forced_hook_climb_freeform,2048)
 label(returnhere8)
-label(originalcode8)
 label(exit8)
 
-forced_hook_climb_tap_2:
-cmp byte ptr [forced_hook_climb_leap_rehook_enable],01
-je ACRSP.exe+69BFBA
-cmp byte ptr [hook_tap_f],01
-jne originalcode8
-cmp byte ptr [forced_hook_climb_leap_enable],01
-je ACRSP.exe+69C01E
-cmp byte ptr [forced_hook_climb_leap_double_enable],01
-je ACRSP.exe+69C03D
-
-originalcode8:
-cmp byte ptr [esi+000001D1],00
+forced_hook_climb_freeform:
+cmp byte ptr [freeform_enable],01
+je exit8
+mov [ecx+0000202A],al
 
 exit8:
 jmp returnhere8
 
-"ACRSP.exe"+69BFB1:
-jmp forced_hook_climb_tap_2
-nop 2
+"ACRSP.exe"+173239D:
+jmp forced_hook_climb_freeform
+nop
 returnhere8:
 
 
-alloc(forced_hook_climb_tap_3,2048)
+alloc(forced_hook_climb_freeform_2,2048)
 label(returnhere9)
+label(originalcode9)
 label(exit9)
 
-forced_hook_climb_tap_3:
-cmp byte ptr [hook_tap_f],01
-jne exit9
-mov [ecx+0000202A],al
-mov [hook_tap_f],00
+forced_hook_climb_freeform_2:
+cmp byte ptr [climb_leap_f],01
+jne originalcode9
+cmp byte ptr [freeform_enable],01
+jne originalcode9
+cmp byte ptr [bindLegsTap],01
+jne originalcode9
+mov [climb_leap_f],00
+mov [eax],00
+
+originalcode9:
+cmp byte ptr [eax],00
+je ACRSP.exe+69BE3C
 
 exit9:
 jmp returnhere9
 
-"ACRSP.exe"+173239D:
-jmp forced_hook_climb_tap_3
+"ACRSP.exe"+69BA9F:
+jmp forced_hook_climb_freeform_2
 nop
 returnhere9:
 
 
-alloc(forced_hand_climb_tap,2048)
+alloc(forced_hook_climb_freeform_3,2048)
 label(returnhere10)
 label(originalcode10)
 label(exit10)
 
-forced_hand_climb_tap:
-cmp byte ptr [climb_leap_f],01
+forced_hook_climb_freeform_3:
+cmp byte ptr [climb_leap_f],00
 jne originalcode10
 cmp byte ptr [freeform_enable],01
-jne originalcode10
-cmp byte ptr [bindLegsTap],01
-jne originalcode10
-mov [climb_leap_f],00
-mov [eax],00
+je ACRSP.exe+69BE34
 
 originalcode10:
-cmp byte ptr [eax],00
-je ACRSP.exe+69BE3C
+test al,al
+je ACRSP.exe+69BE34
 
 exit10:
 jmp returnhere10
 
-"ACRSP.exe"+69BA9F:
-jmp forced_hand_climb_tap
-nop
+"ACRSP.exe"+69BA8B:
+jmp forced_hook_climb_freeform_3
+nop 3
 returnhere10:
 
 
-alloc(forced_hand_climb_tap_2,2048)
+alloc(forced_hook_climb_freeform_crouch,2048)
 label(returnhere11)
-label(originalcode11)
 label(exit11)
 
-forced_hand_climb_tap_2:
-cmp byte ptr [climb_leap_f],00
-jne originalcode11
-cmp byte ptr [freeform_enable],01
-je ACRSP.exe+69BE34
-
-originalcode11:
-test al,al
-je ACRSP.exe+69BE34
-
-exit11:
-jmp returnhere11
-
-"ACRSP.exe"+69BA8B:
-jmp forced_hand_climb_tap_2
-nop 3
-returnhere11:
-
-
-alloc(forced_hand_climb_tap_crouch,2048)
-label(returnhere12)
-label(exit12)
-
-forced_hand_climb_tap_crouch:
+forced_hook_climb_freeform_crouch:
 mov [climb_leap_f],01
 push ecx
 mov ecx,edi
 call edx
 
-exit12:
-jmp returnhere12
+exit11:
+jmp returnhere11
 
 "ACRSP.exe"+173232A:
-jmp forced_hand_climb_tap_crouch
-returnhere12:
+jmp forced_hook_climb_freeform_crouch
+returnhere11:
 
 
-alloc(forced_hand_climb_tap_stand,2048)
-label(returnhere13)
-label(exit13)
+alloc(forced_hook_climb_freeform_stand,2048)
+label(returnhere12)
+label(exit12)
 
-forced_hand_climb_tap_stand:
+forced_hook_climb_freeform_stand:
 mov [climb_leap_f],01
 lea eax,[ebp-24]
 push eax
 call edx
 
-exit13:
-jmp returnhere13
+exit12:
+jmp returnhere12
 
 "ACRSP.exe"+1733D97:
-jmp forced_hand_climb_tap_stand
+jmp forced_hook_climb_freeform_stand
 nop
-returnhere13:
+returnhere12:
 
 
-alloc(forced_hand_climb_tap_wallrun,2048)
-label(returnhere14)
-label(exit14)
+alloc(forced_hook_climb_freeform_wallrun,2048)
+label(returnhere13)
+label(exit13)
 
-forced_hand_climb_tap_wallrun:
+forced_hook_climb_freeform_wallrun:
 mov [climb_leap_f],00
 mov byte ptr [ebp-13],01
 call edx
 
-exit14:
-jmp returnhere14
+exit13:
+jmp returnhere13
 
 "ACRSP.exe"+6A27E2:
-jmp forced_hand_climb_tap_wallrun
+jmp forced_hook_climb_freeform_wallrun
 nop
-returnhere14:
+returnhere13:
 
 
-alloc(forced_hand_climb_tap_wallrun_2,2048)
-label(returnhere15)
-label(exit15)
+alloc(forced_hook_climb_freeform_wallrun_2,2048)
+label(returnhere14)
+label(exit14)
 
-forced_hand_climb_tap_wallrun_2:
+forced_hook_climb_freeform_wallrun_2:
 cmp byte ptr [freeform_enable],01
 je ACRSP.exe+6A69D3
 cmp edi,01
 je ACRSP.exe+6A69D3
 
-exit15:
-jmp returnhere15
+exit14:
+jmp returnhere14
 
 "ACRSP.exe"+6A69C2:
-jmp forced_hand_climb_tap_wallrun_2
-returnhere15:
+jmp forced_hook_climb_freeform_wallrun_2
+returnhere14:
 
 
 [DISABLE]
@@ -7848,6 +7826,10 @@ db 75 14 89 48 08
 db E8 72 8E 00 00
 //call ACRSP.exe+6BE610
 
+"ACRSP.exe"+69BF68:
+db 80 BE D0 01 00 00 00
+//cmp byte ptr [esi+000001D0],00
+
 "ACRSP.exe"+6A2A99:
 db 0F 84 EE 00 00 00
 //je ACRSP.exe+6A2B8D
@@ -7859,14 +7841,6 @@ db E8 97 7C 55 00
 "ACRSP.exe"+6A2C99:
 db E8 02 72 55 00
 //call ACRSP.exe+BF9EA0
-
-"ACRSP.exe"+69BF68:
-db 80 BE D0 01 00 00 00
-//cmp byte ptr [esi+000001D0],00
-
-"ACRSP.exe"+69BFB1:
-db 80 BE D1 01 00 00 00
-//cmp byte ptr [esi+000001D1],00
 
 "ACRSP.exe"+173239D:
 db 88 81 2A 20 00 00
@@ -7909,20 +7883,19 @@ dealloc(forced_hook_climb_hang)
 dealloc(forced_hook_climb_pull_up)
 dealloc(forced_hook_climb_hang_pull_up)
 dealloc(forced_hook_climb_hang_pull_up_2)
-dealloc(forced_hook_climb_tap)
-dealloc(forced_hook_climb_tap_2)
-dealloc(forced_hook_climb_tap_3)
-dealloc(forced_hand_climb_tap)
-dealloc(forced_hand_climb_tap_2)
-dealloc(forced_hand_climb_tap_crouch)
-dealloc(forced_hand_climb_tap_stand)
-dealloc(forced_hand_climb_tap_wallrun)
-dealloc(forced_hand_climb_tap_wallrun_2)
+dealloc(forced_hook_climb_hand)
+dealloc(forced_hook_climb_freeform)
+dealloc(forced_hook_climb_freeform_2)
+dealloc(forced_hook_climb_freeform_3)
+dealloc(forced_hook_climb_freeform_crouch)
+dealloc(forced_hook_climb_freeform_stand)
+dealloc(forced_hook_climb_freeform_wallrun)
+dealloc(forced_hook_climb_freeform_wallrun_2)
 dealloc(value)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>326</ID>
+                          <ID>327</ID>
                           <Description>"Ground Landings"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -8053,7 +8026,7 @@ dealloc(ground_roll_3)
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>327</ID>
+                              <ID>328</ID>
                               <Description>"Remove Hard Landing / Roll Screen Shake"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -8084,7 +8057,7 @@ db 80 7D EB 00 74 1B
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>328</ID>
+                              <ID>329</ID>
                               <Description>"Smooth Vault Ground Landing"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -8132,7 +8105,7 @@ db 75 35 8B 4E 08
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>329</ID>
+                              <ID>330</ID>
                               <Description>"Forced Ground Roll"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
@@ -8194,20 +8167,20 @@ dealloc(forced_ground_roll_2)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>330</ID>
+                              <ID>331</ID>
                               <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                               <Options moDeactivateChildrenAsWell="1"/>
                               <GroupHeader>1</GroupHeader>
                               <CheatEntries>
                                 <CheatEntry>
-                                  <ID>331</ID>
+                                  <ID>332</ID>
                                   <Description>"Values"</Description>
                                   <Options moHideChildren="1"/>
                                   <Color>808080</Color>
                                   <GroupHeader>1</GroupHeader>
                                   <CheatEntries>
                                     <CheatEntry>
-                                      <ID>332</ID>
+                                      <ID>333</ID>
                                       <Description>"Drop Height"</Description>
                                       <ShowAsSigned>0</ShowAsSigned>
                                       <Color>808080</Color>
@@ -8215,7 +8188,7 @@ dealloc(forced_ground_roll_2)
                                       <Address>drop_height</Address>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>333</ID>
+                                      <ID>334</ID>
                                       <Description>"Soft Land Height Threshold"</Description>
                                       <ShowAsSigned>0</ShowAsSigned>
                                       <Color>808080</Color>
@@ -8229,7 +8202,7 @@ dealloc(forced_ground_roll_2)
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>334</ID>
+                          <ID>335</ID>
                           <Description>"Kiosk Moves"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -8408,7 +8381,7 @@ dealloc(kiosk_swing_end)
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>335</ID>
+                              <ID>336</ID>
                               <Description>"Forced Kiosk"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
@@ -8503,7 +8476,7 @@ dealloc(forced_kiosk_2)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>336</ID>
+                              <ID>337</ID>
                               <Description>"Kiosk Cancel"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -8569,7 +8542,7 @@ dealloc(kiosk_swing_cancel)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>337</ID>
+                              <ID>338</ID>
                               <Description>"Smooth Prescriptive Kiosk Moves"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -8612,7 +8585,7 @@ db D9 C9 DF F1 DD D8
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>338</ID>
+                              <ID>339</ID>
                               <Description>"Kiosk Distance Modifier"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -8733,20 +8706,20 @@ dealloc(kiosk_finish)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>339</ID>
+                              <ID>340</ID>
                               <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                               <Options moDeactivateChildrenAsWell="1"/>
                               <GroupHeader>1</GroupHeader>
                               <CheatEntries>
                                 <CheatEntry>
-                                  <ID>340</ID>
+                                  <ID>341</ID>
                                   <Description>"Values"</Description>
                                   <Options moHideChildren="1"/>
                                   <Color>808080</Color>
                                   <GroupHeader>1</GroupHeader>
                                   <CheatEntries>
                                     <CheatEntry>
-                                      <ID>341</ID>
+                                      <ID>342</ID>
                                       <Description>"Kiosk Start Speed"</Description>
                                       <ShowAsSigned>0</ShowAsSigned>
                                       <Color>808080</Color>
@@ -8754,7 +8727,7 @@ dealloc(kiosk_finish)
                                       <Address>kiosk_speed</Address>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>342</ID>
+                                      <ID>343</ID>
                                       <Description>"Short Kiosk Roll Value"</Description>
                                       <ShowAsSigned>0</ShowAsSigned>
                                       <Color>808080</Color>
@@ -8762,7 +8735,7 @@ dealloc(kiosk_finish)
                                       <Address>short_kiosk_roll_value</Address>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>343</ID>
+                                      <ID>344</ID>
                                       <Description>"Far Kiosk Roll Value"</Description>
                                       <ShowAsSigned>0</ShowAsSigned>
                                       <Color>808080</Color>
@@ -8770,7 +8743,7 @@ dealloc(kiosk_finish)
                                       <Address>far_kiosk_roll_value</Address>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>344</ID>
+                                      <ID>345</ID>
                                       <Description>"Dismount Kiosk Roll Value"</Description>
                                       <ShowAsSigned>0</ShowAsSigned>
                                       <Color>808080</Color>
@@ -8784,7 +8757,7 @@ dealloc(kiosk_finish)
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>345</ID>
+                          <ID>346</ID>
                           <Description>"Enhanced Direction"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -8952,7 +8925,7 @@ dealloc(enhanced_direction_2)
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>346</ID>
+                              <ID>347</ID>
                               <Description>"Swing"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
@@ -9110,7 +9083,7 @@ dealloc(angle_restriction_side)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>347</ID>
+                              <ID>348</ID>
                               <Description>"Ground Roll"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
@@ -9186,7 +9159,7 @@ db 8D 45 E4 50 51
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>348</ID>
+                              <ID>349</ID>
                               <Description>"Kiosk Roll"</Description>
                               <Options moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
@@ -9269,7 +9242,7 @@ dealloc(angle_restriction)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>349</ID>
+                              <ID>350</ID>
                               <Description>"Lamp Hookblade"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -9326,7 +9299,7 @@ db 8B 46 08 8B 88 08 01 00 00
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>350</ID>
+                              <ID>351</ID>
                               <Description>"Zip Line"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
@@ -9402,7 +9375,7 @@ db 8B 06 8B 50 04
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>351</ID>
+                          <ID>352</ID>
                           <Description>"Coords Modifier"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -9795,7 +9768,7 @@ dealloc(coords_modifier_3)
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>352</ID>
+                              <ID>353</ID>
                               <Description>"Target Modifier"</Description>
                               <Options moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
@@ -10860,7 +10833,7 @@ dealloc(move_type)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>353</ID>
+                              <ID>354</ID>
                               <Description>"Swing / Vault / Eject Modifier"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -10956,7 +10929,7 @@ dealloc(eject_coords)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>354</ID>
+                              <ID>355</ID>
                               <Description>"NSO Idle"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
@@ -11140,7 +11113,7 @@ dealloc(self_swing_2)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>355</ID>
+                              <ID>356</ID>
                               <Description>"NSO Run"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
@@ -11263,25 +11236,25 @@ dealloc(nso_run_coords_3)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>356</ID>
+                              <ID>357</ID>
                               <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                               <Options moDeactivateChildrenAsWell="1"/>
                               <GroupHeader>1</GroupHeader>
                               <CheatEntries>
                                 <CheatEntry>
-                                  <ID>357</ID>
+                                  <ID>358</ID>
                                   <Description>"Values"</Description>
                                   <Options moHideChildren="1"/>
                                   <Color>808080</Color>
                                   <GroupHeader>1</GroupHeader>
                                   <CheatEntries>
                                     <CheatEntry>
-                                      <ID>358</ID>
+                                      <ID>359</ID>
                                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                                       <GroupHeader>1</GroupHeader>
                                       <CheatEntries>
                                         <CheatEntry>
-                                          <ID>359</ID>
+                                          <ID>360</ID>
                                           <Description>"Vault Landing Far Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>

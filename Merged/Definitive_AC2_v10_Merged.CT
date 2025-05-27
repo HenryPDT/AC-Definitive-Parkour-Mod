@@ -3705,7 +3705,8 @@ local config_enable = {
         dynamic9 = "AssassinsCreedIIGame.exe+E00958",
         dynamic10 = "AssassinsCreedIIGame.exe+E00958",
         dynamic11 = "\"AssassinsCreedIIGame.exe\"+E007C3:",
-        dynamic12 = "\"AssassinsCreedIIGame.exe\"+1706F9C:"
+        dynamic12 = "AssassinsCreedIIGame.exe+13CD7EC",
+        dynamic13 = "\"AssassinsCreedIIGame.exe\"+13CD76C:"
     },
     [2] = {
         dynamic1 = "\"AssassinsCreedIIGame.exe\"+D50B53:",
@@ -3719,7 +3720,8 @@ local config_enable = {
         dynamic9 = "AssassinsCreedIIGame.exe+13DA858",
         dynamic10 = "AssassinsCreedIIGame.exe+13DA858",
         dynamic11 = "\"AssassinsCreedIIGame.exe\"+13DA6C3:",
-        dynamic12 = "\"AssassinsCreedIIGame.exe\"+1775F0C:"
+        dynamic12 = "AssassinsCreedIIGame.exe+16661CC",
+        dynamic13 = "\"AssassinsCreedIIGame.exe\"+166614C:"
     }
 }
 
@@ -3737,10 +3739,12 @@ globalalloc(buttonLS,1)
 globalalloc(buttonLB,1)
 globalalloc(parkour_mode_enable,1)
 globalalloc(forced_hang_enable,1)
-globalalloc(hud_scale,4)
+globalalloc(parkour_mode_hud_hide_f,1)
 
-hud_scale:
-dd (float)0
+parkour_mode_hud_hide_f:
+db 01
+//00: No Hud Hide
+//01: Hud Hide with Parkour Mode
 
 pause:
 mov [pause_f],cl
@@ -3856,16 +3860,15 @@ label(returnhere6)
 label(exit6)
 
 hide_hud:
+cmp byte ptr [parkour_mode_hud_hide_f],01
+jne originalcode
 cmp byte ptr [parkour_mode_enable],01
 jne originalcode
-cmp byte ptr [pause_f],01
-je originalcode
-fst st(0)
-fld dword ptr [hud_scale]
+cmp byte ptr [pause_f],00
+je %s
 
 originalcode:
-fst dword ptr [esp+04]
-fstp dword ptr [esp]
+cmp dword ptr [esi+00000EA8],00
 
 exit6:
 jmp returnhere6
@@ -3874,7 +3877,7 @@ jmp returnhere6
 jmp hide_hud
 nop 2
 returnhere6:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12)
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -3897,7 +3900,7 @@ local config_disable = {
         dynamic4 = "\"AssassinsCreedIIGame.exe\"+10B17A2:",
         dynamic5 = "\"AssassinsCreedIIGame.exe\"+E007C3:",
         dynamic6 = "AssassinsCreedIIGame.exe+E00958",
-        dynamic7 = "\"AssassinsCreedIIGame.exe\"+1706F9C:"
+        dynamic7 = "\"AssassinsCreedIIGame.exe\"+13CD76C:"
     },
     [2] = {
         dynamic1 = "\"AssassinsCreedIIGame.exe\"+D50B53:",
@@ -3906,7 +3909,7 @@ local config_disable = {
         dynamic4 = "\"AssassinsCreedIIGame.exe\"+5EDEB2:",
         dynamic5 = "\"AssassinsCreedIIGame.exe\"+13DA6C3:",
         dynamic6 = "AssassinsCreedIIGame.exe+13DA858",
-        dynamic7 = "\"AssassinsCreedIIGame.exe\"+1775F0C:"
+        dynamic7 = "\"AssassinsCreedIIGame.exe\"+166614C:"
     }
 }
 
@@ -3936,9 +3939,8 @@ db 0F 84 8F 01 00 00
 //je %s
 
 %s
-db D9 54 24 04 D9 1C 24
-//fst dword ptr [esp+04]
-//fstp dword ptr [esp]
+db 83 BE A8 0E 00 00 00
+//cmp dword ptr [esi+00000EA8],00
 
 dealloc(pause)
 dealloc(disable_npc_interaction)
@@ -3957,9 +3959,21 @@ end
 disableInfo = nil
 {$asm}
 </AssemblerScript>
+                          <CheatEntries>
+                            <CheatEntry>
+                              <ID>300</ID>
+                              <Description>"Hud Hide"</Description>
+                              <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">0: No Hud Hide
+1: Hud Hide with Parkour Mode
+</DropDownList>
+                              <ShowAsSigned>0</ShowAsSigned>
+                              <VariableType>Byte</VariableType>
+                              <Address>parkour_mode_hud_hide_f</Address>
+                            </CheatEntry>
+                          </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>300</ID>
+                          <ID>301</ID>
                           <Description>"Vault"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -4656,7 +4670,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>301</ID>
+                          <ID>302</ID>
                           <Description>"Forced Freeform"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -4819,7 +4833,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>302</ID>
+                          <ID>303</ID>
                           <Description>"Parkour Down / Far"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -5085,7 +5099,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>303</ID>
+                          <ID>304</ID>
                           <Description>"Forced Hang / Dive Beam / Forced Step"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -5509,7 +5523,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>304</ID>
+                          <ID>305</ID>
                           <Description>"Drop to Fall"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -5849,7 +5863,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>305</ID>
+                          <ID>306</ID>
                           <Description>"Ledge Drop"</Description>
                           <Options moHideChildren="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -6028,7 +6042,7 @@ disableInfo = nil
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>306</ID>
+                              <ID>307</ID>
                               <Description>"Activation Choice"</Description>
                               <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">0: Activate with Parkour Down or Freeform
 1: Always On
@@ -6040,7 +6054,7 @@ disableInfo = nil
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>307</ID>
+                          <ID>308</ID>
                           <Description>"Beam Drop"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -6271,7 +6285,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>308</ID>
+                          <ID>309</ID>
                           <Description>"Lamp Swing Drop"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -6407,7 +6421,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>309</ID>
+                          <ID>310</ID>
                           <Description>"Disable Stumble"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -6491,7 +6505,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>310</ID>
+                          <ID>311</ID>
                           <Description>"Disable Snap on NSO Landing"</Description>
                           <Options moHideChildren="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -6646,7 +6660,7 @@ disableInfo = nil
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>311</ID>
+                              <ID>312</ID>
                               <Description>"Activation Choice"</Description>
                               <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">0: Dynamically Snap
 1: Always Disable Snap
@@ -6658,7 +6672,7 @@ disableInfo = nil
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>312</ID>
+                          <ID>313</ID>
                           <Description>"Disable Eject Angle Restriction"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -7072,7 +7086,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>313</ID>
+                          <ID>314</ID>
                           <Description>"Disable Water Dive"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -7165,7 +7179,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>314</ID>
+                          <ID>315</ID>
                           <Description>"Forced / Disable Ledge Grab"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -7330,7 +7344,7 @@ disableInfo = nil
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>315</ID>
+                              <ID>316</ID>
                               <Description>"Disable Wall Rebound"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -7437,7 +7451,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>316</ID>
+                              <ID>317</ID>
                               <Description>"Disable Staggered Ledge Grab"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -7539,7 +7553,7 @@ disableInfo = nil
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>317</ID>
+                          <ID>318</ID>
                           <Description>"Fix Eject Animation"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -7747,7 +7761,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>318</ID>
+                          <ID>319</ID>
                           <Description>"Hang to Hang"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -8041,7 +8055,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>319</ID>
+                          <ID>320</ID>
                           <Description>"Quick Eject / Pull Up"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -8355,7 +8369,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>320</ID>
+                          <ID>321</ID>
                           <Description>"Swing Off Beam / Pull up Pole"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -8715,7 +8729,7 @@ disableInfo = nil
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>321</ID>
+                              <ID>322</ID>
                               <Description>"Swing Off Instantly"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -8998,7 +9012,7 @@ disableInfo = nil
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>322</ID>
+                          <ID>323</ID>
                           <Description>"Swan Dive"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -9248,7 +9262,7 @@ disableInfo = nil
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>323</ID>
+                          <ID>324</ID>
                           <Description>"Ground Landings"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -9470,7 +9484,7 @@ disableInfo = nil
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>324</ID>
+                              <ID>325</ID>
                               <Description>"Remove Hard Landing / Roll Screen Shake"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -9553,7 +9567,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>325</ID>
+                              <ID>326</ID>
                               <Description>"Smooth Vault Ground Landing"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -9661,7 +9675,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>326</ID>
+                              <ID>327</ID>
                               <Description>"Forced Ground Roll"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -9791,20 +9805,20 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>327</ID>
+                              <ID>328</ID>
                               <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                               <Options moDeactivateChildrenAsWell="1" />
                               <GroupHeader>1</GroupHeader>
                               <CheatEntries>
                                 <CheatEntry>
-                                  <ID>328</ID>
+                                  <ID>329</ID>
                                   <Description>"Values"</Description>
                                   <Options moHideChildren="1" />
                                   <Color>808080</Color>
                                   <GroupHeader>1</GroupHeader>
                                   <CheatEntries>
                                     <CheatEntry>
-                                      <ID>329</ID>
+                                      <ID>330</ID>
                                       <Description>"Drop Height"</Description>
                                       <ShowAsSigned>0</ShowAsSigned>
                                       <Color>808080</Color>
@@ -9812,7 +9826,7 @@ disableInfo = nil
                                       <Address>drop_height</Address>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>330</ID>
+                                      <ID>331</ID>
                                       <Description>"Soft Land Height Threshold"</Description>
                                       <ShowAsSigned>0</ShowAsSigned>
                                       <Color>808080</Color>
@@ -9826,7 +9840,7 @@ disableInfo = nil
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>331</ID>
+                          <ID>332</ID>
                           <Description>"Kiosk Moves"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -10084,7 +10098,7 @@ disableInfo = nil
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>332</ID>
+                              <ID>333</ID>
                               <Description>"Forced Kiosk"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -10244,7 +10258,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>333</ID>
+                              <ID>334</ID>
                               <Description>"Kiosk Cancel"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -10377,7 +10391,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>334</ID>
+                              <ID>335</ID>
                               <Description>"Smooth Prescriptive Kiosk Moves"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -10469,7 +10483,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>335</ID>
+                              <ID>336</ID>
                               <Description>"Kiosk Distance Modifier"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -10653,20 +10667,20 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>336</ID>
+                              <ID>337</ID>
                               <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                               <Options moDeactivateChildrenAsWell="1" />
                               <GroupHeader>1</GroupHeader>
                               <CheatEntries>
                                 <CheatEntry>
-                                  <ID>337</ID>
+                                  <ID>338</ID>
                                   <Description>"Values"</Description>
                                   <Options moHideChildren="1" />
                                   <Color>808080</Color>
                                   <GroupHeader>1</GroupHeader>
                                   <CheatEntries>
                                     <CheatEntry>
-                                      <ID>338</ID>
+                                      <ID>339</ID>
                                       <Description>"Kiosk Start Speed"</Description>
                                       <ShowAsSigned>0</ShowAsSigned>
                                       <Color>808080</Color>
@@ -10674,7 +10688,7 @@ disableInfo = nil
                                       <Address>kiosk_speed</Address>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>339</ID>
+                                      <ID>340</ID>
                                       <Description>"Short Kiosk Roll Value"</Description>
                                       <ShowAsSigned>0</ShowAsSigned>
                                       <Color>808080</Color>
@@ -10682,7 +10696,7 @@ disableInfo = nil
                                       <Address>short_kiosk_roll_value</Address>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>340</ID>
+                                      <ID>341</ID>
                                       <Description>"Far Kiosk Roll Value"</Description>
                                       <ShowAsSigned>0</ShowAsSigned>
                                       <Color>808080</Color>
@@ -10690,7 +10704,7 @@ disableInfo = nil
                                       <Address>far_kiosk_roll_value</Address>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>341</ID>
+                                      <ID>342</ID>
                                       <Description>"Dismount Kiosk Roll Value"</Description>
                                       <ShowAsSigned>0</ShowAsSigned>
                                       <Color>808080</Color>
@@ -10704,7 +10718,7 @@ disableInfo = nil
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>342</ID>
+                          <ID>343</ID>
                           <Description>"Enhanced Direction"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -10927,7 +10941,7 @@ disableInfo = nil
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>343</ID>
+                              <ID>344</ID>
                               <Description>"Swing"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -11093,7 +11107,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>344</ID>
+                              <ID>345</ID>
                               <Description>"Ground Roll"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -11218,7 +11232,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>345</ID>
+                              <ID>346</ID>
                               <Description>"Kiosk Roll"</Description>
                               <Options moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -11358,7 +11372,7 @@ disableInfo = nil
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>346</ID>
+                          <ID>347</ID>
                           <Description>"Coords Modifier"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                           <VariableType>Auto Assembler Script</VariableType>
@@ -11814,7 +11828,7 @@ disableInfo = nil
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>347</ID>
+                              <ID>348</ID>
                               <Description>"Target Modifier"</Description>
                               <Options moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -12894,7 +12908,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>348</ID>
+                              <ID>349</ID>
                               <Description>"Swing / Vault / Eject Modifier"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -13053,7 +13067,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>349</ID>
+                              <ID>350</ID>
                               <Description>"NSO Idle"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -13330,7 +13344,7 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>350</ID>
+                              <ID>351</ID>
                               <Description>"NSO Run"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                               <VariableType>Auto Assembler Script</VariableType>
@@ -13523,25 +13537,25 @@ disableInfo = nil
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>351</ID>
+                              <ID>352</ID>
                               <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                               <Options moDeactivateChildrenAsWell="1" />
                               <GroupHeader>1</GroupHeader>
                               <CheatEntries>
                                 <CheatEntry>
-                                  <ID>352</ID>
+                                  <ID>353</ID>
                                   <Description>"Values"</Description>
                                   <Options moHideChildren="1" />
                                   <Color>808080</Color>
                                   <GroupHeader>1</GroupHeader>
                                   <CheatEntries>
                                     <CheatEntry>
-                                      <ID>353</ID>
+                                      <ID>354</ID>
                                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                                       <GroupHeader>1</GroupHeader>
                                       <CheatEntries>
                                         <CheatEntry>
-                                          <ID>354</ID>
+                                          <ID>355</ID>
                                           <Description>"Vault Landing Far Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
