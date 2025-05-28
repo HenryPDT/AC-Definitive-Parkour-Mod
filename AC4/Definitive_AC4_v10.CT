@@ -3626,6 +3626,12 @@ globalalloc(buttonLS,1)
 globalalloc(buttonLB,1)
 globalalloc(parkour_mode_enable,1)
 globalalloc(forced_hang_enable,1)
+globalalloc(parkour_mode_hud_hide_f,1)
+
+parkour_mode_hud_hide_f:
+db 01
+//00: No Hud Hide
+//01: Hud Hide with Parkour Mode
 
 pause:
 mov [pause_f],al
@@ -3714,6 +3720,33 @@ jmp returnhere5
 jmp disable_drop_to_hang
 returnhere5:
 
+{
+alloc(hide_hud,2048)
+label(returnhere6)
+label(exit6)
+
+hide_hud:
+cmp byte ptr [parkour_mode_hud_hide_f],01
+jne originalcode
+cmp byte ptr [parkour_mode_enable],01
+jne originalcode
+cmp byte ptr [pause_f],01
+je originalcode
+fst st(0)
+fld dword ptr [hud_scale]
+
+originalcode:
+fst dword ptr [esp+04]
+fstp dword ptr [esp]
+
+exit6:
+jmp returnhere6
+
+"ACRSP.exe"+1FAE3AC:
+jmp hide_hud
+nop 2
+returnhere6:
+}
 
 [DISABLE]
 "AC4BFSP.exe"+C311D0:
@@ -3739,6 +3772,7 @@ dealloc(disable_npc_interaction)
 dealloc(disable_ingame_binds)
 dealloc(disable_combat_grab)
 dealloc(disable_drop_to_hang)
+dealloc(hide_hud)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
@@ -4047,7 +4081,7 @@ jmp vault_inner_ledge_2
 nop
 returnhere8:
 
-{
+
 alloc(vault_inner_ledge_3,2048)
 label(returnhere9)
 label(originalcode9)
@@ -4069,6 +4103,7 @@ je originalcode9
 code9:
 cmp byte ptr [vault_inner_ledge_f],01
 jne originalcode9
+jmp AC4BFSP.exe+199F17A
 mov eax,[esi]
 mov ecx,[eax+00000108]
 call AC4BFSP.exe+1FC110
@@ -4101,21 +4136,22 @@ cmp byte ptr [vault_landing_low_enable],01
 je originalcode10
 cmp byte ptr [vault_landing_far_enable],01
 je originalcode10
-cmp byte ptr [vault_inner_ledge_f],01
-jne originalcode10
+//cmp byte ptr [vault_inner_ledge_f],01
+//jne originalcode10
 movaps xmm0,[vault_inner_ledge_to_hang_coords]
-movaps [eax+00000100],xmm0
+movaps [esi],xmm0
 movaps xmm0,[player_rotation]
-movaps [eax+00000110],xmm0
+movaps [esi+10],xmm0
 mov [vault_inner_ledge_f],00
 
 originalcode10:
-movaps xmm0,[eax+00000100]
+movq xmm0,[esi]
+mov ecx,[ebx+10]
 
 exit10:
 jmp returnhere10
 
-"AssassinsCreedIIGame.exe"+66766F:
+"AC4BFSP.exe"+18046DA:
 jmp vault_inner_ledge_4
 nop 2
 returnhere10:
@@ -4279,6 +4315,11 @@ db 8A 81 30 04 00 00
 db 85 C0 0F 84 0F 01 00 00
 //test eax,eax
 //je AC4BFSP.exe+199F289
+
+"AC4BFSP.exe"+18046DA:
+db F3 0F 7E 06 8B 4B 10
+//movq xmm0,[esi]
+//mov ecx,[ebx+10]
 
 "AC4BFSP.exe"+19A13E0:
 db 8B 06 8B 88 08 01 00 00
@@ -6280,6 +6321,206 @@ db 0F 86 42 01 00 00
                         </CheatEntry>
                         <CheatEntry>
                           <ID>315</ID>
+                          <Description>"Hang to Hang"</Description>
+                          <VariableType>Auto Assembler Script</VariableType>
+                          <AssemblerScript>[ENABLE]
+alloc(hang_to_hang,2048)
+label(returnhere)
+label(originalcode)
+label(button_release)
+label(exit)
+
+globalalloc(hang_to_hang_enable,1)
+globalalloc(hang_to_hang_f,1)
+globalalloc(hang_to_hang_disable_f,1)
+
+hang_to_hang:
+cmp byte ptr [hang_to_hang_enable],01
+jne button_release
+cmp byte ptr [hang_to_hang_disable_f],01
+je originalcode
+mov [hang_to_hang_f],01
+jmp originalcode
+
+button_release:
+mov [hang_to_hang_disable_f],00
+mov [hang_to_hang_f],00
+
+originalcode:
+mov ecx,[esi+14]
+mov eax,[ecx]
+
+exit:
+jmp returnhere
+
+"AC4BFSP.exe"+12C23B:
+jmp hang_to_hang
+returnhere:
+
+
+alloc(hang_to_hang_stand,2048)
+label(returnhere2)
+label(originalcode2)
+label(exit2)
+
+hang_to_hang_stand:
+cmp byte ptr [hang_to_hang_f],01
+jne originalcode2
+cmp byte ptr [ebp+184],01
+jne AC4BFSP.exe+176532F
+mov [hang_to_hang_disable_f],01
+mov [hang_to_hang_f],00
+jmp AC4BFSP.exe+176532F
+
+originalcode2:
+cmp cx,[ebp-0000040A]
+
+exit2:
+jmp returnhere2
+
+"AC4BFSP.exe"+1764B74:
+jmp hang_to_hang_stand
+nop 2
+returnhere2:
+
+
+alloc(hang_to_hang_stand_2,2048)
+label(returnhere3)
+label(exit3)
+
+hang_to_hang_stand_2:
+cmp byte ptr [hang_to_hang_f],01
+je AC4BFSP.exe+175DC40
+test [ebp-74],FFFF0000
+jbe AC4BFSP.exe+175DC40
+
+exit3:
+jmp returnhere3
+
+"AC4BFSP.exe"+175D7A6:
+jmp hang_to_hang_stand_2
+nop
+returnhere3:
+
+{
+alloc(hang_to_hang_stand_3,2048)
+label(returnhere4)
+label(exit4)
+
+hang_to_hang_stand_3:
+call ACBSP.exe+DE1230
+cmp byte ptr [hang_to_hang_f],01
+jne exit4
+mov [hang_to_hang_disable_f],01
+mov [hang_to_hang_f],00
+je ACBSP.exe+DF3E67
+
+exit4:
+jmp returnhere4
+
+"ACBSP.exe"+DF3E4B:
+jmp hang_to_hang_stand_3
+returnhere4:
+
+
+alloc(hang_to_hang_stand_4,2048)
+label(returnhere5)
+label(exit5)
+
+hang_to_hang_stand_4:
+mov [hang_to_hang_disable_f],01
+mov [hang_to_hang_f],00
+mov al,01
+mov [esi+00000B74],al
+
+exit5:
+jmp returnhere5
+
+"ACBSP.exe"+DF3B07:
+jmp hang_to_hang_stand_4
+nop 3
+returnhere5:
+
+
+alloc(hang_to_hang_crouch,2048)
+label(returnhere6)
+label(exit6)
+
+hang_to_hang_crouch:
+call ACBSP.exe+DBAF30
+cmp byte ptr [hang_to_hang_f],01
+je ACBSP.exe+DD0D21
+
+exit6:
+jmp returnhere6
+
+"ACBSP.exe"+DD0D14:
+jmp hang_to_hang_crouch
+returnhere6:
+
+
+alloc(hang_to_hang_crouch_2,2048)
+label(returnhere7)
+label(exit7)
+
+hang_to_hang_crouch_2:
+call ACBSP.exe+DC6DC0
+cmp byte ptr [hang_to_hang_f],01
+jne exit7
+mov [hang_to_hang_disable_f],01
+mov [hang_to_hang_f],00
+je ACBSP.exe+DD0DB1
+
+exit7:
+jmp returnhere7
+
+"ACBSP.exe"+DD0DA4:
+jmp hang_to_hang_crouch_2
+returnhere7:
+}
+
+[DISABLE]
+"AC4BFSP.exe"+12C23B:
+db 8B 4E 14 8B 01
+//mov ecx,[esi+14]
+//mov eax,[ecx]
+
+"AC4BFSP.exe"+1764B74:
+db 66 3B 8D F6 FB FF FF
+//cmp cx,[ebp-0000040A]
+
+"AC4BFSP.exe"+175D7A6:
+db 0F 86 94 04 00 00
+//jbe AC4BFSP.exe+175DC40
+{
+"ACBSP.exe"+DF3E4B:
+db E8 E0 D3 FE FF
+//call ACBSP.exe+DE1230
+
+"ACBSP.exe"+DF3B07:
+db B0 01 88 86 74 0B 00 00
+//mov al,01
+//mov [esi+00000B74],al
+
+"ACBSP.exe"+DD0D14:
+db E8 17 A2 FE FF
+//call ACBSP.exe+DBAF30
+
+"ACBSP.exe"+DD0DA4:
+db E8 17 60 FF FF
+//call ACBSP.exe+DC6DC0
+}
+dealloc(hang_to_hang)
+dealloc(hang_to_hang_stand)
+dealloc(hang_to_hang_stand_2)
+dealloc(hang_to_hang_stand_3)
+dealloc(hang_to_hang_stand_4)
+dealloc(hang_to_hang_crouch)
+dealloc(hang_to_hang_crouch_2)
+</AssemblerScript>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>316</ID>
                           <Description>"Quick Eject"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -6350,7 +6591,7 @@ dealloc(quick_eject_hang)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>316</ID>
+                          <ID>317</ID>
                           <Description>"Swing Off Beam / Pull up Pole"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -6528,7 +6769,7 @@ dealloc(instant_swing_off)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>317</ID>
+                          <ID>318</ID>
                           <Description>"Ground Landings"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -6632,7 +6873,7 @@ dealloc(ground_roll_3)
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>318</ID>
+                              <ID>319</ID>
                               <Description>"Remove Hard Landing / Roll Screen Shake"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -6662,7 +6903,7 @@ db 0F 84 91 00 00 00
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>319</ID>
+                              <ID>320</ID>
                               <Description>"Smooth Vault Ground Landing"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -6713,7 +6954,7 @@ db 75 31 6A 00 6A 00
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>320</ID>
+                              <ID>321</ID>
                               <Description>"Forced Ground Roll"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
@@ -6803,20 +7044,20 @@ dealloc(forced_ground_roll_3)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>321</ID>
+                              <ID>322</ID>
                               <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                               <Options moDeactivateChildrenAsWell="1"/>
                               <GroupHeader>1</GroupHeader>
                               <CheatEntries>
                                 <CheatEntry>
-                                  <ID>322</ID>
+                                  <ID>323</ID>
                                   <Description>"Values"</Description>
                                   <Options moHideChildren="1"/>
                                   <Color>808080</Color>
                                   <GroupHeader>1</GroupHeader>
                                   <CheatEntries>
                                     <CheatEntry>
-                                      <ID>323</ID>
+                                      <ID>324</ID>
                                       <Description>"Drop Height"</Description>
                                       <ShowAsSigned>0</ShowAsSigned>
                                       <Color>808080</Color>
@@ -6824,7 +7065,7 @@ dealloc(forced_ground_roll_3)
                                       <Address>drop_height</Address>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>324</ID>
+                                      <ID>325</ID>
                                       <Description>"Soft Land Height Threshold"</Description>
                                       <ShowAsSigned>0</ShowAsSigned>
                                       <Color>808080</Color>
@@ -6838,7 +7079,7 @@ dealloc(forced_ground_roll_3)
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>325</ID>
+                          <ID>326</ID>
                           <Description>"Coords Modifier"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -7228,7 +7469,7 @@ dealloc(coords_modifier_3)
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>326</ID>
+                              <ID>327</ID>
                               <Description>"Target Modifier"</Description>
                               <Options moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
@@ -7383,7 +7624,7 @@ dd (float)0 (float)0 (float)-4 (float)0
 vault_freeform_dismount_height:
 dd (float)0 (float)0 (float)-4 (float)0
 vault_inner_ledge_height:
-dd (float)0 (float)0 (float)0 (float)0
+dd (float)0 (float)0 (float)0.2 (float)0
 vault_inner_ledge_to_hang_height:
 dd (float)0 (float)0 (float)0 (float)0
 
@@ -8204,7 +8445,7 @@ dealloc(swing_up_cycle)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>327</ID>
+                              <ID>328</ID>
                               <Description>"Swing / Vault / Eject Modifier"</Description>
                               <VariableType>Auto Assembler Script</VariableType>
                               <AssemblerScript>[ENABLE]
@@ -8309,7 +8550,7 @@ dealloc(vault_coords)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>328</ID>
+                              <ID>329</ID>
                               <Description>"NSO Idle"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
@@ -8495,7 +8736,7 @@ dealloc(self_swing_2)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>329</ID>
+                              <ID>330</ID>
                               <Description>"NSO Run"</Description>
                               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                               <VariableType>Auto Assembler Script</VariableType>
@@ -8624,25 +8865,25 @@ dealloc(nso_run_coords_3)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>330</ID>
+                              <ID>331</ID>
                               <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                               <Options moDeactivateChildrenAsWell="1"/>
                               <GroupHeader>1</GroupHeader>
                               <CheatEntries>
                                 <CheatEntry>
-                                  <ID>331</ID>
+                                  <ID>332</ID>
                                   <Description>"Values"</Description>
                                   <Options moHideChildren="1"/>
                                   <Color>808080</Color>
                                   <GroupHeader>1</GroupHeader>
                                   <CheatEntries>
                                     <CheatEntry>
-                                      <ID>332</ID>
+                                      <ID>333</ID>
                                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                                       <GroupHeader>1</GroupHeader>
                                       <CheatEntries>
                                         <CheatEntry>
-                                          <ID>333</ID>
+                                          <ID>334</ID>
                                           <Description>"Vault Landing Far Height"</Description>
                                           <ShowAsSigned>0</ShowAsSigned>
                                           <VariableType>Float</VariableType>
@@ -9336,195 +9577,6 @@ dealloc(nso_run_coords_3)
                             </CheatEntry>
                           </CheatEntries>
                         </CheatEntry>
-                        <CheatEntry>
-                          <ID>796</ID>
-                          <Description>"Hang to Hang"</Description>
-                          <VariableType>Auto Assembler Script</VariableType>
-                          <AssemblerScript>[ENABLE]
-alloc(hang_to_hang,2048)
-label(returnhere)
-label(originalcode)
-label(button_release)
-label(exit)
-
-globalalloc(hang_to_hang_enable,1)
-globalalloc(hang_to_hang_f,1)
-globalalloc(hang_to_hang_disable_f,1)
-
-hang_to_hang:
-cmp byte ptr [hang_to_hang_enable],01
-jne button_release
-cmp byte ptr [hang_to_hang_disable_f],01
-je originalcode
-mov [hang_to_hang_f],01
-jmp originalcode
-
-button_release:
-mov [hang_to_hang_disable_f],00
-mov [hang_to_hang_f],00
-
-originalcode:
-mov ecx,[esi+14]
-mov eax,[ecx]
-
-exit:
-jmp returnhere
-
-"AC4BFSP.exe"+12C23B:
-jmp hang_to_hang
-returnhere:
-
-
-alloc(hang_to_hang_stand,2048)
-label(returnhere2)
-label(exit2)
-
-hang_to_hang_stand:
-call ACBSP.exe+DDD0C0
-cmp byte ptr [hang_to_hang_f],01
-je ACBSP.exe+DF3BEA
-
-exit2:
-jmp returnhere2
-
-"ACBSP.exe"+DF3BC2:
-jmp hang_to_hang_stand
-returnhere2:
-
-
-alloc(hang_to_hang_stand_2,2048)
-label(returnhere3)
-label(exit3)
-
-hang_to_hang_stand_2:
-call ACBSP.exe+DDD0C0
-cmp byte ptr [hang_to_hang_f],01
-je ACBSP.exe+DF3D0C
-
-exit3:
-jmp returnhere3
-
-"ACBSP.exe"+DF3CB5:
-jmp hang_to_hang_stand_2
-returnhere3:
-
-
-alloc(hang_to_hang_stand_3,2048)
-label(returnhere4)
-label(exit4)
-
-hang_to_hang_stand_3:
-call ACBSP.exe+DE1230
-cmp byte ptr [hang_to_hang_f],01
-jne exit4
-mov [hang_to_hang_disable_f],01
-mov [hang_to_hang_f],00
-je ACBSP.exe+DF3E67
-
-exit4:
-jmp returnhere4
-
-"ACBSP.exe"+DF3E4B:
-jmp hang_to_hang_stand_3
-returnhere4:
-
-
-alloc(hang_to_hang_stand_4,2048)
-label(returnhere5)
-label(exit5)
-
-hang_to_hang_stand_4:
-mov [hang_to_hang_disable_f],01
-mov [hang_to_hang_f],00
-mov al,01
-mov [esi+00000B74],al
-
-exit5:
-jmp returnhere5
-
-"ACBSP.exe"+DF3B07:
-jmp hang_to_hang_stand_4
-nop 3
-returnhere5:
-
-
-alloc(hang_to_hang_crouch,2048)
-label(returnhere6)
-label(exit6)
-
-hang_to_hang_crouch:
-call ACBSP.exe+DBAF30
-cmp byte ptr [hang_to_hang_f],01
-je ACBSP.exe+DD0D21
-
-exit6:
-jmp returnhere6
-
-"ACBSP.exe"+DD0D14:
-jmp hang_to_hang_crouch
-returnhere6:
-
-
-alloc(hang_to_hang_crouch_2,2048)
-label(returnhere7)
-label(exit7)
-
-hang_to_hang_crouch_2:
-call ACBSP.exe+DC6DC0
-cmp byte ptr [hang_to_hang_f],01
-jne exit7
-mov [hang_to_hang_disable_f],01
-mov [hang_to_hang_f],00
-je ACBSP.exe+DD0DB1
-
-exit7:
-jmp returnhere7
-
-"ACBSP.exe"+DD0DA4:
-jmp hang_to_hang_crouch_2
-returnhere7:
-
-
-[DISABLE]
-"AC4BFSP.exe"+12C23B:
-db 8B 4E 14 8B 01
-//mov ecx,[esi+14]
-//mov eax,[ecx]
-
-"ACBSP.exe"+DF3BC2:
-db E8 F9 94 FE FF
-//call ACBSP.exe+DDD0C0
-
-"ACBSP.exe"+DF3CB5:
-db E8 06 94 FE FF
-//call ACBSP.exe+DDD0C0
-
-"ACBSP.exe"+DF3E4B:
-db E8 E0 D3 FE FF
-//call ACBSP.exe+DE1230
-
-"ACBSP.exe"+DF3B07:
-db B0 01 88 86 74 0B 00 00
-//mov al,01
-//mov [esi+00000B74],al
-
-"ACBSP.exe"+DD0D14:
-db E8 17 A2 FE FF
-//call ACBSP.exe+DBAF30
-
-"ACBSP.exe"+DD0DA4:
-db E8 17 60 FF FF
-//call ACBSP.exe+DC6DC0
-
-dealloc(hang_to_hang)
-dealloc(hang_to_hang_stand)
-dealloc(hang_to_hang_stand_2)
-dealloc(hang_to_hang_stand_3)
-dealloc(hang_to_hang_stand_4)
-dealloc(hang_to_hang_crouch)
-dealloc(hang_to_hang_crouch_2)
-</AssemblerScript>
-                        </CheatEntry>
                       </CheatEntries>
                     </CheatEntry>
                   </CheatEntries>
@@ -9534,139 +9586,6 @@ dealloc(hang_to_hang_crouch_2)
           </CheatEntries>
         </CheatEntry>
       </CheatEntries>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>797</ID>
-      <Description>"Fix Leap of Faith Bug"</Description>
-      <Color>808080</Color>
-      <VariableType>Auto Assembler Script</VariableType>
-      <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the modification
-alloc(newmem,2048)
-label(returnhere)
-label(originalcode)
-label(exit)
-
-newmem:
-
-originalcode:
-jmp AC4BFSP.exe+D7DFD3
-//mov ecx,[ebp-08]
-
-exit:
-jmp returnhere
-
-"AC4BFSP.exe"+D7DF97:
-jmp newmem
-returnhere:
-
-
-
-
-[DISABLE]
-//code from here till the end of the code will be used to disable the modification
-dealloc(newmem)
-"AC4BFSP.exe"+D7DF97:
-db 74 3A 8B 4D F8
-//je AC4BFSP.exe+D7DFD3
-//mov ecx,[ebp-08]
-</AssemblerScript>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>798</ID>
-      <Description>"H2H"</Description>
-      <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
-      <VariableType>Auto Assembler Script</VariableType>
-      <AssemblerScript>[ENABLE]
-alloc(newmem,2048)
-label(returnhere)
-label(originalcode)
-label(exit)
-
-newmem:
-
-originalcode:
-jmp AC4BFSP.exe+176532F
-
-exit:
-jmp returnhere
-
-"AC4BFSP.exe"+1764B7B:
-jmp newmem
-nop
-returnhere:
-
-
-
-
-[DISABLE]
-dealloc(newmem)
-"AC4BFSP.exe"+1764B7B:
-db 0F 83 AE 07 00 00
-//jae AC4BFSP.exe+176532F
-</AssemblerScript>
-      <Hotkeys>
-        <Hotkey Active="0" OnlyWhileDown="1">
-          <Action>Toggle Activation</Action>
-          <Keys>
-            <Key>22528</Key>
-          </Keys>
-          <ID>799</ID>
-        </Hotkey>
-      </Hotkeys>
-      <CheatEntries>
-        <CheatEntry>
-          <ID>800</ID>
-          <Description>"H2H Beam"</Description>
-          <VariableType>Auto Assembler Script</VariableType>
-          <AssemblerScript>[ENABLE]
-alloc(newmem,2048)
-label(returnhere)
-label(originalcode)
-label(exit)
-
-newmem:
-
-originalcode:
-cmp edi,04
-mov edi,0B
-nop
-
-exit:
-jmp returnhere
-
-"AC4BFSP.exe"+175CFE3:
-jmp newmem
-returnhere:
-
-
-
-
-[DISABLE]
-dealloc(newmem)
-"AC4BFSP.exe"+175CFE3:
-db 83 FF 04 74 09
-//cmp edi,04
-//je AC4BFSP.exe+175CFF1
-</AssemblerScript>
-          <Hotkeys>
-            <Hotkey Active="0" OnlyWhileDown="1">
-              <Action>Toggle Activation</Action>
-              <Keys>
-                <Key>22528</Key>
-              </Keys>
-              <ID>801</ID>
-            </Hotkey>
-          </Hotkeys>
-        </CheatEntry>
-      </CheatEntries>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>802</ID>
-      <Description>"No description"</Description>
-      <ShowAsSigned>0</ShowAsSigned>
-      <VariableType>4 Bytes</VariableType>
-      <Address>vault_inner_ledge_f</Address>
     </CheatEntry>
   </CheatEntries>
   <LuaScript>-- Process name
