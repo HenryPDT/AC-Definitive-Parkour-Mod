@@ -8619,15 +8619,19 @@ returnhere:
 alloc(drop_to_hang_2,2048)
 label(returnhere2)
 label(originalcode2)
+label(dismount2)
 label(exit2)
 
 drop_to_hang_2:
 cmp byte ptr [on_hang_free_f],00
 je originalcode2
 cmp byte ptr [dismount_enable],01
-je originalcode2
+je dismount2
 mov [edx+5C],00000001
 jmp exit2
+
+dismount2:
+mov [dismount_hang_free_eject_f],01
 
 originalcode2:
 mov [edx+5C],0000000C
@@ -9773,78 +9777,82 @@ if syntaxcheck then return end
 
 local config_enable = {
     [1] = {
-        dynamic1 = "ACRSP.exe+66A385",
+        dynamic1 = "ACRSP.exe+66A632",
         dynamic2 = "ACRSP.exe+66A385",
         dynamic3 = "ACRSP.exe+66A385",
-        dynamic4 = "ACRSP.exe+66A632",
-        dynamic5 = "\"ACRSP.exe\"+66A374:",
-        dynamic6 = "ACRSP.exe+66A809",
-        dynamic7 = "ACRSP.exe+66A809",
-        dynamic8 = "\"ACRSP.exe\"+66A7F3:",
-        dynamic9 = "ACRSP.exe+68CE80",
-        dynamic10 = "ACRSP.exe+684032",
-        dynamic11 = "ACRSP.exe+684032",
-        dynamic12 = "ACRSP.exe+684012",
-        dynamic13 = "\"ACRSP.exe\"+684009:",
-        dynamic14 = "ACRSP.exe+66A88E",
-        dynamic15 = "\"ACRSP.exe\"+66A7D8:",
-        dynamic16 = "ACRSP.exe+6713FD",
-        dynamic17 = "\"ACRSP.exe\"+671309:",
-        dynamic18 = "ACRSP.exe+BC6D80",
-        dynamic19 = "ACRSP.exe+671458",
-        dynamic20 = "\"ACRSP.exe\"+6713F4:",
-        dynamic21 = "ACRSP.exe+BC6400",
-        dynamic22 = "ACRSP.exe+671516",
-        dynamic23 = "\"ACRSP.exe\"+671509:",
-        dynamic24 = "\"ACRSP.exe\"+16FE98D:",
-        dynamic25 = "ACRSP.exe+66A6AC",
-        dynamic26 = "\"ACRSP.exe\"+66A30F:",
-        dynamic27 = "ACRSP.exe+66A6A4",
-        dynamic28 = "ACRSP.exe+66A6A4",
-        dynamic29 = "\"ACRSP.exe\"+66A2FB:",
-        dynamic30 = "\"ACRSP.exe\"+16FE91A:",
-        dynamic31 = "\"ACRSP.exe\"+1700387:",
-        dynamic32 = "\"ACRSP.exe\"+671052:",
-        dynamic33 = "ACRSP.exe+675243",
-        dynamic34 = "ACRSP.exe+675243",
-        dynamic35 = "\"ACRSP.exe\"+675232:"
+        dynamic4 = "ACRSP.exe+66A385",
+        dynamic5 = "ACRSP.exe+66A632",
+        dynamic6 = "ACRSP.exe+66A385",
+        dynamic7 = "\"ACRSP.exe\"+66A378:",
+        dynamic8 = "ACRSP.exe+66A809",
+        dynamic9 = "ACRSP.exe+66A809",
+        dynamic10 = "\"ACRSP.exe\"+66A7F3:",
+        dynamic11 = "ACRSP.exe+68CE80",
+        dynamic12 = "ACRSP.exe+684032",
+        dynamic13 = "ACRSP.exe+684032",
+        dynamic14 = "ACRSP.exe+684012",
+        dynamic15 = "\"ACRSP.exe\"+684009:",
+        dynamic16 = "ACRSP.exe+66A88E",
+        dynamic17 = "\"ACRSP.exe\"+66A7D8:",
+        dynamic18 = "ACRSP.exe+6713FD",
+        dynamic19 = "\"ACRSP.exe\"+671309:",
+        dynamic20 = "ACRSP.exe+BC6D80",
+        dynamic21 = "ACRSP.exe+671458",
+        dynamic22 = "\"ACRSP.exe\"+6713F4:",
+        dynamic23 = "ACRSP.exe+BC6400",
+        dynamic24 = "ACRSP.exe+671516",
+        dynamic25 = "\"ACRSP.exe\"+671509:",
+        dynamic26 = "\"ACRSP.exe\"+16FE98D:",
+        dynamic27 = "ACRSP.exe+66A6AC",
+        dynamic28 = "\"ACRSP.exe\"+66A30F:",
+        dynamic29 = "ACRSP.exe+66A6A4",
+        dynamic30 = "ACRSP.exe+66A6A4",
+        dynamic31 = "\"ACRSP.exe\"+66A2FB:",
+        dynamic32 = "\"ACRSP.exe\"+16FE91A:",
+        dynamic33 = "\"ACRSP.exe\"+1700387:",
+        dynamic34 = "\"ACRSP.exe\"+671052:",
+        dynamic35 = "ACRSP.exe+675243",
+        dynamic36 = "ACRSP.exe+675243",
+        dynamic37 = "\"ACRSP.exe\"+675232:"
     },
     [2] = {
-        dynamic1 = "ACRSP.exe+69BB15",
+        dynamic1 = "ACRSP.exe+69BDC2",
         dynamic2 = "ACRSP.exe+69BB15",
         dynamic3 = "ACRSP.exe+69BB15",
-        dynamic4 = "ACRSP.exe+69BDC2",
-        dynamic5 = "\"ACRSP.exe\"+69BB04:",
-        dynamic6 = "ACRSP.exe+69BF99",
-        dynamic7 = "ACRSP.exe+69BF99",
-        dynamic8 = "\"ACRSP.exe\"+69BF83:",
-        dynamic9 = "ACRSP.exe+6BE610",
-        dynamic10 = "ACRSP.exe+6B57C2",
-        dynamic11 = "ACRSP.exe+6B57C2",
-        dynamic12 = "ACRSP.exe+6B57A2",
-        dynamic13 = "\"ACRSP.exe\"+6B5799:",
-        dynamic14 = "ACRSP.exe+69C01E",
-        dynamic15 = "\"ACRSP.exe\"+69BF68:",
-        dynamic16 = "ACRSP.exe+6A2B8D",
-        dynamic17 = "\"ACRSP.exe\"+6A2A99:",
-        dynamic18 = "ACRSP.exe+BFA820",
-        dynamic19 = "ACRSP.exe+6A2BE8",
-        dynamic20 = "\"ACRSP.exe\"+6A2B84:",
-        dynamic21 = "ACRSP.exe+BF9EA0",
-        dynamic22 = "ACRSP.exe+6A2CA6",
-        dynamic23 = "\"ACRSP.exe\"+6A2C99:",
-        dynamic24 = "\"ACRSP.exe\"+173239D:",
-        dynamic25 = "ACRSP.exe+69BE3C",
-        dynamic26 = "\"ACRSP.exe\"+69BA9F:",
-        dynamic27 = "ACRSP.exe+69BE34",
-        dynamic28 = "ACRSP.exe+69BE34",
-        dynamic29 = "\"ACRSP.exe\"+69BA8B:",
-        dynamic30 = "\"ACRSP.exe\"+173232A:",
-        dynamic31 = "\"ACRSP.exe\"+1733D97:",
-        dynamic32 = "\"ACRSP.exe\"+6A27E2:",
-        dynamic33 = "ACRSP.exe+6A69D3",
-        dynamic34 = "ACRSP.exe+6A69D3",
-        dynamic35 = "\"ACRSP.exe\"+6A69C2:"
+        dynamic4 = "ACRSP.exe+69BB15",
+        dynamic5 = "ACRSP.exe+69BDC2",
+        dynamic6 = "ACRSP.exe+69BB15",
+        dynamic7 = "\"ACRSP.exe\"+69BB08:",
+        dynamic8 = "ACRSP.exe+69BF99",
+        dynamic9 = "ACRSP.exe+69BF99",
+        dynamic10 = "\"ACRSP.exe\"+69BF83:",
+        dynamic11 = "ACRSP.exe+6BE610",
+        dynamic12 = "ACRSP.exe+6B57C2",
+        dynamic13 = "ACRSP.exe+6B57C2",
+        dynamic14 = "ACRSP.exe+6B57A2",
+        dynamic15 = "\"ACRSP.exe\"+6B5799:",
+        dynamic16 = "ACRSP.exe+69C01E",
+        dynamic17 = "\"ACRSP.exe\"+69BF68:",
+        dynamic18 = "ACRSP.exe+6A2B8D",
+        dynamic19 = "\"ACRSP.exe\"+6A2A99:",
+        dynamic20 = "ACRSP.exe+BFA820",
+        dynamic21 = "ACRSP.exe+6A2BE8",
+        dynamic22 = "\"ACRSP.exe\"+6A2B84:",
+        dynamic23 = "ACRSP.exe+BF9EA0",
+        dynamic24 = "ACRSP.exe+6A2CA6",
+        dynamic25 = "\"ACRSP.exe\"+6A2C99:",
+        dynamic26 = "\"ACRSP.exe\"+173239D:",
+        dynamic27 = "ACRSP.exe+69BE3C",
+        dynamic28 = "\"ACRSP.exe\"+69BA9F:",
+        dynamic29 = "ACRSP.exe+69BE34",
+        dynamic30 = "ACRSP.exe+69BE34",
+        dynamic31 = "\"ACRSP.exe\"+69BA8B:",
+        dynamic32 = "\"ACRSP.exe\"+173232A:",
+        dynamic33 = "\"ACRSP.exe\"+1733D97:",
+        dynamic34 = "\"ACRSP.exe\"+6A27E2:",
+        dynamic35 = "ACRSP.exe+6A69D3",
+        dynamic36 = "ACRSP.exe+6A69D3",
+        dynamic37 = "\"ACRSP.exe\"+6A69C2:"
     }
 }
 
@@ -9856,6 +9864,7 @@ alloc(forced_hook_climb,2048)
 label(returnhere)
 label(exit)
 
+globalalloc(forced_hook_climb_leap_f,1)
 globalalloc(forced_hook_climb_leap_enable,1)
 globalalloc(forced_hook_climb_leap_double_enable,1)
 globalalloc(forced_hook_climb_leap_hang_enable,1)
@@ -9870,18 +9879,20 @@ value:
 dd (float)0
 
 forced_hook_climb:
+movss xmm1,[value]
+cvtps2pd xmm1,xmm1
+comisd xmm0,xmm1
+jbe %s
+mov [forced_hook_climb_leap_f],01
 cmp byte ptr [forced_hook_climb_leap_enable],01
 je %s
 cmp byte ptr [forced_hook_climb_leap_double_enable],01
 je %s
 cmp byte ptr [forced_hook_climb_leap_hang_enable],01
 je %s
-cmp byte ptr [forced_hook_pull_up_enable],01
-je %s
-
-movss xmm1,[value]
-cvtss2sd xmm0,xmm0
-cvtps2pd xmm1,xmm1
+//cmp byte ptr [forced_hook_pull_up_enable],01
+//je %s
+jmp %s
 
 exit:
 jmp returnhere
@@ -9964,12 +9975,17 @@ returnhere4:
 
 alloc(forced_hook_climb_pull_up,2048)
 label(returnhere5)
+label(originalcode5)
 label(exit5)
 
 forced_hook_climb_pull_up:
+cmp byte ptr [forced_hook_climb_leap_f],01
+mov [forced_hook_climb_leap_f],00
+jne originalcode5
 cmp byte ptr [forced_hook_pull_up_enable],01
 je exit5
 
+originalcode5:
 test al,al
 je %s
 
@@ -10163,7 +10179,7 @@ jmp returnhere14
 %s
 jmp forced_hook_climb_freeform_wallrun_2
 returnhere14:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16, addrE.dynamic17, addrE.dynamic18, addrE.dynamic19, addrE.dynamic20, addrE.dynamic21, addrE.dynamic22, addrE.dynamic23, addrE.dynamic24, addrE.dynamic25, addrE.dynamic26, addrE.dynamic27, addrE.dynamic28, addrE.dynamic29, addrE.dynamic30, addrE.dynamic31, addrE.dynamic32, addrE.dynamic33, addrE.dynamic34, addrE.dynamic35)
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16, addrE.dynamic17, addrE.dynamic18, addrE.dynamic19, addrE.dynamic20, addrE.dynamic21, addrE.dynamic22, addrE.dynamic23, addrE.dynamic24, addrE.dynamic25, addrE.dynamic26, addrE.dynamic27, addrE.dynamic28, addrE.dynamic29, addrE.dynamic30, addrE.dynamic31, addrE.dynamic32, addrE.dynamic33, addrE.dynamic34, addrE.dynamic35, addrE.dynamic36, addrE.dynamic37)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -10180,7 +10196,7 @@ if syntaxcheck then return end
 
 local config_disable = {
     [1] = {
-        dynamic1 = "\"ACRSP.exe\"+66A374:",
+        dynamic1 = "\"ACRSP.exe\"+66A378:",
         dynamic2 = "\"ACRSP.exe\"+66A7F3:",
         dynamic3 = "ACRSP.exe+66A809",
         dynamic4 = "\"ACRSP.exe\"+684009:",
@@ -10204,7 +10220,7 @@ local config_disable = {
         dynamic22 = "ACRSP.exe+675243"
     },
     [2] = {
-        dynamic1 = "\"ACRSP.exe\"+69BB04:",
+        dynamic1 = "\"ACRSP.exe\"+69BB08:",
         dynamic2 = "\"ACRSP.exe\"+69BF83:",
         dynamic3 = "ACRSP.exe+69BF99",
         dynamic4 = "\"ACRSP.exe\"+6B5799:",
@@ -10234,9 +10250,9 @@ if not addrD then error("Could not determine disable addresses for the current g
 
 local disableScript = string.format([==[
 %s
-db F3 0F 5A C0 0F 5A C9
-//cvtss2sd xmm0,xmm0
+db 0F 5A C9 66 0F 2F C1
 //cvtps2pd xmm1,xmm1
+//comisd xmm0,xmm1
 
 %s
 db 75 14 89 48 08

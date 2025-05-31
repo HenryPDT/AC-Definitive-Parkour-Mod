@@ -6699,15 +6699,19 @@ returnhere:
 alloc(drop_to_hang_2,2048)
 label(returnhere2)
 label(originalcode2)
+label(dismount2)
 label(exit2)
 
 drop_to_hang_2:
 cmp byte ptr [on_hang_free_f],00
 je originalcode2
 cmp byte ptr [dismount_enable],01
-je originalcode2
+je dismount2
 mov [edx+5C],00000001
 jmp exit2
+
+dismount2:
+mov [dismount_hang_free_eject_f],01
 
 originalcode2:
 mov [edx+5C],0000000C
@@ -7502,6 +7506,7 @@ alloc(forced_hook_climb,2048)
 label(returnhere)
 label(exit)
 
+globalalloc(forced_hook_climb_leap_f,1)
 globalalloc(forced_hook_climb_leap_enable,1)
 globalalloc(forced_hook_climb_leap_double_enable,1)
 globalalloc(forced_hook_climb_leap_hang_enable,1)
@@ -7516,23 +7521,25 @@ value:
 dd (float)0
 
 forced_hook_climb:
+movss xmm1,[value]
+cvtps2pd xmm1,xmm1
+comisd xmm0,xmm1
+jbe ACRSP.exe+66A632
+mov [forced_hook_climb_leap_f],01
 cmp byte ptr [forced_hook_climb_leap_enable],01
 je ACRSP.exe+66A385
 cmp byte ptr [forced_hook_climb_leap_double_enable],01
 je ACRSP.exe+66A385
 cmp byte ptr [forced_hook_climb_leap_hang_enable],01
 je ACRSP.exe+66A385
-cmp byte ptr [forced_hook_pull_up_enable],01
-je ACRSP.exe+66A632
-
-movss xmm1,[value]
-cvtss2sd xmm0,xmm0
-cvtps2pd xmm1,xmm1
+//cmp byte ptr [forced_hook_pull_up_enable],01
+//je ACRSP.exe+66A632
+jmp ACRSP.exe+66A385
 
 exit:
 jmp returnhere
 
-"ACRSP.exe"+66A374:
+"ACRSP.exe"+66A378:
 jmp forced_hook_climb
 nop 2
 returnhere:
@@ -7610,12 +7617,17 @@ returnhere4:
 
 alloc(forced_hook_climb_pull_up,2048)
 label(returnhere5)
+label(originalcode5)
 label(exit5)
 
 forced_hook_climb_pull_up:
+cmp byte ptr [forced_hook_climb_leap_f],01
+mov [forced_hook_climb_leap_f],00
+jne originalcode5
 cmp byte ptr [forced_hook_pull_up_enable],01
 je exit5
 
+originalcode5:
 test al,al
 je ACRSP.exe+6713FD
 
@@ -7812,10 +7824,10 @@ returnhere14:
 
 
 [DISABLE]
-"ACRSP.exe"+66A374:
-db F3 0F 5A C0 0F 5A C9
-//cvtss2sd xmm0,xmm0
+"ACRSP.exe"+66A378:
+db 0F 5A C9 66 0F 2F C1
 //cvtps2pd xmm1,xmm1
+//comisd xmm0,xmm1
 
 "ACRSP.exe"+66A7F3:
 db 75 14 89 48 08
