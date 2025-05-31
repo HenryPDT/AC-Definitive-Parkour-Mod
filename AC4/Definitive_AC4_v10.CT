@@ -6603,10 +6603,19 @@ label(exit)
 
 globalalloc(forced_hang_enable,1)
 globalalloc(vanilla_beam_entry_enable,1)
+globalalloc(eject_clamp_f,1)
 globalalloc(manual_catch_speed,4)
+globalalloc(swing_angle_release,4)
+globalalloc(swing_angle_restriction,4)
 
 manual_catch_speed:
 dd (float)0.2
+
+swing_angle_release:
+dd (float)-0.42
+
+swing_angle_restriction:
+dd (float)1.05
 
 pole_to_beam:
 cmp byte ptr [forced_hang_enable],01
@@ -6728,6 +6737,51 @@ nop 3
 returnhere6:
 
 
+alloc(enhanced_swing,2048)
+label(returnhere7)
+label(exit7)
+
+enhanced_swing:
+movaps xmm3,[ebp-00000110]
+movss xmm2,[swing_angle_release]
+jmp AC4BFSP.exe+D3DEF2
+
+exit7:
+jmp returnhere7
+
+"AC4BFSP.exe"+D3DEE3:
+jmp enhanced_swing
+nop 2
+returnhere7:
+
+
+alloc(enhanced_swing_2,2048)
+label(returnhere8)
+label(exit8)
+
+enhanced_swing_2:
+mov [eject_clamp_f],01
+movss [esp+04],xmm0
+movaps [ebp-50],xmm5
+fld dword ptr [swing_angle_restriction]
+fchs
+fstp dword ptr [esp]
+call AC4BFSP.ReadData+EA0
+fstp dword ptr [esp+04]
+fld dword ptr [swing_angle_restriction]
+fstp dword ptr [esp]
+call AC4BFSP.ReadData+31B0
+jmp AC4BFSP.exe+D3EA45
+
+exit8:
+jmp returnhere8
+
+"AC4BFSP.exe"+D3EA13:
+jmp enhanced_swing_2
+nop
+returnhere8:
+
+
 [DISABLE]
 "AC4BFSP.exe"+19D6411:
 db 89 4D EC 89 85 68 FF FF FF
@@ -6759,6 +6813,14 @@ db D9 5D 08 F3 0F 10 45 08
 //fstp dword ptr [ebp+08]
 //movss xmm0,[ebp+08]
 
+"AC4BFSP.exe"+D3DEE3:
+db 0F 28 9D F0 FE FF FF
+//movaps xmm3,[ebp-00000110]
+
+"AC4BFSP.exe"+D3EA13:
+db F3 0F 11 44 24 04
+//movss [esp+04],xmm0
+
 dealloc(hang)
 dealloc(pole_to_beam)
 dealloc(pull_up)
@@ -6766,6 +6828,8 @@ dealloc(swing_idle)
 dealloc(swing_entry)
 dealloc(vanilla_beam_entry)
 dealloc(instant_swing_off)
+dealloc(enhanced_swing)
+dealloc(enhanced_swing_2)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
