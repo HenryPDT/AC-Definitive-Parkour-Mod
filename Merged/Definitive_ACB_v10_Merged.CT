@@ -114,7 +114,9 @@ globalalloc(bindCenterCam,1)
 globalalloc(absolute_input_f,8)
 globalalloc(absolute_input_cam_f,8)
 globalalloc(relative_input_f,4)
+globalalloc(relative_input_alt_f,4)
 globalalloc(direction_input_f,16)
+globalalloc(pi,4)
 
 globalalloc(pVelocity,4)
 globalalloc(player_velocity,16)
@@ -149,6 +151,9 @@ globalalloc(freeform_jump_f,1)
 globalalloc(ledge_drop_f,1)
 globalalloc(eject_clamp_f,1)
 globalalloc(swan_dive_f,1)
+
+pi:
+dd (float)3.1415929
 
 walk_strength:
 dd (float)1
@@ -255,6 +260,7 @@ movq [absolute_input_f],xmm0
 cmp [absolute_input_f],00000000
 jne exit3
 mov [relative_input_f],00000000
+mov [relative_input_alt_f],00000000
 
 exit3:
 jmp returnhere3
@@ -267,11 +273,24 @@ returnhere3:
 
 alloc(relative_input,2048)
 label(returnhere4)
+label(relative_alt)
 label(exit4)
 
 relative_input:
 fst [relative_input_f]
 fstp dword ptr [esi+000022A8]
+movss xmm0,[relative_input_f]
+movss xmm1,[pi]
+subss xmm1,xmm0
+comiss xmm1,[pi]
+jbe relative_alt
+movss xmm0,[pi]
+addss xmm0,xmm0
+subss xmm1,xmm0
+
+relative_alt:
+movss xmm0,xmm1
+movss [relative_input_alt_f],xmm0
 
 exit4:
 jmp returnhere4
@@ -1089,13 +1108,20 @@ disableInfo = nil
                     </CheatEntry>
                     <CheatEntry>
                       <ID>36</ID>
+                      <Description>"Relative Input Direction Alt"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Float</VariableType>
+                      <Address>relative_input_alt_f</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>37</ID>
                       <Description>"X-Axis Input"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Float</VariableType>
                       <Address>direction_input_f</Address>
                       <CheatEntries>
                         <CheatEntry>
-                          <ID>37</ID>
+                          <ID>38</ID>
                           <Description>"Y-Axis Input"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <VariableType>Float</VariableType>
@@ -1106,14 +1132,14 @@ disableInfo = nil
                   </CheatEntries>
                 </CheatEntry>
                 <CheatEntry>
-                  <ID>38</ID>
+                  <ID>39</ID>
                   <Description>"Player Values"</Description>
                   <Options moHideChildren="1" />
                   <Color>808080</Color>
                   <GroupHeader>1</GroupHeader>
                   <CheatEntries>
                     <CheatEntry>
-                      <ID>39</ID>
+                      <ID>40</ID>
                       <Description>"pEntity"</Description>
                       <ShowAsHex>1</ShowAsHex>
                       <ShowAsSigned>0</ShowAsSigned>
@@ -1121,7 +1147,7 @@ disableInfo = nil
                       <Address>pEntity</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>40</ID>
+                      <ID>41</ID>
                       <Description>"X-axis Pointer (South Positive)"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Float</VariableType>
@@ -1131,7 +1157,7 @@ disableInfo = nil
                       </Offsets>
                       <CheatEntries>
                         <CheatEntry>
-                          <ID>41</ID>
+                          <ID>42</ID>
                           <Description>"Y-Axis (East Positive)"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <Color>C0C0C0</Color>
@@ -1139,7 +1165,7 @@ disableInfo = nil
                           <Address>+4</Address>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>42</ID>
+                          <ID>43</ID>
                           <Description>"Z-Axis (Height)"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <Color>C0C0C0</Color>
@@ -1147,7 +1173,7 @@ disableInfo = nil
                           <Address>+8</Address>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>43</ID>
+                          <ID>44</ID>
                           <Description>"Face South"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <Color>C0C0C0</Color>
@@ -1155,7 +1181,7 @@ disableInfo = nil
                           <Address>-20</Address>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>44</ID>
+                          <ID>45</ID>
                           <Description>"Face East"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <Color>C0C0C0</Color>
@@ -1163,7 +1189,7 @@ disableInfo = nil
                           <Address>-1C</Address>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>45</ID>
+                          <ID>46</ID>
                           <Description>"Face East"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <Color>C0C0C0</Color>
@@ -1171,7 +1197,7 @@ disableInfo = nil
                           <Address>-30</Address>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>46</ID>
+                          <ID>47</ID>
                           <Description>"Face North"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <Color>C0C0C0</Color>
@@ -1181,21 +1207,21 @@ disableInfo = nil
                       </CheatEntries>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>47</ID>
+                      <ID>48</ID>
                       <Description>"X-Axis Speed"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Float</VariableType>
                       <Address>player_velocity</Address>
                       <CheatEntries>
                         <CheatEntry>
-                          <ID>48</ID>
+                          <ID>49</ID>
                           <Description>"Y-Axis Speed"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <VariableType>Float</VariableType>
                           <Address>+4</Address>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>49</ID>
+                          <ID>50</ID>
                           <Description>"Z-Axis / Vertical Speed"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <VariableType>Float</VariableType>
@@ -1204,56 +1230,56 @@ disableInfo = nil
                       </CheatEntries>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>50</ID>
+                      <ID>51</ID>
                       <Description>"Horizontal Speed"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Float</VariableType>
                       <Address>horizontal_velocity</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>51</ID>
+                      <ID>52</ID>
                       <Description>"On Ground"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>on_ground_f</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>52</ID>
+                      <ID>53</ID>
                       <Description>"On NSO"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>on_nso_f</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>53</ID>
+                      <ID>54</ID>
                       <Description>"On Hang"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>on_hang_f</Address>
                       <CheatEntries>
                         <CheatEntry>
-                          <ID>54</ID>
+                          <ID>55</ID>
                           <Description>"On Hang Free"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <VariableType>Byte</VariableType>
                           <Address>on_hang_free_f</Address>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>55</ID>
+                          <ID>56</ID>
                           <Description>"On Hang Wall"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <VariableType>Byte</VariableType>
                           <Address>on_hang_wall_f</Address>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>56</ID>
+                              <ID>57</ID>
                               <Description>"On Hang Crouch"</Description>
                               <ShowAsSigned>0</ShowAsSigned>
                               <VariableType>Byte</VariableType>
                               <Address>on_hang_crouch_f</Address>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>57</ID>
+                              <ID>58</ID>
                               <Description>"On Hang Stand"</Description>
                               <ShowAsSigned>0</ShowAsSigned>
                               <VariableType>Byte</VariableType>
@@ -1264,70 +1290,70 @@ disableInfo = nil
                       </CheatEntries>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>58</ID>
+                      <ID>59</ID>
                       <Description>"On Vault"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>on_vault_f</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>59</ID>
+                      <ID>60</ID>
                       <Description>"On Air"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>on_air_f</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>60</ID>
+                      <ID>61</ID>
                       <Description>"On Water"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Byte</VariableType>
                       <Address>on_water_f</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>61</ID>
+                      <ID>62</ID>
                       <Description>"Fall Height"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Float</VariableType>
                       <Address>fall_height</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>62</ID>
+                      <ID>63</ID>
                       <Description>"Ground Walk Strength"</Description>
                       <ShowAsSigned>0</ShowAsSigned>
                       <VariableType>Float</VariableType>
                       <Address>walk_strength</Address>
                       <CheatEntries>
                         <CheatEntry>
-                          <ID>63</ID>
+                          <ID>64</ID>
                           <Description>"Walk Cycle Max"</Description>
                           <ShowAsSigned>0</ShowAsSigned>
                           <VariableType>Byte</VariableType>
                           <Address>walk_mode_cycle</Address>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>64</ID>
+                              <ID>65</ID>
                               <Description>"Walk Strength Default"</Description>
                               <ShowAsSigned>0</ShowAsSigned>
                               <VariableType>Float</VariableType>
                               <Address>walk_strength_table</Address>
                               <CheatEntries>
                                 <CheatEntry>
-                                  <ID>65</ID>
+                                  <ID>66</ID>
                                   <Description>"Walk Strength 2"</Description>
                                   <ShowAsSigned>0</ShowAsSigned>
                                   <VariableType>Float</VariableType>
                                   <Address>+4</Address>
                                 </CheatEntry>
                                 <CheatEntry>
-                                  <ID>66</ID>
+                                  <ID>67</ID>
                                   <Description>"Walk Strength 3"</Description>
                                   <ShowAsSigned>0</ShowAsSigned>
                                   <VariableType>Float</VariableType>
                                   <Address>+8</Address>
                                 </CheatEntry>
                                 <CheatEntry>
-                                  <ID>67</ID>
+                                  <ID>68</ID>
                                   <Description>"Walk Strength 4"</Description>
                                   <ShowAsSigned>0</ShowAsSigned>
                                   <VariableType>Float</VariableType>
@@ -1344,13 +1370,13 @@ disableInfo = nil
               </CheatEntries>
             </CheatEntry>
             <CheatEntry>
-              <ID>68</ID>
+              <ID>69</ID>
               <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
               <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
               <GroupHeader>1</GroupHeader>
               <CheatEntries>
                 <CheatEntry>
-                  <ID>69</ID>
+                  <ID>70</ID>
                   <Description>"Binds"</Description>
                   <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                   <VariableType>Auto Assembler Script</VariableType>
