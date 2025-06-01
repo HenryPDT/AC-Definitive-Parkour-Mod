@@ -8804,8 +8804,11 @@ alloc(enhanced_direction,2048)
 label(returnhere)
 label(originalcode)
 label(exit)
+label(lamp_hook)
+label(lamp_hook_2)
 label(clamp)
 label(clamp_1)
+label(clamp_2)
 label(swan_dive)
 
 globalalloc(pEntity,4)
@@ -8821,6 +8824,10 @@ globalalloc(cos_value,4)
 globalalloc(sin_value,4)
 globalalloc(vector_pos,16)
 globalalloc(vector_neg,16)
+globalalloc(lamp_hook_clamp_f,1)
+globalalloc(original_direction_f,16)
+globalalloc(dot_product_lamp,4)
+globalalloc(cos_angle_radians,4)
 
 inverse:
 dd (float)1 (float)-1 (float)0 (float)0
@@ -8837,8 +8844,37 @@ cmp [direction_input_f],00000000
 je originalcode
 cmp byte ptr [diag_swing_f],00
 je originalcode
+cmp byte ptr [lamp_hook_f],01
+je lamp_hook
 cmp byte ptr [clamp_f],01
 je clamp
+movaps xmm0,[direction_input_f]
+movaps [eax+20],xmm0
+shufps xmm0,xmm0,E1
+mulps xmm0,[inverse]
+movaps [eax+10],xmm0
+mov [diag_swing_f],00
+jmp originalcode
+
+lamp_hook:
+cmp byte ptr [lamp_hook_clamp_f],01
+je lamp_hook_2
+movaps xmm1,[eax+20]
+movaps [original_direction_f],xmm1
+
+lamp_hook_2:
+mov [lamp_hook_clamp_f],01
+movaps xmm1,[original_direction_f]
+movaps xmm0,[direction_input_f]
+mulps xmm1,xmm0
+haddps xmm1,xmm1
+haddps xmm1,xmm1
+movss [dot_product_lamp],xmm1
+fld dword ptr [angle_radians]
+fcos
+fstp dword ptr [cos_angle_radians]
+comiss xmm1,[cos_angle_radians]
+jb clamp
 movaps xmm0,[direction_input_f]
 movaps [eax+20],xmm0
 shufps xmm0,xmm0,E1
@@ -8883,6 +8919,11 @@ fchs
 fstp dword ptr [vector_neg+4]
 
 movaps xmm0,[eax+20]
+cmp byte ptr [lamp_hook_f],01
+jne clamp_2
+movaps xmm0,[original_direction_f]
+
+clamp_2:
 movaps xmm1,xmm0
 shufps xmm0,xmm0,0
 shufps xmm1,xmm1,55
@@ -9291,25 +9332,31 @@ label(exit)
 
 globalalloc(diag_swing_f,1)
 globalalloc(lamp_hook_f,1)
+globalalloc(lamp_hook_clamp_f,1)
 globalalloc(direction_input_f,16)
 globalalloc(relative_input_f,4)
-alloc(angle_restriction,4)
+alloc(angle_restriction_back,4)
+alloc(angle_restriction_side,4)
 
-angle_restriction:
+angle_restriction_back:
+dd (float)2.5
+
+angle_restriction_side:
 dd (float)1.05
 
 enhance_lamp_hookblade:
 mov [lamp_hook_f],01
 mov [diag_swing_f],00
-mov [clamp_f],00
 cmp [direction_input_f],00000000
 je originalcode
 fld dword ptr [relative_input_f]
 fabs
-fld dword ptr [angle_restriction]
+fld dword ptr [angle_restriction_back]
 fcomip st(0),st(1)
 fstp st(0)
 jb originalcode
+mov eax,[angle_restriction_side]
+mov [angle_radians],eax
 mov [diag_swing_f],01
 
 originalcode:
@@ -9325,15 +9372,36 @@ nop 4
 returnhere:
 
 
+alloc(enhance_lamp_hookblade_2,2048)
+label(returnhere2)
+label(exit2)
+
+enhance_lamp_hookblade_2:
+mov [lamp_hook_clamp_f],00
+call ACRSP.exe+701400
+
+exit2:
+jmp returnhere2
+
+"ACRSP.exe"+70724F:
+jmp enhance_lamp_hookblade_2
+returnhere2:
 
 
 [DISABLE]
-dealloc(enhance_lamp_hookblade)
-dealloc(angle_restriction)
 "ACRSP.exe"+70722A:
 db 8B 46 08 8B 88 08 01 00 00
 //mov eax,[esi+08]
 //mov ecx,[eax+00000108]
+
+"ACRSP.exe"+70724F:
+db E8 AC A1 FF FF
+//call ACRSP.exe+701400
+
+dealloc(enhance_lamp_hookblade)
+dealloc(enhance_lamp_hookblade_2)
+dealloc(angle_restriction_back)
+dealloc(angle_restriction_side)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
