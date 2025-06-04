@@ -8569,6 +8569,8 @@ freeform_jump_diff_check:
 cmp byte ptr [eject_clamp_f],01
 mov [eject_clamp_f],00
 je checks
+cmp byte ptr [on_hang_free_f],01
+je checks
 cmp [input_vector_coords],00000000
 je checks
 
