@@ -3688,22 +3688,22 @@ jmp pause
 returnhere:
 
 
-alloc(disable_npc_interaction,2048)
+alloc(disable_air_trackle,2048)
 label(returnhere2)
 label(exit2)
 
-disable_npc_interaction:
+disable_air_trackle:
 cmp byte ptr [parkour_mode_enable],01
-je exit2
-cmp edx,[ebp-1C]
-jne ACRSP.exe+34F1D0
+je ACRSP.exe+1327B42
+test esi,esi
+je ACRSP.exe+1327B42
+mov ecx,[esi+18]
 
 exit2:
 jmp returnhere2
 
-"ACRSP.exe"+34F35D:
-jmp disable_npc_interaction
-nop
+"ACRSP.exe"+1327B18:
+jmp disable_air_trackle
 returnhere2:
 
 
@@ -3815,9 +3815,10 @@ db 8B 4E 0C 85 C9
 //mov ecx,[esi+0C]
 //test ecx,ecx
 
-"ACRSP.exe"+34F35D:
-db 0F 85 6D FE FF FF
-//jne ACRSP.exe+34F1D0
+"ACRSP.exe"+1327B18:
+db 74 28 8B 4E 18
+//je ACRSP.exe+1327B42
+//mov ecx,[esi+18]
 
 "ACRSP.exe"+182933F:
 db 66 0F D6 86 90 01 00 00
@@ -3837,7 +3838,7 @@ db 83 BE 60 0F 00 00 00
 //cmp dword ptr [esi+00000F60],00
 
 dealloc(pause)
-dealloc(disable_npc_interaction)
+dealloc(disable_air_trackle)
 dealloc(disable_ingame_binds)
 dealloc(disable_combat_grab)
 dealloc(disable_drop_to_hang)

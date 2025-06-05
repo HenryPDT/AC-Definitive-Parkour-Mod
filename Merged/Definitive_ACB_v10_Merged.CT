@@ -3767,35 +3767,37 @@ if syntaxcheck then return end
 local config_enable = {
     [1] = {
         dynamic1 = "\"ACBSP.exe\"+CD54E4:",
-        dynamic2 = "ACBSP.exe+3B5850",
-        dynamic3 = "\"ACBSP.exe\"+3B5993:",
-        dynamic4 = "\"ACBSP.exe\"+822B0F:",
-        dynamic5 = "ACBSP.exe+7A6023",
-        dynamic6 = "\"ACBSP.exe\"+7A6012:",
-        dynamic7 = "ACBSP.exe+1CE1607",
+        dynamic2 = "ACBSP.exe+197F8C2",
+        dynamic3 = "ACBSP.exe+197F8C2",
+        dynamic4 = "\"ACBSP.exe\"+197F898:",
+        dynamic5 = "\"ACBSP.exe\"+822B0F:",
+        dynamic6 = "ACBSP.exe+7A6023",
+        dynamic7 = "\"ACBSP.exe\"+7A6012:",
         dynamic8 = "ACBSP.exe+1CE1607",
         dynamic9 = "ACBSP.exe+1CE1607",
         dynamic10 = "ACBSP.exe+1CE1607",
         dynamic11 = "ACBSP.exe+1CE1607",
-        dynamic12 = "\"ACBSP.exe\"+1CE15B2:",
-        dynamic13 = "ACBSP.exe+9789D7",
-        dynamic14 = "\"ACBSP.exe\"+978958:"
+        dynamic12 = "ACBSP.exe+1CE1607",
+        dynamic13 = "\"ACBSP.exe\"+1CE15B2:",
+        dynamic14 = "ACBSP.exe+9789D7",
+        dynamic15 = "\"ACBSP.exe\"+978958:"
     },
     [2] = {
         dynamic1 = "\"ACBSP.exe\"+641474:",
-        dynamic2 = "ACBSP.exe+3AB2A0",
-        dynamic3 = "\"ACBSP.exe\"+3AB3E3:",
-        dynamic4 = "\"ACBSP.exe\"+177876F:",
-        dynamic5 = "ACBSP.exe+17061C3",
-        dynamic6 = "\"ACBSP.exe\"+17061B2:",
-        dynamic7 = "ACBSP.exe+1655217",
+        dynamic2 = "ACBSP.exe+12F2B22",
+        dynamic3 = "ACBSP.exe+12F2B22",
+        dynamic4 = "\"ACBSP.exe\"+12F2AF8:",
+        dynamic5 = "\"ACBSP.exe\"+177876F:",
+        dynamic6 = "ACBSP.exe+17061C3",
+        dynamic7 = "\"ACBSP.exe\"+17061B2:",
         dynamic8 = "ACBSP.exe+1655217",
         dynamic9 = "ACBSP.exe+1655217",
         dynamic10 = "ACBSP.exe+1655217",
         dynamic11 = "ACBSP.exe+1655217",
-        dynamic12 = "\"ACBSP.exe\"+16551C2:",
-        dynamic13 = "ACBSP.exe+1A25A37",
-        dynamic14 = "\"ACBSP.exe\"+1A259B8:"
+        dynamic12 = "ACBSP.exe+1655217",
+        dynamic13 = "\"ACBSP.exe\"+16551C2:",
+        dynamic14 = "ACBSP.exe+1A25A37",
+        dynamic15 = "\"ACBSP.exe\"+1A259B8:"
     }
 }
 
@@ -3833,22 +3835,22 @@ jmp pause
 returnhere:
 
 
-alloc(disable_npc_interaction,2048)
+alloc(disable_air_trackle,2048)
 label(returnhere2)
 label(exit2)
 
-disable_npc_interaction:
+disable_air_trackle:
 cmp byte ptr [parkour_mode_enable],01
-je exit2
-cmp ecx,[ebp-28]
-jne %s
+je %s
+test esi,esi
+je %s
+mov ecx,[esi+18]
 
 exit2:
 jmp returnhere2
 
 %s
-jmp disable_npc_interaction
-nop
+jmp disable_air_trackle
 returnhere2:
 
 
@@ -3951,7 +3953,7 @@ jmp returnhere6
 jmp hide_hud
 nop 2
 returnhere6:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14)
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -3969,8 +3971,8 @@ if syntaxcheck then return end
 local config_disable = {
     [1] = {
         dynamic1 = "\"ACBSP.exe\"+CD54E4:",
-        dynamic2 = "\"ACBSP.exe\"+3B5993:",
-        dynamic3 = "ACBSP.exe+3B5850",
+        dynamic2 = "\"ACBSP.exe\"+197F898:",
+        dynamic3 = "ACBSP.exe+197F8C2",
         dynamic4 = "\"ACBSP.exe\"+822B0F:",
         dynamic5 = "\"ACBSP.exe\"+7A6012:",
         dynamic6 = "\"ACBSP.exe\"+1CE15B2:",
@@ -3979,8 +3981,8 @@ local config_disable = {
     },
     [2] = {
         dynamic1 = "\"ACBSP.exe\"+641474:",
-        dynamic2 = "\"ACBSP.exe\"+3AB3E3:",
-        dynamic3 = "ACBSP.exe+3AB2A0",
+        dynamic2 = "\"ACBSP.exe\"+12F2AF8:",
+        dynamic3 = "ACBSP.exe+12F2B22",
         dynamic4 = "\"ACBSP.exe\"+177876F:",
         dynamic5 = "\"ACBSP.exe\"+17061B2:",
         dynamic6 = "\"ACBSP.exe\"+16551C2:",
@@ -3999,8 +4001,9 @@ db 8B 4E 0C 85 C9
 //test ecx,ecx
 
 %s
-db 0F 85 B7 FE FF FF
-//jne %s
+db 74 28 8B 4E 18
+//je %s
+//mov ecx,[esi+18]
 
 %s
 db 66 0F D6 86 90 01 00 00
@@ -4020,7 +4023,7 @@ db 83 BE 60 0F 00 00 00
 //cmp dword ptr [esi+00000F60],00
 
 dealloc(pause)
-dealloc(disable_npc_interaction)
+dealloc(disable_air_trackle)
 dealloc(disable_ingame_binds)
 dealloc(disable_combat_grab)
 dealloc(disable_drop_to_hang)

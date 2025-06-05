@@ -3426,7 +3426,7 @@ jmp pause
 nop
 returnhere:
 
-
+{
 alloc(disable_npc_interaction,2048)
 label(returnhere2)
 label(exit2)
@@ -3444,7 +3444,7 @@ jmp returnhere2
 jmp disable_npc_interaction
 nop
 returnhere2:
-
+}
 
 alloc(disable_ingame_binds,2048)
 label(returnhere3)
@@ -3552,11 +3552,11 @@ returnhere6:
 db 8A 40 5C 83 EC 10
 //mov al,[eax+5C]
 //sub esp,10
-
+{
 "AssassinsCreed_Dx10.exe"+91A4E7:
 db 0F 85 88 FD FF FF
 //jne AssassinsCreed_Dx10.exe+91A275
-
+}
 "EaglePatchAC1.asi"+1177:
 db 0F 11 86 00 01 00 00
 //movups [esi+00000100],xmm0

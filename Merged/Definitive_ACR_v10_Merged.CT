@@ -3850,35 +3850,37 @@ if syntaxcheck then return end
 local config_enable = {
     [1] = {
         dynamic1 = "\"ACRSP.exe\"+531431:",
-        dynamic2 = "ACRSP.exe+34F1D0",
-        dynamic3 = "\"ACRSP.exe\"+34F35D:",
-        dynamic4 = "\"ACRSP.exe\"+182933F:",
-        dynamic5 = "ACRSP.exe+17BB323",
-        dynamic6 = "\"ACRSP.exe\"+17BB312:",
-        dynamic7 = "ACRSP.exe+1706D29",
+        dynamic2 = "ACRSP.exe+1327B42",
+        dynamic3 = "ACRSP.exe+1327B42",
+        dynamic4 = "\"ACRSP.exe\"+1327B18:",
+        dynamic5 = "\"ACRSP.exe\"+182933F:",
+        dynamic6 = "ACRSP.exe+17BB323",
+        dynamic7 = "\"ACRSP.exe\"+17BB312:",
         dynamic8 = "ACRSP.exe+1706D29",
         dynamic9 = "ACRSP.exe+1706D29",
         dynamic10 = "ACRSP.exe+1706D29",
         dynamic11 = "ACRSP.exe+1706D29",
-        dynamic12 = "\"ACRSP.exe\"+1706CCA:",
-        dynamic13 = "ACRSP.exe+1B08B27",
-        dynamic14 = "\"ACRSP.exe\"+1B08AA8:"
+        dynamic12 = "ACRSP.exe+1706D29",
+        dynamic13 = "\"ACRSP.exe\"+1706CCA:",
+        dynamic14 = "ACRSP.exe+1B08B27",
+        dynamic15 = "\"ACRSP.exe\"+1B08AA8:"
     },
     [2] = {
         dynamic1 = "\"ACRSP.exe\"+5633A1:",
-        dynamic2 = "ACRSP.exe+37CF30",
-        dynamic3 = "\"ACRSP.exe\"+37D0BD:",
-        dynamic4 = "\"ACRSP.exe\"+185C90F:",
-        dynamic5 = "ACRSP.exe+17EE8E3",
-        dynamic6 = "\"ACRSP.exe\"+17EE8D2:",
-        dynamic7 = "ACRSP.exe+173A739",
+        dynamic2 = "ACRSP.exe+135B592",
+        dynamic3 = "ACRSP.exe+135B592",
+        dynamic4 = "\"ACRSP.exe\"+135B568:",
+        dynamic5 = "\"ACRSP.exe\"+185C90F:",
+        dynamic6 = "ACRSP.exe+17EE8E3",
+        dynamic7 = "\"ACRSP.exe\"+17EE8D2:",
         dynamic8 = "ACRSP.exe+173A739",
         dynamic9 = "ACRSP.exe+173A739",
         dynamic10 = "ACRSP.exe+173A739",
         dynamic11 = "ACRSP.exe+173A739",
-        dynamic12 = "\"ACRSP.exe\"+173A6DA:",
-        dynamic13 = "ACRSP.exe+1B3EB07",
-        dynamic14 = "\"ACRSP.exe\"+1B3EA88:"
+        dynamic12 = "ACRSP.exe+173A739",
+        dynamic13 = "\"ACRSP.exe\"+173A6DA:",
+        dynamic14 = "ACRSP.exe+1B3EB07",
+        dynamic15 = "\"ACRSP.exe\"+1B3EA88:"
     }
 }
 
@@ -3916,22 +3918,22 @@ jmp pause
 returnhere:
 
 
-alloc(disable_npc_interaction,2048)
+alloc(disable_air_trackle,2048)
 label(returnhere2)
 label(exit2)
 
-disable_npc_interaction:
+disable_air_trackle:
 cmp byte ptr [parkour_mode_enable],01
-je exit2
-cmp edx,[ebp-1C]
-jne %s
+je %s
+test esi,esi
+je %s
+mov ecx,[esi+18]
 
 exit2:
 jmp returnhere2
 
 %s
-jmp disable_npc_interaction
-nop
+jmp disable_air_trackle
 returnhere2:
 
 
@@ -4035,7 +4037,7 @@ jmp returnhere6
 jmp hide_hud
 nop 2
 returnhere6:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14)
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -4053,8 +4055,8 @@ if syntaxcheck then return end
 local config_disable = {
     [1] = {
         dynamic1 = "\"ACRSP.exe\"+531431:",
-        dynamic2 = "\"ACRSP.exe\"+34F35D:",
-        dynamic3 = "ACRSP.exe+34F1D0",
+        dynamic2 = "\"ACRSP.exe\"+1327B18:",
+        dynamic3 = "ACRSP.exe+1327B42",
         dynamic4 = "\"ACRSP.exe\"+182933F:",
         dynamic5 = "\"ACRSP.exe\"+17BB312:",
         dynamic6 = "\"ACRSP.exe\"+1706CCA:",
@@ -4063,8 +4065,8 @@ local config_disable = {
     },
     [2] = {
         dynamic1 = "\"ACRSP.exe\"+5633A1:",
-        dynamic2 = "\"ACRSP.exe\"+37D0BD:",
-        dynamic3 = "ACRSP.exe+37CF30",
+        dynamic2 = "\"ACRSP.exe\"+135B568:",
+        dynamic3 = "ACRSP.exe+135B592",
         dynamic4 = "\"ACRSP.exe\"+185C90F:",
         dynamic5 = "\"ACRSP.exe\"+17EE8D2:",
         dynamic6 = "\"ACRSP.exe\"+173A6DA:",
@@ -4083,8 +4085,9 @@ db 8B 4E 0C 85 C9
 //test ecx,ecx
 
 %s
-db 0F 85 6D FE FF FF
-//jne %s
+db 74 28 8B 4E 18
+//je %s
+//mov ecx,[esi+18]
 
 %s
 db 66 0F D6 86 90 01 00 00
@@ -4104,7 +4107,7 @@ db 83 BE 60 0F 00 00 00
 //cmp dword ptr [esi+00000F60],00
 
 dealloc(pause)
-dealloc(disable_npc_interaction)
+dealloc(disable_air_trackle)
 dealloc(disable_ingame_binds)
 dealloc(disable_combat_grab)
 dealloc(disable_drop_to_hang)

@@ -3646,22 +3646,21 @@ jmp pause
 returnhere:
 
 
-alloc(disable_npc_interaction,2048)
+alloc(disable_air_trackle,2048)
 label(returnhere2)
 label(exit2)
 
-disable_npc_interaction:
+disable_air_trackle:
 cmp byte ptr [parkour_mode_enable],01
-je exit2
-cmp ecx,[ebp-14]
-jne AC4BFSP.exe+316460
+je AC4BFSP.exe+1678DA7
+test dl,01
+je AC4BFSP.exe+1678DA7
 
 exit2:
 jmp returnhere2
 
-"AC4BFSP.exe"+31660E:
-jmp disable_npc_interaction
-nop
+"AC4BFSP.exe"+1678D8B:
+jmp disable_air_trackle
 returnhere2:
 
 
@@ -3754,9 +3753,10 @@ db 8B 4E 08 85 C9
 //mov ecx,[esi+08]
 //test ecx,ecx
 
-"AC4BFSP.exe"+31660E:
-db 0F 85 4C FE FF FF
-//jne AC4BFSP.exe+316460
+"AC4BFSP.exe"+1678D8B:
+db F6 C2 01 74 17
+//test dl,01
+//je AC4BFSP.exe+1678DA7
 
 "AC4BFSP.exe"+60816B:
 db 8B 86 64 07 00 00
@@ -3768,7 +3768,7 @@ db 74 48 8B 43 08
 //mov eax,[ebx+08]
 
 dealloc(pause)
-dealloc(disable_npc_interaction)
+dealloc(disable_air_trackle)
 dealloc(disable_ingame_binds)
 dealloc(disable_combat_grab)
 dealloc(disable_drop_to_hang)
