@@ -3408,11 +3408,6 @@ globalalloc(parkour_mode_enable,1)
 globalalloc(forced_hang_enable,1)
 globalalloc(parkour_mode_hud_hide_f,1)
 
-parkour_mode_hud_hide_f:
-db 01
-//00: No Hud Hide
-//01: Hud Hide with Parkour Mode
-
 pause:
 mov al,[eax+5C]
 mov [pause_f],al
@@ -3527,7 +3522,7 @@ label(exit6)
 hide_hud:
 mov [esi+49],bl
 mov [esi+46],bl
-cmp byte ptr [parkour_mode_hud_hide_f],01
+cmp byte ptr [parkour_mode_hud_hide_f],00
 jne originalcode
 cmp byte ptr [parkour_mode_enable],01
 jne originalcode
@@ -3585,9 +3580,9 @@ dealloc(hide_hud)
                           <CheatEntries>
                             <CheatEntry>
                               <ID>300</ID>
-                              <Description>"Hud Hide"</Description>
-                              <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">0: No Hud Hide
-1: Hud Hide with Parkour Mode
+                              <Description>"Hud Hide Option"</Description>
+                              <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">0: Hud Hide with Parkour Mode
+1: No Hud Hide
 </DropDownList>
                               <ShowAsSigned>0</ShowAsSigned>
                               <VariableType>Byte</VariableType>
@@ -4808,7 +4803,6 @@ dealloc(drop_to_fall_6)
                         <CheatEntry>
                           <ID>306</ID>
                           <Description>"Ledge Drop"</Description>
-                          <Options moHideChildren="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
 alloc(ledge_drop,2048)
@@ -4820,11 +4814,6 @@ globalalloc(ledge_drop_enable,1)
 globalalloc(ledge_drop_always,1)
 globalalloc(ledge_drop_f,1)
 globalalloc(vault_inner_ledge_f,1)
-
-ledge_drop_always:
-db 00
-//00: Activate with Parkour Down or Freeform
-//01: Always On
 
 ledge_drop:
 cmp byte ptr [ledge_drop_enable],01
@@ -4911,7 +4900,7 @@ dealloc(ledge_drop_3)
                           <CheatEntries>
                             <CheatEntry>
                               <ID>307</ID>
-                              <Description>"Activation Choice"</Description>
+                              <Description>"Ledge Drop Option"</Description>
                               <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">0: Activate with Parkour Down or Freeform
 1: Always On
 </DropDownList>
@@ -5112,7 +5101,6 @@ db 0F 84 92 00 00 00
                         <CheatEntry>
                           <ID>310</ID>
                           <Description>"Disable Snap on NSO Landing"</Description>
-                          <Options moHideChildren="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
 alloc(disable_snap,2048)
@@ -5137,11 +5125,6 @@ dd (float)-12
 alloc(horizontal_limit,4)
 horizontal_limit:
 dd (float)1
-
-disable_snap_always:
-db 00
-//00: Dynamically Snap
-//01: Always Disable Snap
 
 disable_snap:
 cmp byte ptr [dive_beam_f],01
@@ -5195,7 +5178,7 @@ db 0F 84 27 01 00 00
                           <CheatEntries>
                             <CheatEntry>
                               <ID>311</ID>
-                              <Description>"Activation Choice"</Description>
+                              <Description>"Disable Snap Option"</Description>
                               <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">0: Dynamically Snap
 1: Always Disable Snap
 </DropDownList>
