@@ -6545,7 +6545,7 @@ label(originalcode)
 label(exit)
 
 quick_eject:
-mov eax,[esi+18]
+mov eax,[eax]
 cmp byte ptr [bindHighProfile],01
 jne originalcode
 cmp byte ptr [bindLegsTap],01
@@ -6554,17 +6554,16 @@ mov eax,00000001
 
 originalcode:
 dec eax
-je AC4BFSP.exe+17673CA
+je AC3SP.exe+1470FD3
 
 exit:
 jmp returnhere
 
-"AC4BFSP.exe"+176739B:
+"AC3SP.exe"+1470FA6:
 jmp quick_eject
-nop
 returnhere:
 
-
+{
 alloc(quick_eject_hang,2048)
 label(returnhere2)
 label(originalcode2)
@@ -6587,19 +6586,19 @@ jmp returnhere2
 jmp quick_eject_hang
 nop
 returnhere2:
-
+}
 
 [DISABLE]
-"AC4BFSP.exe"+176739B:
-db 8B 46 18 48 74 29
-//mov eax,[esi+18]
+"AC3SP.exe"+1470FA6:
+db 8B 00 48 74 28
+//mov eax,[eax]
 //dec eax
-//je AC4BFSP.exe+17673CA
-
+//je AC3SP.exe+1470FD3
+{
 "AC4BFSP.exe"+D3F0B8:
 db 0F 84 97 05 00 00
 //je AC4BFSP.exe+D3F655
-
+}
 dealloc(quick_eject)
 dealloc(quick_eject_hang)
 </AssemblerScript>
@@ -7454,7 +7453,7 @@ inc eax
 exit2:
 jmp returnhere2
 
-"AC4BFSP.exe"+D3D9C9:
+"AC3SP.exe"+13CB065:
 jmp coords_modifier_2
 returnhere2:
 
@@ -7519,7 +7518,7 @@ mov ax,[edi+0A]
 exit3:
 jmp returnhere3
 
-"AC4BFSP.exe"+D3D958:
+"AC3SP.exe"+13CAFF8:
 jmp coords_modifier_3
 nop 2
 returnhere3:
@@ -7531,12 +7530,12 @@ db 0F 28 48 30 8B 73 08
 //movaps xmm1,[eax+30]
 //mov esi,[ebx+08]
 
-"AC4BFSP.exe"+D3D9C9:
+"AC3SP.exe"+13CB065:
 db 83 45 FC 40 40
 //add dword ptr [ebp-04],40
 //inc eax
 
-"AC4BFSP.exe"+D3D958:
+"AC3SP.exe"+13CAFF8:
 db 03 7D FC 66 8B 47 0A
 //add edi,[ebp-04]
 //mov ax,[edi+0A]
@@ -8394,7 +8393,7 @@ movaps xmm0,[edi+00000080]
 exit:
 jmp returnhere
 
-"AC4BFSP.exe"+C5E73A:
+"AC3SP.exe"+96A30A:
 jmp target_modifier
 nop 6
 returnhere:
@@ -8412,12 +8411,12 @@ target_modifier_2:
 mov [target_f],01
 
 originalcode2:
-call AC4BFSP.exe+C5E720
+call AC3SP.exe+96A2F0
 
 exit2:
 jmp returnhere2
 
-"AC4BFSP.exe"+12CC872:
+"AC3SP.exe"+F7E16C:
 jmp target_modifier_2
 returnhere2:
 
@@ -8427,13 +8426,13 @@ label(returnhere3)
 label(exit3)
 
 target_modifier_3:
-jmp AC4BFSP.exe+DC9CE1
+jmp AC3SP.exe+AB0B17
 mov ecx,[edx+08]
 
 exit3:
 jmp returnhere3
 
-"AC4BFSP.exe"+DC9C76:
+"AC3SP.exe"+AB0A9C:
 jmp target_modifier_3
 returnhere3:
 
@@ -8447,16 +8446,16 @@ smooth_fall:
 cmp byte ptr [smooth_fall_f],01
 jne originalcode4
 mov [smooth_fall_f],00
-jmp AC4BFSP.exe+19C27E0
+jmp AC3SP.exe+10B5019
 
 originalcode4:
-cmp dword ptr [ebp-24],00
-je AC4BFSP.exe+19C27E0
+cmp dword ptr [ebp-28],00
+je AC3SP.exe+10B5019
 
 exit4:
 jmp returnhere4
 
-"AC4BFSP.exe"+19C1DA6:
+"AC3SP.exe"+10B42C9:
 jmp smooth_fall
 nop 5
 returnhere4:
@@ -8469,53 +8468,53 @@ label(swing_up_drop)
 label(exit5)
 
 swing_up_cycle:
-cmp byte ptr [ebp-10],15
+cmp byte ptr [ebp-0F],15
 jne swing_up_drop
 mov ecx,[swing_up_height_cycle]
 mov [swing_up_height+8],ecx
 
 swing_up_drop:
-cmp byte ptr [ebp-10],77
+cmp byte ptr [ebp-0F],77
 jne originalcode5
 mov [swing_up_height+8],00000000
 
 originalcode5:
-cmp byte ptr [ebp-0A],00
-jne AC4BFSP.exe+176758D
+cmp byte ptr [ebp-09],00
+jne AC3SP.exe+147115B
 
 exit5:
 jmp returnhere5
 
-"AC4BFSP.exe"+1767538:
+"AC3SP.exe"+1471105:
 jmp swing_up_cycle
 nop
 returnhere5:
 
 
 [DISABLE]
-"AC4BFSP.exe"+C5E73A:
+"AC3SP.exe"+96A30A:
 db 0F 29 46 70 0F 28 87 80 00 00 00
 //movaps [esi+70],xmm0
 //movaps xmm0,[edi+00000080]
 
-"AC4BFSP.exe"+12CC872:
-db E8 A9 1E 99 FF
-//call AC4BFSP.exe+C5E720
+"AC3SP.exe"+F7E16C:
+db E8 7F C1 9E FF
+//call AC3SP.exe+96A2F0
 
-"AC4BFSP.exe"+DC9C76:
-db 74 69 8B 4A 08
-//je AC4BFSP.exe+DC9CE1
+"AC3SP.exe"+AB0A9C:
+db 74 79 8B 4A 08
+//je AC3SP.exe+AB0B17
 //mov ecx,[edx+08]
 
-"AC4BFSP.exe"+19C1DA6:
-db 83 7D DC 00 0F 84 30 0A 00 00
-//cmp dword ptr [ebp-24],00
-//je AC4BFSP.exe+19C27E0
+"AC3SP.exe"+10B42C9:
+db 83 7D D8 00 0F 84 46 0D 00 00
+//cmp dword ptr [ebp-28],00
+//je AC3SP.exe+10B5019
 
-"AC4BFSP.exe"+1767538:
-db 80 7D F6 00 75 4F
-//cmp byte ptr [ebp-0A],00
-//jne AC4BFSP.exe+176758D
+"AC3SP.exe"+1471105:
+db 80 7D F7 00 75 50
+//cmp byte ptr [ebp-09],00
+//jne AC3SP.exe+147115B
 
 dealloc(target_modifier)
 dealloc(target_modifier_2)

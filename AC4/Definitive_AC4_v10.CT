@@ -8393,7 +8393,7 @@ call AC4BFSP.exe+C5E720
 exit2:
 jmp returnhere2
 
-"AC4BFSP.exe"+12CC872:
+"AC4BFSP.exe"+12CCA25:
 jmp target_modifier_2
 returnhere2:
 
@@ -8474,8 +8474,8 @@ db 0F 29 46 70 0F 28 87 80 00 00 00
 //movaps [esi+70],xmm0
 //movaps xmm0,[edi+00000080]
 
-"AC4BFSP.exe"+12CC872:
-db E8 A9 1E 99 FF
+"AC4BFSP.exe"+12CCA25:
+db E8 F6 1C 99 FF
 //call AC4BFSP.exe+C5E720
 
 "AC4BFSP.exe"+DC9C76:
