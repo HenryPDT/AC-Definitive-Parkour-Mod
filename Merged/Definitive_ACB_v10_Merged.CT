@@ -14574,120 +14574,289 @@ local process_name = "ACBSP.exe"
 local modEntryID = "Enable Mod"
 local parkourModeEntryID = "Parkour Mode"
 
--- CUSTOM FUNCTIONS --
---================================================================================
+-- Settings entries to manage
+local settingsEntries = {
+    "Hud Hide Option",
+    "Ledge Drop Option",
+    "Disable Snap Option"
+}
 
-function InitTimer(owner, tickRate, status, func)
-   local timer = createTimer(owner)
+-- Mod name for settings storage
+local mod_name = "ACB_Definitive_Parkour"
 
-   if timer == nil then
-      return nil
-   end
-
-   timer_setInterval(timer, tickRate)
-   timer_onTimer(timer, func)
-   timer_setEnabled(timer, status)
-
-   return timer
-end
-
-function cycleFullCompact(sender, force)
-   local state = not (compactmenuitem.Caption == 'Compact View Mode')
-   if force ~= nil then state = not force end
-   compactmenuitem.Caption = state and 'Compact View Mode' or 'Full View Mode'
-   getMainForm().Splitter1.Visible = state
-   getMainForm().Panel4.Visible = state
-   getMainForm().Panel5.Visible = state
-end
-
-function addCompactMenu()
-   if compactmenualreadyexists then return end
-   local parent = getMainForm().Menu.Items
-   compactmenuitem = createMenuItem(parent)
-   parent.add(compactmenuitem)
-   compactmenuitem.Caption = 'Compact View Mode'
-   compactmenuitem.OnClick = cycleFullCompact
-   compactmenualreadyexists = 'yes'
-end
-
--- Function to get a memory record by ID or description
-function getMemRec(id)
-   local mr
-   if type(id) == "string" then
-      mr = AddressList.getMemoryRecordByDescription(id)
-   else
-      mr = AddressList.getMemoryRecordByID(id)
-   end
-   if mr ~= nil then
-      return mr
-   else
-      return nil
-   end
-end
-
--- Function to enforce dependency: "Parkour Mode" can only be enabled if "Enable Mod" is enabled
-function enforceDependency()
-   local enableModRec = getMemRec(modEntryID)
-   local parkourModeRec = getMemRec(parkourModeEntryID)
-
-   if enableModRec and parkourModeRec then
-      if not enableModRec.Active and parkourModeRec.Active then
-         parkourModeRec.Active = false
-         -- print("'Parkour Mode' was automatically disabled because 'Enable Mod' is not active.")
-      end
-   end
-end
+-- Variable to track if handlers are currently set up
+local handlersSetup = false
 
 -- VERSION AUTO-DETECTION --
 --================================================================================
--- This function reads specific memory addresses to determine the version.
+
 function autodetectVersion()
-   local value1 = readInteger("ACBSP.exe+127A296")
-   if value1 and value1 == 0xFEEA3EF6 then
-      return 1
-   else
-      local value2 = readInteger("ACBSP.exe+BE88C6")
-      if value2 and value2 == 0xFF6011A6 then
-         return 2
-      else
-         return 1  -- Fallback to version 1 if neither address matches.
-      end
-   end
+    local value1 = readInteger("ACBSP.exe+127A296")
+    if value1 and value1 == 0xFEEA3EF6 then
+        return 1
+    else
+        local value2 = readInteger("ACBSP.exe+BE88C6")
+        if value2 and value2 == 0xFF6011A6 then
+            return 2
+        else
+            return 1  -- Fallback to version 1 if neither address matches
+        end
+    end
 end
 
--- TIMERS --
+-- UTILITY FUNCTIONS --
+--================================================================================
+
+function InitTimer(owner, tickRate, status, func)
+    local timer = createTimer(owner)
+
+    if timer == nil then
+        return nil
+    end
+
+    timer_setInterval(timer, tickRate)
+    timer_onTimer(timer, func)
+    timer_setEnabled(timer, status)
+
+    return timer
+end
+
+function getMemRec(id)
+    local mr
+    if type(id) == "string" then
+        mr = AddressList.getMemoryRecordByDescription(id)
+    else
+        mr = AddressList.getMemoryRecordByID(id)
+    end
+    if mr ~= nil then
+        return mr
+    else
+        return nil
+    end
+end
+
+-- UI FUNCTIONS --
+--================================================================================
+
+function cycleFullCompact(sender, force)
+    local state = not (compactmenuitem.Caption == 'Compact View Mode')
+    if force ~= nil then state = not force end
+    compactmenuitem.Caption = state and 'Compact View Mode' or 'Full View Mode'
+    getMainForm().Splitter1.Visible = state
+    getMainForm().Panel4.Visible = state
+    getMainForm().Panel5.Visible = state
+end
+
+function addCompactMenu()
+    if compactmenualreadyexists then return end
+    local parent = getMainForm().Menu.Items
+    compactmenuitem = createMenuItem(parent)
+    parent.add(compactmenuitem)
+    compactmenuitem.Caption = 'Compact View Mode'
+    compactmenuitem.OnClick = cycleFullCompact
+    compactmenualreadyexists = 'yes'
+end
+
+-- DEPENDENCY ENFORCEMENT --
+--================================================================================
+
+function enforceDependency()
+    local enableModRec = getMemRec(modEntryID)
+    local parkourModeRec = getMemRec(parkourModeEntryID)
+
+    if enableModRec and parkourModeRec then
+        if not enableModRec.Active and parkourModeRec.Active then
+            parkourModeRec.Active = false
+        end
+    end
+end
+
+-- SETTINGS FUNCTIONS --
+--================================================================================
+
+function saveSettings()
+    local s = getSettings(mod_name)
+
+    for _, entryName in ipairs(settingsEntries) do
+        local memRec = getMemRec(entryName)
+        if memRec then
+            -- Only save if the memory record has a valid address and readable value
+            if memRec.CurrentAddress and memRec.CurrentAddress ~= 0 and
+               memRec.Value and memRec.Value ~= '' and memRec.Value ~= '??' then
+                s.Value[entryName] = memRec.Value
+            end
+        end
+    end
+
+    s.destroy()
+end
+
+function loadSettings()
+    local s = getSettings(mod_name)
+
+    for _, entryName in ipairs(settingsEntries) do
+        local memRec = getMemRec(entryName)
+        if memRec then
+            local savedValue = s.Value[entryName]
+
+            -- Only load if we have a valid saved value and the memory record has a valid address
+            if savedValue and savedValue ~= '' and savedValue ~= '??' and
+               memRec.CurrentAddress and memRec.CurrentAddress ~= 0 then
+                -- Use pcall to safely set the value
+                pcall(function()
+                    memRec.Value = savedValue
+                end)
+            end
+        end
+    end
+
+    s.destroy()
+end
+
+function areSettingsEntriesReady()
+    for _, entryName in ipairs(settingsEntries) do
+        local memRec = getMemRec(entryName)
+        if not memRec or not memRec.CurrentAddress or memRec.CurrentAddress == 0 then
+            return false
+        end
+    end
+    return true
+end
+
+function hasInvalidValues()
+    for _, entryName in ipairs(settingsEntries) do
+        local memRec = getMemRec(entryName)
+        if memRec and memRec.Value == '??' then
+            return true
+        end
+    end
+    return false
+end
+
+function loadSettingsWithDelay()
+    -- Create initial 6-second timer
+    local delayTimer = createTimer()
+    timer_setInterval(delayTimer, 6000)
+    timer_onTimer(delayTimer, function()
+        delayTimer.enabled = false
+        delayTimer.destroy()
+
+        if hasInvalidValues() then
+            -- Create additional 4-second timer
+            local extraTimer = createTimer()
+            timer_setInterval(extraTimer, 4000)
+            timer_onTimer(extraTimer, function()
+                extraTimer.enabled = false
+                extraTimer.destroy()
+                loadSettings()
+                setupValueChangeMonitoring()
+            end)
+            timer_setEnabled(extraTimer, true)
+        else
+            loadSettings()
+            setupValueChangeMonitoring()
+        end
+    end)
+    timer_setEnabled(delayTimer, true)
+end
+
+-- VALUE CHANGE MONITORING --
+--================================================================================
+
+function setupValueChangeMonitoring()
+    for _, entryName in ipairs(settingsEntries) do
+        local memRec = getMemRec(entryName)
+        if memRec then
+            memRec.OnValueChangedByUser = nil -- Clear existing callback
+            memRec.OnValueChangedByUser = function(memoryrecord, oldvalue, newvalue)
+                saveSettings()
+            end
+        end
+    end
+end
+
+function removeValueChangeMonitoring()
+    for _, entryName in ipairs(settingsEntries) do
+        local memRec = getMemRec(entryName)
+        if memRec then
+            memRec.OnValueChangedByUser = nil
+        end
+    end
+end
+
+-- ENABLE MOD HANDLERS --
+--================================================================================
+
+function handleEnableModChange()
+    local enableModRec = getMemRec(modEntryID)
+    if enableModRec then
+        enableModRec.OnActivate = function(memoryrecord, before, currentstate)
+            if not before then -- After activation
+                loadSettingsWithDelay()
+            end
+            return true
+        end
+
+        enableModRec.OnDeactivate = function(memoryrecord, before, currentstate)
+            if not before then -- After deactivation
+                saveSettings()
+                removeValueChangeMonitoring()
+            end
+            return true
+        end
+    end
+end
+
+function removeEnableModHandlers()
+    local enableModRec = getMemRec(modEntryID)
+    if enableModRec then
+        enableModRec.OnActivate = nil
+        enableModRec.OnDeactivate = nil
+    end
+
+    removeValueChangeMonitoring() -- Also remove any active monitoring
+end
+
+-- PROCESS MANAGEMENT --
 --================================================================================
 
 function process_checker(t)
-   local status = readInteger(process_name)
+    local status = readInteger(process_name)
 
-   if status == nil then
-      -- Not attached to process
-      getMainForm().Caption = 'Not Attached'
-      getApplication().Title = 'Not Attached'
-      AddressList.disableAllWithoutExecute()
-      for i = 0, AddressList.Count - 1 do
-         AddressList[i].Active = false
-      end
-      if getProcessIDFromProcessName(process_name) ~= nil then
-         sleep(2000)
-         openProcess(process_name)
-      end
-   else
-      -- Attached to process
-      getMainForm().Caption = 'Attached to ' .. process_name
-      getApplication().Title = 'Attached to ' .. process_name
+    if status == nil then
+        -- Not attached to process
+        getMainForm().Caption = 'Not Attached'
+        getApplication().Title = 'Not Attached'
+        AddressList.disableAllWithoutExecute()
+        for i = 0, AddressList.Count - 1 do
+            AddressList[i].Active = false
+        end
 
-      -- Auto-detect version periodically.
-      version = autodetectVersion()
-      -- print("Detected version: " .. version)
+        if handlersSetup then
+            removeEnableModHandlers()
+            handlersSetup = false
+        end
 
-      -- Enforce dependency rule
-      enforceDependency()
-   end
+        if getProcessIDFromProcessName(process_name) ~= nil then
+            sleep(2000)
+            openProcess(process_name)
+        end
+    else
+        -- Attached to process
+        getMainForm().Caption = 'Attached to ' .. process_name
+        getApplication().Title = 'Attached to ' .. process_name
+
+        if not handlersSetup then
+            handleEnableModChange()
+            handlersSetup = true
+        end
+
+        version = autodetectVersion()
+        enforceDependency()
+    end
 end
 
---================================================================================
+-- INITIALIZATION --
 --================================================================================
 
 -----------------------------   Start Execution   --------------------------------
