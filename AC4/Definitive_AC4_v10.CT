@@ -282,18 +282,28 @@ push esi
 mov esi,ecx
 cmp esi,0
 je originalcode6
+cmp esi,00010000
+jb originalcode6
 mov esi,[esi+0]
 cmp esi,0
 je originalcode6
+cmp esi,00010000
+jb originalcode6
 mov esi,[esi+60]
 cmp esi,0
 je originalcode6
+cmp esi,00010000
+jb originalcode6
 mov esi,[esi+68]
 cmp esi,0
 je originalcode6
+cmp esi,00010000
+jb originalcode6
 lea esi,[esi+A0]
 cmp esi,0
 je originalcode6
+cmp esi,00010000
+jb originalcode6
 movaps xmm0,[esi]
 movaps [player_velocity],xmm0
 mulps xmm0, xmm0
@@ -3889,8 +3899,8 @@ label(exit1)
 vault_1:
 cmp byte ptr [vault_kenway_enable],01
 je vault_code_1
-//cmp byte ptr [vault_enable],01
-//je vault_code_1
+cmp byte ptr [vault_enable],01
+je vault_code_1
 cmp eax,-01
 je AC4BFSP.exe+DC7C72
 jmp exit1
@@ -4381,14 +4391,13 @@ je AC4BFSP.exe+DC7ADB
 
 originalcode:
 cmp dword ptr [esi+000000D4],02
-je AC4BFSP.exe+DC7ADB
 
 exit:
 jmp returnhere
 
-"AC4BFSP.exe"+DC73D6:
+"AC4BFSP.exe"+DC73CF:
 jmp freeform
-nop
+nop 2
 returnhere:
 
 
@@ -4575,9 +4584,9 @@ returnhere11:
 
 
 [DISABLE]
-"AC4BFSP.exe"+DC73D6:
-db 0F 84 FF 06 00 00
-//je AC4BFSP.exe+DC7ADB
+"AC4BFSP.exe"+DC73CF:
+db 83 BE D4 00 00 00 02
+//cmp dword ptr [esi+000000D4],02
 
 "AC4BFSP.exe"+19CD075:
 db 0F 84 C6 0B 00 00
@@ -5522,7 +5531,6 @@ dealloc(nso_step)
                               <AssemblerScript>[ENABLE]
 alloc(ledge_drop,2048)
 label(returnhere)
-label(originalcode)
 label(exit)
 
 globalalloc(ledge_drop_enable,1)
@@ -5535,8 +5543,6 @@ cmp byte ptr [ledge_drop_enable],01
 je AC4BFSP.exe+16F0EE7
 cmp byte ptr [vault_inner_ledge_f],01
 je AC4BFSP.exe+16F0EE7
-
-originalcode:
 cmp byte ptr [ebp-20],00
 je AC4BFSP.exe+16F0EE7
 
@@ -5551,24 +5557,21 @@ returnhere:
 
 alloc(ledge_drop_2,2048)
 label(returnhere2)
-label(originalcode2)
 label(exit2)
 
 ledge_drop_2:
+movss xmm0,[ebp-0000023C]
 cmp byte ptr [ledge_drop_enable],01
 je AC4BFSP.exe+16F2FFA
 cmp byte ptr [vault_inner_ledge_f],01
 je AC4BFSP.exe+16F2FFA
 
-originalcode2:
-comiss xmm1,xmm0
-jna AC4BFSP.exe+16F2FFA
-
 exit2:
 jmp returnhere2
 
-"AC4BFSP.exe"+16F2F98:
+"AC4BFSP.exe"+16F2FBB:
 jmp ledge_drop_2
+nop 3
 returnhere2:
 
 
@@ -5629,10 +5632,9 @@ db 80 7D E0 00 74 5C
 //cmp byte ptr [ebp-20],00
 //je AC4BFSP.exe+16F0EE7
 
-"AC4BFSP.exe"+16F2F98:
-db 0F 2F C8 76 5D
-//comiss xmm1,xmm0
-//jna AC4BFSP.exe+16F2FFA
+"AC4BFSP.exe"+16F2FBB:
+db F3 0F 10 85 C4 FD FF FF
+//movss xmm0,[ebp-0000023C]
 
 "AC4BFSP.exe"+16F2F8A:
 db 0F 2F 4D FC 76 6A
@@ -5829,16 +5831,14 @@ dealloc(nso_step_hp)
                           <AssemblerScript>[ENABLE]
 alloc(ground_wallrun,2048)
 label(returnhere)
-label(originalcode)
 label(exit)
 
 ground_wallrun:
-cmp byte ptr [ebp-21],00
-jne exit
-
-originalcode:
-cmp byte ptr [ebp-29],00
-je AC4BFSP.exe+16F15E6
+cmp byte ptr [bindHighProfile],00
+je AC4BFSP.exe+16F162C
+cmp byte ptr [bindLegs],01
+je AC4BFSP.exe+16F15F0
+jmp AC4BFSP.exe+16F162C
 
 exit:
 jmp returnhere
@@ -5848,37 +5848,58 @@ jmp ground_wallrun
 nop
 returnhere:
 
-
-alloc(nso_wallrun,2048)
+{
+alloc(ground_wallrun_2,2048)
 label(returnhere2)
 label(exit2)
 
-nso_wallrun:
-jmp AC4BFSP.exe+1574865
+ground_wallrun_2:
+cmp byte ptr [bindHighProfile],00
+je AC4BFSP.exe+16F036B
+cmp byte ptr [bindLegs],01
+jne AC4BFSP.exe+16F036B
+mov ecx,esi
+jmp exit2
 
 exit2:
 jmp returnhere2
 
-"AC4BFSP.exe"+157485C:
-jmp nso_wallrun
-nop 2
+"AC4BFSP.exe"+16F033D:
+jmp ground_wallrun_2
+nop
 returnhere2:
+}
 
-
-alloc(land_wallrun,2048)
+alloc(nso_wallrun,2048)
 label(returnhere3)
 label(exit3)
 
-land_wallrun:
-jmp AC4BFSP.exe+156704D
+nso_wallrun:
+jmp AC4BFSP.exe+1574865
 
 exit3:
 jmp returnhere3
 
-"AC4BFSP.exe"+1567028:
-jmp land_wallrun
+"AC4BFSP.exe"+157485C:
+jmp nso_wallrun
 nop 2
 returnhere3:
+
+
+alloc(step_wallrun,2048)
+label(returnhere4)
+label(exit4)
+
+step_wallrun:
+jmp AC4BFSP.exe+156704D
+
+exit4:
+jmp returnhere4
+
+"AC4BFSP.exe"+1567028:
+jmp step_wallrun
+nop 2
+returnhere4:
 
 
 [DISABLE]
@@ -5886,6 +5907,12 @@ returnhere3:
 db 80 7D D7 00 74 0C
 //cmp byte ptr [ebp-29],00
 //je AC4BFSP.exe+16F15E6
+
+"AC4BFSP.exe"+16F033D:
+db 84 C0 74 2A 8B CE
+//test al,al
+//je AC4BFSP.exe+16F036B
+//mov ecx,esi
 
 "AC4BFSP.exe"+157485C:
 db 80 B9 08 22 00 00 00
@@ -5897,7 +5924,7 @@ db 80 B8 08 22 00 00 00
 
 dealloc(ground_wallrun)
 dealloc(nso_wallrun)
-dealloc(land_wallrun)
+dealloc(step_wallrun)
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>
@@ -5944,7 +5971,7 @@ jmp returnhere2
 
 "AC4BFSP.exe"+16F1DCA:
 jmp high_profile_ground
-nop 4
+nop 2
 returnhere2:
 
 
@@ -6042,9 +6069,8 @@ db 89 96 A8 21 00 00
 //mov [esi+000021A8],edx
 
 "AC4BFSP.exe"+16F1DCA:
-db 80 B8 08 22 00 00 00 74 14
+db 80 B8 08 22 00 00 00
 //cmp byte ptr [eax+00002208],00
-//je AC4BFSP.exe+16F1DE7
 
 "AC4BFSP.exe"+1574F67:
 db 0F 84 DA 04 00 00
@@ -6120,6 +6146,7 @@ label(drop_to_release_2)
 label(exit2)
 
 forced_disable_ledge_grab_2:
+mov byte ptr [ebp-44],00
 cmp byte ptr [drop_to_release_f],01
 je drop_to_release_2
 cmp byte ptr [forced_ledge_grab_enable],01
@@ -6139,9 +6166,9 @@ mov [drop_to_release_f],00
 exit2:
 jmp returnhere2
 
-"AC4BFSP.exe"+19BDD27:
+"AC4BFSP.exe"+19BDD23:
 jmp forced_disable_ledge_grab_2
-nop 4
+nop
 returnhere2:
 
 
@@ -6193,10 +6220,10 @@ db 84 C9 0F 84 CF 0E 00 00
 //test cl,cl
 //je AC4BFSP.exe+19BF66D
 
-"AC4BFSP.exe"+19BDD27:
-db 74 79 F6 86 31 04 00 00 10
+"AC4BFSP.exe"+19BDD23:
+db C6 45 BC 00 74 79
+//mov byte ptr [ebp-44],00
 //je AC4BFSP.exe+19BDDA2
-//test byte ptr [esi+00000431],10
 
 "AC4BFSP.exe"+19BDDB3:
 db 74 2D 0F 28 86 50 02 00 00

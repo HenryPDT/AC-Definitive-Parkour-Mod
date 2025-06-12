@@ -274,27 +274,43 @@ push edx
 mov edx,eax
 cmp edx,0
 je originalcode6
+cmp edx,00010000
+jb originalcode6
 mov edx,[edx+10]
 cmp edx,0
 je originalcode6
+cmp edx,00010000
+jb originalcode6
 mov edx,[edx+3C]
 cmp edx,0
 je originalcode6
+cmp edx,00010000
+jb originalcode6
 mov edx,[edx+0]
 cmp edx,0
 je originalcode6
+cmp edx,00010000
+jb originalcode6
 mov edx,[edx+6C]
 cmp edx,0
 je originalcode6
+cmp edx,00010000
+jb originalcode6
 mov edx,[edx+A4]
 cmp edx,0
 je originalcode6
+cmp edx,00010000
+jb originalcode6
 mov edx,[edx+0]
 cmp edx,0
 je originalcode6
+cmp edx,00010000
+jb originalcode6
 lea edx,[edx+90]
 cmp edx,0
 je originalcode6
+cmp edx,00010000
+jb originalcode6
 movaps xmm0,[edx]
 movaps [player_velocity],xmm0
 movaps xmm1, xmm0
@@ -4807,7 +4823,6 @@ dealloc(drop_to_fall_6)
                           <AssemblerScript>[ENABLE]
 alloc(ledge_drop,2048)
 label(returnhere)
-label(originalcode)
 label(exit)
 
 globalalloc(ledge_drop_enable,1)
@@ -4820,8 +4835,6 @@ cmp byte ptr [ledge_drop_enable],01
 je AssassinsCreed_Dx9.exe+AE88BF
 cmp byte ptr [vault_inner_ledge_f],01
 je AssassinsCreed_Dx9.exe+AE88BF
-
-originalcode:
 test al,al
 je AssassinsCreed_Dx9.exe+AE88BF
 cmp dword ptr [esp+4C],01

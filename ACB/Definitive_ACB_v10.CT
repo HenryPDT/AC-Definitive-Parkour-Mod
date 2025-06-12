@@ -279,33 +279,53 @@ push esi
 mov esi,eax
 cmp esi,0
 je originalcode6
+cmp esi,00010000
+jb originalcode6
 mov esi,[esi+C]
 cmp esi,0
 je originalcode6
+cmp esi,00010000
+jb originalcode6
 mov esi,[esi+4]
 cmp esi,0
 je originalcode6
+cmp esi,00010000
+jb originalcode6
 mov esi,[esi+0]
 cmp esi,0
 je originalcode6
+cmp esi,00010000
+jb originalcode6
 mov esi,[esi+18]
 cmp esi,0
 je originalcode6
+cmp esi,00010000
+jb originalcode6
 mov esi,[esi+5E8]
 cmp esi,0
 je originalcode6
+cmp esi,00010000
+jb originalcode6
 mov esi,[esi+40]
 cmp esi,0
 je originalcode6
+cmp esi,00010000
+jb originalcode6
 mov esi,[esi+0]
 cmp esi,0
 je originalcode6
+cmp esi,00010000
+jb originalcode6
 mov esi,[esi+60]
 cmp esi,0
 je originalcode6
+cmp esi,00010000
+jb originalcode6
 lea esi,[esi+A0]
 cmp esi,0
 je originalcode6
+cmp esi,00010000
+jb originalcode6
 movaps xmm0,[esi]
 movaps [player_velocity],xmm0
 movaps xmm1, xmm0
@@ -5099,7 +5119,6 @@ dealloc(drop_to_fall_6)
                           <AssemblerScript>[ENABLE]
 alloc(ledge_drop,2048)
 label(returnhere)
-label(originalcode)
 label(exit)
 
 globalalloc(ledge_drop_enable,1)
@@ -5112,8 +5131,6 @@ cmp byte ptr [ledge_drop_enable],01
 je ACBSP.exe+1BDA656
 cmp byte ptr [vault_inner_ledge_f],01
 je ACBSP.exe+1BDA656
-
-originalcode:
 test al,al
 je ACBSP.exe+1BDA656
 cmp dword ptr [ebp-48],01
