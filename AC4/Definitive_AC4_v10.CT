@@ -6621,6 +6621,7 @@ label(exit)
 globalalloc(forced_hang_enable,1)
 globalalloc(vanilla_beam_entry_enable,1)
 globalalloc(eject_clamp_f,1)
+globalalloc(on_hang_wall_f,1)
 globalalloc(manual_catch_speed,4)
 globalalloc(swing_angle_release,4)
 globalalloc(swing_angle_restriction,4)
@@ -6760,6 +6761,8 @@ label(exit7)
 
 enhanced_swing:
 movaps xmm3,[ebp-00000110]
+cmp byte ptr [on_hang_wall_f],01
+je exit7
 movss xmm2,[swing_angle_release]
 jmp AC4BFSP.exe+D3DEF2
 
