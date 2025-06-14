@@ -5950,6 +5950,10 @@ label(returnhere)
 label(originalcode)
 label(exit)
 
+globalalloc(bindHighProfile,1)
+globalalloc(bindLegs,1)
+globalalloc(direction_input_f,16)
+
 high_profile_jog:
 cmp byte ptr [esi+00002201],01
 je originalcode
@@ -6059,8 +6063,6 @@ label(returnhere6)
 label(exit6)
 
 high_profile_swing:
-cmp byte ptr [swing_up_enable],01
-je AC3SP.exe+13C6952
 cmp byte ptr [bindHighProfile],00
 je AC3SP.exe+13C696F
 cmp byte ptr [bindLegs],01
@@ -9418,6 +9420,7 @@ label(coords_mod)
 
 globalalloc(coords_mod_f,1)
 globalalloc(swing_up_f,1)
+globalalloc(self_swing_f,1)
 globalalloc(parkour_down_low_f,1)
 globalalloc(vault_landing_far_f,1)
 globalalloc(vault_landing_low_f,1)
@@ -9425,6 +9428,7 @@ globalalloc(vault_freeform_f,1)
 globalalloc(forced_hang_f,1)
 globalalloc(dive_beam_far_f,1)
 globalalloc(forced_hang_enable,1)
+globalalloc(swing_up_enable,1)
 
 swing_vault_coords:
 mov [self_swing_f],00
@@ -9495,6 +9499,25 @@ nop 6
 returnhere2:
 
 
+alloc(swing_up,2048)
+label(returnhere3)
+label(exit3)
+
+swing_up:
+cmp byte ptr [swing_up_enable],01
+je AC3SP.exe+13C6952
+mov [ebp-09],cl
+mov edx,00000001
+
+exit3:
+jmp returnhere3
+
+"AC3SP.exe"+13C696F:
+jmp swing_up
+nop 3
+returnhere3:
+
+
 [DISABLE]
 "AC3SP.exe"+13C6720:
 db 0F 28 40 30 0F 29 85 F0 FD FF FF
@@ -9506,8 +9529,14 @@ db 0F 28 48 30 0F 29 8D 00 FF FF FF
 //movaps xmm1,[eax+30]
 //movaps [ebp-00000100],xmm1
 
+"AC3SP.exe"+13C696F:
+db 88 4D F7 BA 01 00 00 00
+//mov [ebp-09],cl
+//mov edx,00000001
+
 dealloc(swing_vault_coords)
 dealloc(vault_coords)
+dealloc(swing_up)
 </AssemblerScript>
                             </CheatEntry>
                             <CheatEntry>
