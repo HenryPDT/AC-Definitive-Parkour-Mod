@@ -11961,8 +11961,8 @@ mov [smooth_fall_f],01
 jmp coords_change
 
 forced_hang:
-cmp byte ptr [on_hang_free_f],00
-je originalcode
+//cmp byte ptr [on_hang_wall_f],01
+//je originalcode
 movaps xmm1,[forced_hang_height]
 jmp coords_change
 
@@ -13457,7 +13457,6 @@ globalalloc(forced_hang_f,1)
 globalalloc(self_swing_enable,1)
 
 nso_idle_coords:
-mov [forced_hang_f],00
 cmp byte ptr [nso_idle_f],01
 jne originalcode
 cmp byte ptr [parkour_down_low_f],01
@@ -13466,6 +13465,9 @@ cmp byte ptr [dive_beam_far_f],01
 je coords_mod
 cmp byte ptr [self_swing_f],01
 je coords_mod
+cmp byte ptr [forced_hang_f],01
+je coords_mod
+mov [forced_hang_f],00
 mov [nso_idle_f],00
 jmp originalcode
 
@@ -13716,7 +13718,6 @@ globalalloc(forced_hang_f,1)
 globalalloc(forced_ground_roll_enable,1)
 
 nso_run_coords:
-mov [forced_hang_f],00
 cmp byte ptr [forced_ground_roll_enable],01
 je originalcode
 cmp byte ptr [nso_run_f],01
@@ -13727,6 +13728,9 @@ cmp byte ptr [dive_beam_far_f],01
 je coords_mod
 cmp byte ptr [self_swing_f],01
 je coords_mod
+cmp byte ptr [forced_hang_f],01
+je coords_mod
+mov [forced_hang_f],00
 mov [nso_run_f],00
 jmp originalcode
 
