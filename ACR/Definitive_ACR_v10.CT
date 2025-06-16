@@ -9878,6 +9878,22 @@ nop 2
 returnhere3:
 
 
+alloc(disable_prescriptive_breakout,2048)
+label(returnhere4)
+label(exit4)
+
+disable_prescriptive_breakout:
+jmp ACRSP.exe+BB3D59
+
+exit4:
+jmp returnhere4
+
+"ACRSP.exe"+BB3C08:
+jmp disable_prescriptive_breakout
+nop
+returnhere4:
+
+
 [DISABLE]
 "ACRSP.exe"+7730:
 db 0F 28 50 30 8B 43 08
@@ -9894,9 +9910,14 @@ db 03 75 FC 66 8B 46 0A
 //add esi,[ebp-04]
 //mov ax,[esi+0A]
 
+"ACRSP.exe"+BB3C08:
+db 0F 86 4B 01 00 00
+//jbe ACRSP.exe+BB3D59
+
 dealloc(coords_modifier)
 dealloc(coords_modifier_2)
 dealloc(coords_modifier_3)
+dealloc(disable_prescriptive_breakout)
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>

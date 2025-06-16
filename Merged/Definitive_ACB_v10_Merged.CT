@@ -11715,12 +11715,16 @@ local config_enable = {
     [1] = {
         dynamic1 = "\"ACBSP.exe\"+9BB0:",
         dynamic2 = "\"ACBSP.exe\"+1CD3F47:",
-        dynamic3 = "\"ACBSP.exe\"+1CD3EF6:"
+        dynamic3 = "\"ACBSP.exe\"+1CD3EF6:",
+        dynamic4 = "ACBSP.exe+12718C9",
+        dynamic5 = "\"ACBSP.exe\"+1271778:"
     },
     [2] = {
         dynamic1 = "\"ACBSP.exe\"+ED90:",
         dynamic2 = "\"ACBSP.exe\"+1647B57:",
-        dynamic3 = "\"ACBSP.exe\"+1647B06:"
+        dynamic3 = "\"ACBSP.exe\"+1647B06:",
+        dynamic4 = "ACBSP.exe+BDFEE9",
+        dynamic5 = "\"ACBSP.exe\"+BDFD98:"
     }
 }
 
@@ -12115,7 +12119,23 @@ jmp returnhere3
 jmp coords_modifier_3
 nop 2
 returnhere3:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3)
+
+
+alloc(disable_prescriptive_breakout,2048)
+label(returnhere4)
+label(exit4)
+
+disable_prescriptive_breakout:
+jmp %s
+
+exit4:
+jmp returnhere4
+
+%s
+jmp disable_prescriptive_breakout
+nop
+returnhere4:
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -12134,12 +12154,16 @@ local config_disable = {
     [1] = {
         dynamic1 = "\"ACBSP.exe\"+9BB0:",
         dynamic2 = "\"ACBSP.exe\"+1CD3F47:",
-        dynamic3 = "\"ACBSP.exe\"+1CD3EF6:"
+        dynamic3 = "\"ACBSP.exe\"+1CD3EF6:",
+        dynamic4 = "\"ACBSP.exe\"+1271778:",
+        dynamic5 = "ACBSP.exe+12718C9"
     },
     [2] = {
         dynamic1 = "\"ACBSP.exe\"+ED90:",
         dynamic2 = "\"ACBSP.exe\"+1647B57:",
-        dynamic3 = "\"ACBSP.exe\"+1647B06:"
+        dynamic3 = "\"ACBSP.exe\"+1647B06:",
+        dynamic4 = "\"ACBSP.exe\"+BDFD98:",
+        dynamic5 = "ACBSP.exe+BDFEE9"
     }
 }
 
@@ -12162,10 +12186,15 @@ db 03 75 FC 66 8B 46 0A
 //add esi,[ebp-04]
 //mov ax,[esi+0A]
 
+%s
+db 0F 86 4B 01 00 00
+//jbe %s
+
 dealloc(coords_modifier)
 dealloc(coords_modifier_2)
 dealloc(coords_modifier_3)
-]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3)
+dealloc(disable_prescriptive_breakout)
+]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5)
 
 
 if disableInfo and disableInfo.info then

@@ -8860,6 +8860,22 @@ nop
 returnhere3:
 
 
+alloc(disable_prescriptive_breakout,2048)
+label(returnhere4)
+label(exit4)
+
+disable_prescriptive_breakout:
+jmp AssassinsCreedIIGame.exe+91E608
+
+exit4:
+jmp returnhere4
+
+"AssassinsCreedIIGame.exe"+91E4B7:
+jmp disable_prescriptive_breakout
+nop
+returnhere4:
+
+
 [DISABLE]
 "AssassinsCreedIIGame.exe"+16280:
 db 0F 28 50 30 8B 43 08
@@ -8878,9 +8894,14 @@ db 56 8B F1 8B 46 08
 //mov esi,ecx
 //mov eax,[esi+08]
 
+"AssassinsCreedIIGame.exe"+91E4B7:
+db 0F 86 4B 01 00 00
+//jbe AssassinsCreedIIGame.exe+91E608
+
 dealloc(coords_modifier)
 dealloc(coords_modifier_2)
 dealloc(coords_modifier_3)
+dealloc(disable_prescriptive_breakout)
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>

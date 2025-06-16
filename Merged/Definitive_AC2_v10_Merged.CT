@@ -11417,12 +11417,16 @@ local config_enable = {
     [1] = {
         dynamic1 = "\"AssassinsCreedIIGame.exe\"+16280:",
         dynamic2 = "\"AssassinsCreedIIGame.exe\"+DEC2A0:",
-        dynamic3 = "\"AssassinsCreedIIGame.exe\"+E04D80:"
+        dynamic3 = "\"AssassinsCreedIIGame.exe\"+E04D80:",
+        dynamic4 = "AssassinsCreedIIGame.exe+91E608",
+        dynamic5 = "\"AssassinsCreedIIGame.exe\"+91E4B7:"
     },
     [2] = {
         dynamic1 = "\"AssassinsCreedIIGame.exe\"+16220:",
         dynamic2 = "\"AssassinsCreedIIGame.exe\"+13C61A0:",
-        dynamic3 = "\"AssassinsCreedIIGame.exe\"+13DEC80:"
+        dynamic3 = "\"AssassinsCreedIIGame.exe\"+13DEC80:",
+        dynamic4 = "AssassinsCreedIIGame.exe+EF8C08",
+        dynamic5 = "\"AssassinsCreedIIGame.exe\"+EF8AB7:"
     }
 }
 
@@ -11819,7 +11823,23 @@ jmp returnhere3
 jmp coords_modifier_3
 nop
 returnhere3:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3)
+
+
+alloc(disable_prescriptive_breakout,2048)
+label(returnhere4)
+label(exit4)
+
+disable_prescriptive_breakout:
+jmp %s
+
+exit4:
+jmp returnhere4
+
+%s
+jmp disable_prescriptive_breakout
+nop
+returnhere4:
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -11838,12 +11858,16 @@ local config_disable = {
     [1] = {
         dynamic1 = "\"AssassinsCreedIIGame.exe\"+16280:",
         dynamic2 = "\"AssassinsCreedIIGame.exe\"+DEC2A0:",
-        dynamic3 = "\"AssassinsCreedIIGame.exe\"+E04D80:"
+        dynamic3 = "\"AssassinsCreedIIGame.exe\"+E04D80:",
+        dynamic4 = "\"AssassinsCreedIIGame.exe\"+91E4B7:",
+        dynamic5 = "AssassinsCreedIIGame.exe+91E608"
     },
     [2] = {
         dynamic1 = "\"AssassinsCreedIIGame.exe\"+16220:",
         dynamic2 = "\"AssassinsCreedIIGame.exe\"+13C61A0:",
-        dynamic3 = "\"AssassinsCreedIIGame.exe\"+13DEC80:"
+        dynamic3 = "\"AssassinsCreedIIGame.exe\"+13DEC80:",
+        dynamic4 = "\"AssassinsCreedIIGame.exe\"+EF8AB7:",
+        dynamic5 = "AssassinsCreedIIGame.exe+EF8C08"
     }
 }
 
@@ -11868,10 +11892,15 @@ db 56 8B F1 8B 46 08
 //mov esi,ecx
 //mov eax,[esi+08]
 
+%s
+db 0F 86 4B 01 00 00
+//jbe %s
+
 dealloc(coords_modifier)
 dealloc(coords_modifier_2)
 dealloc(coords_modifier_3)
-]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3)
+dealloc(disable_prescriptive_breakout)
+]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5)
 
 
 if disableInfo and disableInfo.info then

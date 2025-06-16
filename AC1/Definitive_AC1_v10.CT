@@ -8119,6 +8119,22 @@ jmp coords_modifier_3
 returnhere3:
 
 
+alloc(disable_prescriptive_breakout,2048)
+label(returnhere4)
+label(exit4)
+
+disable_prescriptive_breakout:
+jmp AssassinsCreed_Dx10.exe+8F28F7
+
+exit4:
+jmp returnhere4
+
+"AssassinsCreed_Dx10.exe"+8F2722:
+jmp disable_prescriptive_breakout
+nop
+returnhere4:
+
+
 [DISABLE]
 "AssassinsCreed_Dx10.exe"+C82520:
 db 0F 28 40 30 0F 28 5C 24 20
@@ -8134,9 +8150,14 @@ db 8B 4C 24 08 51
 //mov ecx,[esp+08]
 //push ecx
 
+"AssassinsCreed_Dx10.exe"+8F2722:
+db 0F 86 CF 01 00 00
+//jbe AssassinsCreed_Dx10.exe+8F28F7
+
 dealloc(coords_modifier_1)
 dealloc(coords_modifier_2)
 dealloc(coords_modifier_3)
+dealloc(disable_prescriptive_breakout)
 </AssemblerScript>
                           <CheatEntries>
                             <CheatEntry>

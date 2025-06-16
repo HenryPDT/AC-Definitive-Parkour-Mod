@@ -10310,13 +10310,17 @@ local config_enable = {
         dynamic1 = "\"AssassinsCreed_Dx10.exe\"+C82520:",
         dynamic2 = "AssassinsCreed_Dx10.exe+CB2170",
         dynamic3 = "\"AssassinsCreed_Dx10.exe\"+CC1565:",
-        dynamic4 = "\"AssassinsCreed_Dx10.exe\"+CC151F:"
+        dynamic4 = "\"AssassinsCreed_Dx10.exe\"+CC151F:",
+        dynamic5 = "AssassinsCreed_Dx10.exe+8F28F7",
+        dynamic6 = "\"AssassinsCreed_Dx10.exe\"+8F2722:"
     },
     [2] = {
         dynamic1 = "\"AssassinsCreed_Dx9.exe\"+AAF6F0:",
         dynamic2 = "AssassinsCreed_Dx9.exe+ADF340",
         dynamic3 = "\"AssassinsCreed_Dx9.exe\"+AEE735:",
-        dynamic4 = "\"AssassinsCreed_Dx9.exe\"+AEE6EF:"
+        dynamic4 = "\"AssassinsCreed_Dx9.exe\"+AEE6EF:",
+        dynamic5 = "AssassinsCreed_Dx9.exe+71BC07",
+        dynamic6 = "\"AssassinsCreed_Dx9.exe\"+71BA32:"
     }
 }
 
@@ -10706,7 +10710,23 @@ jmp returnhere3
 %s
 jmp coords_modifier_3
 returnhere3:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4)
+
+
+alloc(disable_prescriptive_breakout,2048)
+label(returnhere4)
+label(exit4)
+
+disable_prescriptive_breakout:
+jmp %s
+
+exit4:
+jmp returnhere4
+
+%s
+jmp disable_prescriptive_breakout
+nop
+returnhere4:
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -10726,13 +10746,17 @@ local config_disable = {
         dynamic1 = "\"AssassinsCreed_Dx10.exe\"+C82520:",
         dynamic2 = "\"AssassinsCreed_Dx10.exe\"+CC1565:",
         dynamic3 = "AssassinsCreed_Dx10.exe+CB2170",
-        dynamic4 = "\"AssassinsCreed_Dx10.exe\"+CC151F:"
+        dynamic4 = "\"AssassinsCreed_Dx10.exe\"+CC151F:",
+        dynamic5 = "\"AssassinsCreed_Dx10.exe\"+8F2722:",
+        dynamic6 = "AssassinsCreed_Dx10.exe+8F28F7"
     },
     [2] = {
         dynamic1 = "\"AssassinsCreed_Dx9.exe\"+AAF6F0:",
         dynamic2 = "\"AssassinsCreed_Dx9.exe\"+AEE735:",
         dynamic3 = "AssassinsCreed_Dx9.exe+ADF340",
-        dynamic4 = "\"AssassinsCreed_Dx9.exe\"+AEE6EF:"
+        dynamic4 = "\"AssassinsCreed_Dx9.exe\"+AEE6EF:",
+        dynamic5 = "\"AssassinsCreed_Dx9.exe\"+71BA32:",
+        dynamic6 = "AssassinsCreed_Dx9.exe+71BC07"
     }
 }
 
@@ -10754,10 +10778,15 @@ db 8B 4C 24 08 51
 //mov ecx,[esp+08]
 //push ecx
 
+%s
+db 0F 86 CF 01 00 00
+//jbe %s
+
 dealloc(coords_modifier_1)
 dealloc(coords_modifier_2)
 dealloc(coords_modifier_3)
-]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4)
+dealloc(disable_prescriptive_breakout)
+]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6)
 
 
 if disableInfo and disableInfo.info then
