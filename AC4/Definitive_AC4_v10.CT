@@ -4382,6 +4382,7 @@ label(originalcode)
 label(exit)
 
 globalalloc(freeform_enable,1)
+globalalloc(on_vault_f,1)
 
 freeform:
 cmp byte ptr [on_vault_f],01
@@ -4514,17 +4515,16 @@ label(returnhere8)
 label(exit8)
 
 ground_arm:
+mov cl,[ebp-06]
 cmp byte ptr [freeform_enable],01
 je AC4BFSP.exe+16F2275
-comiss xmm0,[ebp-04]
-jna AC4BFSP.exe+16F223B
+test cl,cl
 
 exit8:
 jmp returnhere8
 
-"AC4BFSP.exe"+16F222C:
+"AC4BFSP.exe"+16F221D:
 jmp ground_arm
-nop
 returnhere8:
 
 
@@ -4612,10 +4612,10 @@ db E8 AA E6 93 FF
 db 0F 84 F8 02 00 00
 //je AC4BFSP.exe+19B166E
 
-"AC4BFSP.exe"+16F222C:
-db 0F 2F 45 FC 76 09
-//comiss xmm0,[ebp-04]
-//jna AC4BFSP.exe+16F223B
+"AC4BFSP.exe"+16F221D:
+db 8A 4D FA 84 C9
+//mov cl,[ebp-06]
+//test cl,cl
 
 "AC4BFSP.exe"+16F21E4:
 db 0F 84 A1 01 00 00
@@ -4882,6 +4882,8 @@ label(forced_hang_alt_2)
 label(exit2)
 
 dive_beam_2:
+test eax,00080000
+je AC4BFSP.exe+DC79A7
 cmp byte ptr [dive_beam_alt_enable],01
 je originalcode2
 cmp byte ptr [parkour_down_low_enable],01

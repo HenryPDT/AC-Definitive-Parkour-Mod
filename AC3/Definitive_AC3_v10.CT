@@ -4410,6 +4410,7 @@ label(originalcode)
 label(exit)
 
 globalalloc(freeform_enable,1)
+globalalloc(on_vault_f,1)
 
 freeform:
 cmp byte ptr [on_vault_f],01
@@ -4535,23 +4536,22 @@ jmp freeform_corner_swing
 nop
 returnhere7:
 
-{
+
 alloc(ground_arm,2048)
 label(returnhere8)
 label(exit8)
 
 ground_arm:
+mov cl,[ebp-29]
 cmp byte ptr [freeform_enable],01
-je AC4BFSP.exe+16F2275
-comiss xmm0,[ebp-04]
-jna AC4BFSP.exe+16F223B
+je AC3SP.exe+DDD6E7
+test cl,cl
 
 exit8:
 jmp returnhere8
 
-"AC4BFSP.exe"+16F222C:
+"AC3SP.exe"+DDD68A:
 jmp ground_arm
-nop
 returnhere8:
 
 
@@ -4562,13 +4562,13 @@ label(exit9)
 ground_arm_2:
 cmp byte ptr [freeform_enable],01
 je exit9
-cmp byte ptr [ebp-20],00
-je AC4BFSP.exe+16F238B
+cmp byte ptr [ebp-18],00
+je AC3SP.exe+DDD7F1
 
 exit9:
 jmp returnhere9
 
-"AC4BFSP.exe"+16F21E4:
+"AC3SP.exe"+DDD674:
 jmp ground_arm_2
 nop
 returnhere9:
@@ -4580,14 +4580,14 @@ label(exit10)
 
 nso_arm:
 cmp byte ptr [freeform_enable],01
-je AC4BFSP.exe+1575383
+je AC3SP.exe+10E8878
 cmp edx,03
-jne AC4BFSP.exe+15753C9
+jne AC3SP.exe+10E88BE
 
 exit10:
 jmp returnhere10
 
-"AC4BFSP.exe"+157536A:
+"AC3SP.exe"+10E885F:
 jmp nso_arm
 returnhere10:
 
@@ -4598,17 +4598,17 @@ label(exit11)
 
 nso_arm_2:
 cmp byte ptr [freeform_enable],01
-je AC4BFSP.exe+1567C48
+je AC3SP.exe+10DE54D
 cmp edx,03
-jne AC4BFSP.exe+1567C28
+jne AC3SP.exe+10DE52D
 
 exit11:
 jmp returnhere11
 
-"AC4BFSP.exe"+1567C0D:
+"AC3SP.exe"+10DE512:
 jmp nso_arm_2
 returnhere11:
-}
+
 
 [DISABLE]
 "AC3SP.exe"+157C932:
@@ -4639,26 +4639,26 @@ db E8 AA E6 93 FF
 "AC3SP.exe"+10A2C68:
 db 0F 84 FC 02 00 00
 //je AC3SP.exe+10A2F6A
-{
-"AC4BFSP.exe"+16F222C:
-db 0F 2F 45 FC 76 09
-//comiss xmm0,[ebp-04]
-//jna AC4BFSP.exe+16F223B
 
-"AC4BFSP.exe"+16F21E4:
-db 0F 84 A1 01 00 00
-//je AC4BFSP.exe+16F238B
+"AC3SP.exe"+DDD68A:
+db 8A 4D D7 84 C9
+//mov cl,[ebp-29]
+//test cl,cl
 
-"AC4BFSP.exe"+157536A:
+"AC3SP.exe"+DDD674:
+db 0F 84 77 01 00 00
+//je AC3SP.exe+DDD7F1
+
+"AC3SP.exe"+10E885F:
 db 83 FA 03 75 5A
 //cmp edx,03
-//jne AC4BFSP.exe+15753C9
+//jne AC3SP.exe+10E88BE
 
-"AC4BFSP.exe"+1567C0D:
+"AC3SP.exe"+10DE512:
 db 83 FA 03 75 16
 //cmp edx,03
-//jne AC4BFSP.exe+1567C28
-}
+//jne AC3SP.exe+10DE52D
+
 dealloc(freeform)
 dealloc(disable_leap_of_faith)
 dealloc(disable_wallrun_grab)
@@ -6553,76 +6553,6 @@ dealloc(hang_to_hang_crouch_2)
                         </CheatEntry>
                         <CheatEntry>
                           <ID>316</ID>
-                          <Description>"Quick Eject"</Description>
-                          <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
-                          <VariableType>Auto Assembler Script</VariableType>
-                          <AssemblerScript>[ENABLE]
-alloc(quick_eject,2048)
-label(returnhere)
-label(originalcode)
-label(exit)
-
-quick_eject:
-mov eax,[eax]
-cmp byte ptr [bindHighProfile],01
-jne originalcode
-cmp byte ptr [bindLegsTap],01
-jne originalcode
-mov eax,00000001
-
-originalcode:
-dec eax
-je AC3SP.exe+1470FD3
-
-exit:
-jmp returnhere
-
-"AC3SP.exe"+1470FA6:
-jmp quick_eject
-returnhere:
-
-
-alloc(quick_eject_hang,2048)
-label(returnhere2)
-label(originalcode2)
-label(exit2)
-
-quick_eject_hang:
-cmp byte ptr [bindHighProfile],01
-jne originalcode2
-cmp byte ptr [bindLegsTap],01
-je AC3SP.exe+13C7A68
-
-originalcode2:
-test al,al
-je AC3SP.exe+13C7E94
-
-exit2:
-jmp returnhere2
-
-"AC3SP.exe"+13C7A29:
-jmp quick_eject_hang
-nop
-returnhere2:
-
-
-[DISABLE]
-"AC3SP.exe"+1470FA6:
-db 8B 00 48 74 28
-//mov eax,[eax]
-//dec eax
-//je AC3SP.exe+1470FD3
-
-"AC3SP.exe"+13C7A29:
-db 0F 84 65 04 00 00
-//je AC3SP.exe+13C7E94
-
-dealloc(quick_eject)
-dealloc(quick_eject_hang)
-</AssemblerScript>
-                        </CheatEntry>
-                        <CheatEntry>
-                          <ID>317</ID>
                           <Description>"Swing Off Beam / Pull up Pole"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -6876,6 +6806,78 @@ dealloc(instant_swing_off)
 dealloc(enhanced_swing)
 dealloc(enhanced_swing_2)
 </AssemblerScript>
+                          <CheatEntries>
+                            <CheatEntry>
+                              <ID>317</ID>
+                              <Description>"Quick Eject"</Description>
+                              <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
+                              <VariableType>Auto Assembler Script</VariableType>
+                              <AssemblerScript>[ENABLE]
+alloc(quick_eject,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+quick_eject:
+mov eax,[eax]
+cmp byte ptr [bindHighProfile],01
+jne originalcode
+cmp byte ptr [bindLegsTap],01
+jne originalcode
+mov eax,00000001
+
+originalcode:
+dec eax
+je AC3SP.exe+1470FD3
+
+exit:
+jmp returnhere
+
+"AC3SP.exe"+1470FA6:
+jmp quick_eject
+returnhere:
+
+
+alloc(quick_eject_hang,2048)
+label(returnhere2)
+label(originalcode2)
+label(exit2)
+
+quick_eject_hang:
+cmp byte ptr [bindHighProfile],01
+jne originalcode2
+cmp byte ptr [bindLegsTap],01
+je AC3SP.exe+13C7A68
+
+originalcode2:
+test al,al
+je AC3SP.exe+13C7E94
+
+exit2:
+jmp returnhere2
+
+"AC3SP.exe"+13C7A29:
+jmp quick_eject_hang
+nop
+returnhere2:
+
+
+[DISABLE]
+"AC3SP.exe"+1470FA6:
+db 8B 00 48 74 28
+//mov eax,[eax]
+//dec eax
+//je AC3SP.exe+1470FD3
+
+"AC3SP.exe"+13C7A29:
+db 0F 84 65 04 00 00
+//je AC3SP.exe+13C7E94
+
+dealloc(quick_eject)
+dealloc(quick_eject_hang)
+</AssemblerScript>
+                            </CheatEntry>
+                          </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
                           <ID>318</ID>
