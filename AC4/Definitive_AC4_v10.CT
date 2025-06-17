@@ -3852,6 +3852,8 @@ globalalloc(vault_kenway_enable,1)
 globalalloc(bindEmptyHand,1)
 globalalloc(on_vault_f,1)
 globalalloc(vault_inner_ledge_enable,1)
+globalalloc(vault_landing_low_enable,1)
+globalalloc(vault_landing_far_enable,1)
 globalalloc(parkour_far_enable,1)
 globalalloc(freeform_enable,1)
 globalalloc(on_hang_free_f,1)
@@ -3860,6 +3862,7 @@ globalalloc(vault_ground_land_f,1)
 globalalloc(vault_required_passes,1)
 globalalloc(vault_pass_counter,1)
 globalalloc(vault_to_fall_f,1)
+globalalloc(vault_to_breakout_f,1)
 globalalloc(vault_inner_ledge_to_hang_coords,16)
 globalalloc(player_rotation,16)
 
@@ -4000,15 +4003,12 @@ label(originalcode5)
 label(exit5)
 
 vault_to_hang:
-mov [vault_inner_ledge_f],00
 cmp byte ptr [vault_enable],01
 je AC4BFSP.exe+D7DFD3
 cmp byte ptr [bindEmptyHand],01
 je AC4BFSP.exe+D7DFD3
 cmp byte ptr [freeform_enable],01
 je originalcode5
-cmp byte ptr [vault_inner_ledge_f],01
-je AC4BFSP.exe+D7DFD3
 
 originalcode5:
 test al,al
@@ -4094,15 +4094,17 @@ label(code9)
 label(exit9)
 
 vault_inner_ledge_3:
-cmp byte ptr [vault_landing_low_enable],01
-je originalcode9
-cmp byte ptr [vault_landing_far_enable],01
-je originalcode9
 cmp byte ptr [vault_enable],01
 je code9
 cmp byte ptr [bindEmptyHand],01
 je code9
+cmp byte ptr [vault_to_breakout_f],01
+je code9
 cmp byte ptr [freeform_enable],01
+je originalcode9
+cmp byte ptr [vault_landing_low_enable],01
+je originalcode9
+cmp byte ptr [vault_landing_far_enable],01
 je originalcode9
 
 code9:
@@ -4116,6 +4118,7 @@ push 00
 push 00
 mov ecx,eax
 call AC4BFSP.exe+266D80
+mov [vault_to_breakout_f],00
 jmp AC4BFSP.exe+199F19A
 
 originalcode9:
@@ -4277,6 +4280,26 @@ jmp vault_to_fall
 returnhere16:
 
 
+alloc(vault_to_breakout,2048)
+label(returnhere17)
+label(exit17)
+
+vault_to_breakout:
+mov [vault_to_breakout_f],01
+cmp byte ptr [vault_inner_ledge_f],01
+je AC4BFSP.exe+19A140E
+pop edi
+mov eax,0000000A
+
+exit17:
+jmp returnhere17
+
+"AC4BFSP.exe"+19A1403:
+jmp vault_to_breakout
+nop
+returnhere17:
+
+
 [DISABLE]
 "AC4BFSP.exe"+DC7BF2:
 db F3 0F 10 85 F0 FE FF FF 83 C4 08
@@ -4351,6 +4374,11 @@ db 84 C0 8B 06 8B CE
 db B8 0C 00 00 00
 //mov eax,0000000C
 
+"AC4BFSP.exe"+19A1403:
+db 5F B8 0A 00 00 00
+//pop edi
+//mov eax,0000000A
+
 dealloc(vault)
 dealloc(vault_1)
 dealloc(vault_2)
@@ -4368,6 +4396,7 @@ dealloc(vault_freeform_3)
 dealloc(vault_from_hang)
 dealloc(vault_from_hang_2)
 dealloc(vault_to_fall)
+dealloc(vault_to_breakout)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>

@@ -3886,27 +3886,28 @@ local config_enable = {
         dynamic9 = "AssassinsCreed_Dx10.exe+CBF9D4",
         dynamic10 = "AssassinsCreed_Dx10.exe+CBF9D4",
         dynamic11 = "AssassinsCreed_Dx10.exe+CBF9D4",
-        dynamic12 = "AssassinsCreed_Dx10.exe+CBF9D4",
-        dynamic13 = "\"AssassinsCreed_Dx10.exe\"+CBF947:",
-        dynamic14 = "AssassinsCreed_Dx10.exe+9051E0",
+        dynamic12 = "\"AssassinsCreed_Dx10.exe\"+CBF947:",
+        dynamic13 = "AssassinsCreed_Dx10.exe+9051E0",
+        dynamic14 = "AssassinsCreed_Dx10.exe+B7F314",
         dynamic15 = "AssassinsCreed_Dx10.exe+B7F314",
         dynamic16 = "AssassinsCreed_Dx10.exe+B7F314",
-        dynamic17 = "AssassinsCreed_Dx10.exe+B7F314",
-        dynamic18 = "\"AssassinsCreed_Dx10.exe\"+B7F2DB:",
-        dynamic19 = "AssassinsCreed_Dx10.exe+C6A176",
-        dynamic20 = "\"AssassinsCreed_Dx10.exe\"+C6A14C:",
-        dynamic21 = "AssassinsCreed_Dx10.exe+BAB592",
-        dynamic22 = "\"AssassinsCreed_Dx10.exe\"+BAB580:",
-        dynamic23 = "AssassinsCreed_Dx10.exe+353370",
-        dynamic24 = "AssassinsCreed_Dx10.exe+140A50",
-        dynamic25 = "AssassinsCreed_Dx10.exe+B7F2A6",
-        dynamic26 = "\"AssassinsCreed_Dx10.exe\"+B7F27B:",
-        dynamic27 = "\"AssassinsCreed_Dx10.exe\"+B8AE77:",
-        dynamic28 = "\"AssassinsCreed_Dx10.exe\"+B8CDD8:",
-        dynamic29 = "AssassinsCreed_Dx10.exe+BB0016",
-        dynamic30 = "\"AssassinsCreed_Dx10.exe\"+BAFFF6:",
-        dynamic31 = "AssassinsCreed_Dx10.exe+B8C910",
-        dynamic32 = "\"AssassinsCreed_Dx10.exe\"+B8CE49:"
+        dynamic17 = "\"AssassinsCreed_Dx10.exe\"+B7F2DB:",
+        dynamic18 = "AssassinsCreed_Dx10.exe+C6A176",
+        dynamic19 = "\"AssassinsCreed_Dx10.exe\"+C6A14C:",
+        dynamic20 = "AssassinsCreed_Dx10.exe+BAB592",
+        dynamic21 = "\"AssassinsCreed_Dx10.exe\"+BAB580:",
+        dynamic22 = "AssassinsCreed_Dx10.exe+353370",
+        dynamic23 = "AssassinsCreed_Dx10.exe+140A50",
+        dynamic24 = "AssassinsCreed_Dx10.exe+B7F2A6",
+        dynamic25 = "\"AssassinsCreed_Dx10.exe\"+B7F27B:",
+        dynamic26 = "\"AssassinsCreed_Dx10.exe\"+B8AE77:",
+        dynamic27 = "\"AssassinsCreed_Dx10.exe\"+B8CDD8:",
+        dynamic28 = "AssassinsCreed_Dx10.exe+BB0016",
+        dynamic29 = "\"AssassinsCreed_Dx10.exe\"+BAFFF6:",
+        dynamic30 = "AssassinsCreed_Dx10.exe+B8C910",
+        dynamic31 = "\"AssassinsCreed_Dx10.exe\"+B8CE49:",
+        dynamic32 = "AssassinsCreed_Dx10.exe+B8CE27",
+        dynamic33 = "\"AssassinsCreed_Dx10.exe\"+B8CDF6:"
     },
     [2] = {
         dynamic1 = "AssassinsCreed_Dx9.exe+A975A3",
@@ -3920,27 +3921,28 @@ local config_enable = {
         dynamic9 = "AssassinsCreed_Dx9.exe+AECBA4",
         dynamic10 = "AssassinsCreed_Dx9.exe+AECBA4",
         dynamic11 = "AssassinsCreed_Dx9.exe+AECBA4",
-        dynamic12 = "AssassinsCreed_Dx9.exe+AECBA4",
-        dynamic13 = "\"AssassinsCreed_Dx9.exe\"+AECB17:",
-        dynamic14 = "AssassinsCreed_Dx9.exe+72E4F0",
+        dynamic12 = "\"AssassinsCreed_Dx9.exe\"+AECB17:",
+        dynamic13 = "AssassinsCreed_Dx9.exe+72E4F0",
+        dynamic14 = "AssassinsCreed_Dx9.exe+9D2C84",
         dynamic15 = "AssassinsCreed_Dx9.exe+9D2C84",
         dynamic16 = "AssassinsCreed_Dx9.exe+9D2C84",
-        dynamic17 = "AssassinsCreed_Dx9.exe+9D2C84",
-        dynamic18 = "\"AssassinsCreed_Dx9.exe\"+9D2C4B:",
-        dynamic19 = "AssassinsCreed_Dx9.exe+A97346",
-        dynamic20 = "\"AssassinsCreed_Dx9.exe\"+A9731C:",
-        dynamic21 = "AssassinsCreed_Dx9.exe+9FEED2",
-        dynamic22 = "\"AssassinsCreed_Dx9.exe\"+9FEEC0:",
-        dynamic23 = "AssassinsCreed_Dx9.exe+3183F0",
-        dynamic24 = "AssassinsCreed_Dx9.exe+1017B0",
-        dynamic25 = "AssassinsCreed_Dx9.exe+9D2C16",
-        dynamic26 = "\"AssassinsCreed_Dx9.exe\"+9D2BEB:",
-        dynamic27 = "\"AssassinsCreed_Dx9.exe\"+9DE7E7:",
-        dynamic28 = "\"AssassinsCreed_Dx9.exe\"+9E0748:",
-        dynamic29 = "AssassinsCreed_Dx9.exe+A03956",
-        dynamic30 = "\"AssassinsCreed_Dx9.exe\"+A03936:",
-        dynamic31 = "AssassinsCreed_Dx9.exe+9E0280",
-        dynamic32 = "\"AssassinsCreed_Dx9.exe\"+9E07B9:"
+        dynamic17 = "\"AssassinsCreed_Dx9.exe\"+9D2C4B:",
+        dynamic18 = "AssassinsCreed_Dx9.exe+A97346",
+        dynamic19 = "\"AssassinsCreed_Dx9.exe\"+A9731C:",
+        dynamic20 = "AssassinsCreed_Dx9.exe+9FEED2",
+        dynamic21 = "\"AssassinsCreed_Dx9.exe\"+9FEEC0:",
+        dynamic22 = "AssassinsCreed_Dx9.exe+3183F0",
+        dynamic23 = "AssassinsCreed_Dx9.exe+1017B0",
+        dynamic24 = "AssassinsCreed_Dx9.exe+9D2C16",
+        dynamic25 = "\"AssassinsCreed_Dx9.exe\"+9D2BEB:",
+        dynamic26 = "\"AssassinsCreed_Dx9.exe\"+9DE7E7:",
+        dynamic27 = "\"AssassinsCreed_Dx9.exe\"+9E0748:",
+        dynamic28 = "AssassinsCreed_Dx9.exe+A03956",
+        dynamic29 = "\"AssassinsCreed_Dx9.exe\"+A03936:",
+        dynamic30 = "AssassinsCreed_Dx9.exe+9E0280",
+        dynamic31 = "\"AssassinsCreed_Dx9.exe\"+9E07B9:",
+        dynamic32 = "AssassinsCreed_Dx9.exe+9E0797",
+        dynamic33 = "\"AssassinsCreed_Dx9.exe\"+9E0766:"
     }
 }
 
@@ -3957,6 +3959,8 @@ globalalloc(vault_enable,1)
 globalalloc(bindEmptyHand,1)
 globalalloc(on_vault_f,1)
 globalalloc(vault_inner_ledge_enable,1)
+globalalloc(vault_landing_low_enable,1)
+globalalloc(vault_landing_far_enable,1)
 globalalloc(parkour_far_enable,1)
 globalalloc(self_swing_enable,1)
 globalalloc(freeform_enable,1)
@@ -3966,6 +3970,7 @@ globalalloc(vault_ground_land_f,1)
 globalalloc(vault_required_passes,1)
 globalalloc(vault_pass_counter,1)
 globalalloc(vault_to_fall_f,1)
+globalalloc(vault_to_breakout_f,1)
 globalalloc(vault_inner_ledge_to_hang_coords,16)
 globalalloc(player_rotation,16)
 
@@ -4073,15 +4078,12 @@ label(originalcode5)
 label(exit5)
 
 vault_to_hang:
-mov [vault_inner_ledge_f],00
 cmp byte ptr [vault_enable],01
 je %s
 cmp byte ptr [bindEmptyHand],01
 je %s
 cmp byte ptr [freeform_enable],01
 je originalcode5
-cmp byte ptr [vault_inner_ledge_f],01
-je %s
 
 originalcode5:
 test al,al
@@ -4167,15 +4169,17 @@ label(code9)
 label(exit9)
 
 vault_inner_ledge_3:
-cmp byte ptr [vault_landing_low_enable],01
-je originalcode9
-cmp byte ptr [vault_landing_far_enable],01
-je originalcode9
 cmp byte ptr [vault_enable],01
 je code9
 cmp byte ptr [bindEmptyHand],01
 je code9
+cmp byte ptr [vault_to_breakout_f],01
+je code9
 cmp byte ptr [freeform_enable],01
+je originalcode9
+cmp byte ptr [vault_landing_low_enable],01
+je originalcode9
+cmp byte ptr [vault_landing_far_enable],01
 je originalcode9
 
 code9:
@@ -4190,6 +4194,7 @@ call %s
 push 00
 mov ecx,eax
 call %s
+mov [vault_to_breakout_f],00
 jmp %s
 
 originalcode9:
@@ -4210,10 +4215,6 @@ label(originalcode10)
 label(exit10)
 
 vault_inner_ledge_4:
-cmp byte ptr [vault_landing_low_enable],01
-je originalcode10
-cmp byte ptr [vault_landing_far_enable],01
-je originalcode10
 cmp byte ptr [vault_inner_ledge_f],01
 jne originalcode10
 movaps xmm1,[vault_inner_ledge_to_hang_coords]
@@ -4298,7 +4299,27 @@ jmp returnhere13
 jmp vault_to_fall
 nop 2
 returnhere13:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16, addrE.dynamic17, addrE.dynamic18, addrE.dynamic19, addrE.dynamic20, addrE.dynamic21, addrE.dynamic22, addrE.dynamic23, addrE.dynamic24, addrE.dynamic25, addrE.dynamic26, addrE.dynamic27, addrE.dynamic28, addrE.dynamic29, addrE.dynamic30, addrE.dynamic31, addrE.dynamic32)
+
+
+alloc(vault_to_breakout,2048)
+label(returnhere14)
+label(exit14)
+
+vault_to_breakout:
+mov [vault_to_breakout_f],01
+cmp byte ptr [vault_inner_ledge_f],01
+je %s
+xor ecx,ecx
+mov [esp+08],ecx
+
+exit14:
+jmp returnhere14
+
+%s
+jmp vault_to_breakout
+nop
+returnhere14:
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16, addrE.dynamic17, addrE.dynamic18, addrE.dynamic19, addrE.dynamic20, addrE.dynamic21, addrE.dynamic22, addrE.dynamic23, addrE.dynamic24, addrE.dynamic25, addrE.dynamic26, addrE.dynamic27, addrE.dynamic28, addrE.dynamic29, addrE.dynamic30, addrE.dynamic31, addrE.dynamic32, addrE.dynamic33)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -4333,7 +4354,8 @@ local config_disable = {
         dynamic16 = "\"AssassinsCreed_Dx10.exe\"+B8CDD8:",
         dynamic17 = "\"AssassinsCreed_Dx10.exe\"+BAFFF6:",
         dynamic18 = "\"AssassinsCreed_Dx10.exe\"+B8CE49:",
-        dynamic19 = "AssassinsCreed_Dx10.exe+B8C910"
+        dynamic19 = "AssassinsCreed_Dx10.exe+B8C910",
+        dynamic20 = "\"AssassinsCreed_Dx10.exe\"+B8CDF6:"
     },
     [2] = {
         dynamic1 = "\"AssassinsCreed_Dx9.exe\"+A97584:",
@@ -4354,7 +4376,8 @@ local config_disable = {
         dynamic16 = "\"AssassinsCreed_Dx9.exe\"+9E0748:",
         dynamic17 = "\"AssassinsCreed_Dx9.exe\"+A03936:",
         dynamic18 = "\"AssassinsCreed_Dx9.exe\"+9E07B9:",
-        dynamic19 = "AssassinsCreed_Dx9.exe+9E0280"
+        dynamic19 = "AssassinsCreed_Dx9.exe+9E0280",
+        dynamic20 = "\"AssassinsCreed_Dx9.exe\"+9E0766:"
     }
 }
 
@@ -4420,6 +4443,11 @@ db 8B CE E8 C0 FA FF FF
 //mov ecx,esi
 //call %s
 
+%s
+db 33 C9 89 4C 24 08
+//xor ecx,ecx
+//mov [esp+08],ecx
+
 dealloc(vault)
 dealloc(vault_2)
 dealloc(vault_landing)
@@ -4433,7 +4461,8 @@ dealloc(vault_inner_ledge_4)
 dealloc(vault_freeform)
 dealloc(vault_freeform_2)
 dealloc(vault_to_fall)
-]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7, addrD.dynamic8, addrD.dynamic9, addrD.dynamic10, addrD.dynamic11, addrD.dynamic12, addrD.dynamic13, addrD.dynamic14, addrD.dynamic15, addrD.dynamic16, addrD.dynamic17, addrD.dynamic18, addrD.dynamic19)
+dealloc(vault_to_breakout)
+]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7, addrD.dynamic8, addrD.dynamic9, addrD.dynamic10, addrD.dynamic11, addrD.dynamic12, addrD.dynamic13, addrD.dynamic14, addrD.dynamic15, addrD.dynamic16, addrD.dynamic17, addrD.dynamic18, addrD.dynamic19, addrD.dynamic20)
 
 
 if disableInfo and disableInfo.info then
@@ -11088,7 +11117,7 @@ dd (float)1.5
 vault_inner_ledge_distance:
 dd (float)0.5
 vault_inner_ledge_to_hang_distance:
-dd (float)0.5
+dd (float)0.25
 
 near_miss_distance:
 dd (float)0

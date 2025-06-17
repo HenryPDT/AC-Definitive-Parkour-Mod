@@ -4171,36 +4171,38 @@ local config_enable = {
         dynamic8 = "ACRSP.exe+16FF074",
         dynamic9 = "ACRSP.exe+16FF074",
         dynamic10 = "ACRSP.exe+16FF074",
-        dynamic11 = "ACRSP.exe+16FF074",
-        dynamic12 = "\"ACRSP.exe\"+16FEFDD:",
-        dynamic13 = "ACRSP.exe+BC86A0",
+        dynamic11 = "\"ACRSP.exe\"+16FEFDD:",
+        dynamic12 = "ACRSP.exe+BC86A0",
+        dynamic13 = "ACRSP.exe+669A1C",
         dynamic14 = "ACRSP.exe+669A1C",
         dynamic15 = "ACRSP.exe+669A1C",
-        dynamic16 = "ACRSP.exe+669A1C",
-        dynamic17 = "\"ACRSP.exe\"+6699DA:",
-        dynamic18 = "ACRSP.exe+159022E",
-        dynamic19 = "\"ACRSP.exe\"+15901FB:",
-        dynamic20 = "ACRSP.exe+6ADB52",
-        dynamic21 = "\"ACRSP.exe\"+6ADB40:",
-        dynamic22 = "ACRSP.exe+1BED80",
-        dynamic23 = "ACRSP.exe+181070",
-        dynamic24 = "ACRSP.exe+66996C",
-        dynamic25 = "ACRSP.exe+669A27",
-        dynamic26 = "\"ACRSP.exe\"+669945:",
-        dynamic27 = "\"ACRSP.exe\"+67D604:",
-        dynamic28 = "\"ACRSP.exe\"+683939:",
-        dynamic29 = "ACRSP.exe+6C6B4C",
-        dynamic30 = "\"ACRSP.exe\"+6C6A67:",
-        dynamic31 = "ACRSP.exe+6C6B4C",
-        dynamic32 = "\"ACRSP.exe\"+6C6A7C:",
+        dynamic16 = "\"ACRSP.exe\"+6699DA:",
+        dynamic17 = "ACRSP.exe+159022E",
+        dynamic18 = "\"ACRSP.exe\"+15901FB:",
+        dynamic19 = "ACRSP.exe+6ADB52",
+        dynamic20 = "\"ACRSP.exe\"+6ADB40:",
+        dynamic21 = "ACRSP.exe+1BED80",
+        dynamic22 = "ACRSP.exe+181070",
+        dynamic23 = "ACRSP.exe+66996C",
+        dynamic24 = "ACRSP.exe+669A27",
+        dynamic25 = "\"ACRSP.exe\"+669945:",
+        dynamic26 = "\"ACRSP.exe\"+67D604:",
+        dynamic27 = "\"ACRSP.exe\"+683939:",
+        dynamic28 = "ACRSP.exe+6C6B4C",
+        dynamic29 = "\"ACRSP.exe\"+6C6A67:",
+        dynamic30 = "ACRSP.exe+6C6B4C",
+        dynamic31 = "\"ACRSP.exe\"+6C6A7C:",
+        dynamic32 = "ACRSP.exe+6899DC",
         dynamic33 = "ACRSP.exe+6899DC",
-        dynamic34 = "ACRSP.exe+6899DC",
-        dynamic35 = "\"ACRSP.exe\"+6893E4:",
+        dynamic34 = "\"ACRSP.exe\"+6893E4:",
+        dynamic35 = "ACRSP.exe+16FF139",
         dynamic36 = "ACRSP.exe+16FF139",
-        dynamic37 = "ACRSP.exe+16FF139",
-        dynamic38 = "\"ACRSP.exe\"+16FF12B:",
-        dynamic39 = "ACRSP.exe+681610",
-        dynamic40 = "\"ACRSP.exe\"+683980:"
+        dynamic37 = "\"ACRSP.exe\"+16FF12B:",
+        dynamic38 = "ACRSP.exe+681610",
+        dynamic39 = "\"ACRSP.exe\"+683980:",
+        dynamic40 = "ACRSP.exe+683960",
+        dynamic41 = "ACRSP.exe+672480",
+        dynamic42 = "\"ACRSP.exe\"+683954:"
     },
     [2] = {
         dynamic1 = "ACRSP.exe+15C3FAE",
@@ -4213,36 +4215,38 @@ local config_enable = {
         dynamic8 = "ACRSP.exe+1732A84",
         dynamic9 = "ACRSP.exe+1732A84",
         dynamic10 = "ACRSP.exe+1732A84",
-        dynamic11 = "ACRSP.exe+1732A84",
-        dynamic12 = "\"ACRSP.exe\"+17329ED:",
-        dynamic13 = "ACRSP.exe+BFC140",
+        dynamic11 = "\"ACRSP.exe\"+17329ED:",
+        dynamic12 = "ACRSP.exe+BFC140",
+        dynamic13 = "ACRSP.exe+69B1AC",
         dynamic14 = "ACRSP.exe+69B1AC",
         dynamic15 = "ACRSP.exe+69B1AC",
-        dynamic16 = "ACRSP.exe+69B1AC",
-        dynamic17 = "\"ACRSP.exe\"+69B16A:",
-        dynamic18 = "ACRSP.exe+15C3C3E",
-        dynamic19 = "\"ACRSP.exe\"+15C3C0B:",
-        dynamic20 = "ACRSP.exe+6DF282",
-        dynamic21 = "\"ACRSP.exe\"+6DF270:",
-        dynamic22 = "ACRSP.exe+1D9310",
-        dynamic23 = "ACRSP.exe+199560",
-        dynamic24 = "ACRSP.exe+69B0FC",
-        dynamic25 = "ACRSP.exe+69B1B7",
-        dynamic26 = "\"ACRSP.exe\"+69B0D5:",
-        dynamic27 = "\"ACRSP.exe\"+6AED94:",
-        dynamic28 = "\"ACRSP.exe\"+6B50C9:",
-        dynamic29 = "ACRSP.exe+6F827C",
-        dynamic30 = "\"ACRSP.exe\"+6F8197:",
-        dynamic31 = "ACRSP.exe+6F827C",
-        dynamic32 = "\"ACRSP.exe\"+6F81AC:",
+        dynamic16 = "\"ACRSP.exe\"+69B16A:",
+        dynamic17 = "ACRSP.exe+15C3C3E",
+        dynamic18 = "\"ACRSP.exe\"+15C3C0B:",
+        dynamic19 = "ACRSP.exe+6DF282",
+        dynamic20 = "\"ACRSP.exe\"+6DF270:",
+        dynamic21 = "ACRSP.exe+1D9310",
+        dynamic22 = "ACRSP.exe+199560",
+        dynamic23 = "ACRSP.exe+69B0FC",
+        dynamic24 = "ACRSP.exe+69B1B7",
+        dynamic25 = "\"ACRSP.exe\"+69B0D5:",
+        dynamic26 = "\"ACRSP.exe\"+6AED94:",
+        dynamic27 = "\"ACRSP.exe\"+6B50C9:",
+        dynamic28 = "ACRSP.exe+6F827C",
+        dynamic29 = "\"ACRSP.exe\"+6F8197:",
+        dynamic30 = "ACRSP.exe+6F827C",
+        dynamic31 = "\"ACRSP.exe\"+6F81AC:",
+        dynamic32 = "ACRSP.exe+6BB16C",
         dynamic33 = "ACRSP.exe+6BB16C",
-        dynamic34 = "ACRSP.exe+6BB16C",
-        dynamic35 = "\"ACRSP.exe\"+6BAB74:",
+        dynamic34 = "\"ACRSP.exe\"+6BAB74:",
+        dynamic35 = "ACRSP.exe+1732B49",
         dynamic36 = "ACRSP.exe+1732B49",
-        dynamic37 = "ACRSP.exe+1732B49",
-        dynamic38 = "\"ACRSP.exe\"+1732B3B:",
-        dynamic39 = "ACRSP.exe+6B2DA0",
-        dynamic40 = "\"ACRSP.exe\"+6B5110:"
+        dynamic37 = "\"ACRSP.exe\"+1732B3B:",
+        dynamic38 = "ACRSP.exe+6B2DA0",
+        dynamic39 = "\"ACRSP.exe\"+6B5110:",
+        dynamic40 = "ACRSP.exe+6B50F0",
+        dynamic41 = "ACRSP.exe+6A3C10",
+        dynamic42 = "\"ACRSP.exe\"+6B50E4:"
     }
 }
 
@@ -4259,6 +4263,8 @@ globalalloc(vault_enable,1)
 globalalloc(bindEmptyHand,1)
 globalalloc(on_vault_f,1)
 globalalloc(vault_inner_ledge_enable,1)
+globalalloc(vault_landing_low_enable,1)
+globalalloc(vault_landing_far_enable,1)
 globalalloc(parkour_far_enable,1)
 globalalloc(freeform_enable,1)
 globalalloc(on_hang_free_f,1)
@@ -4267,6 +4273,7 @@ globalalloc(vault_ground_land_f,1)
 globalalloc(vault_required_passes,1)
 globalalloc(vault_pass_counter,1)
 globalalloc(vault_to_fall_f,1)
+globalalloc(vault_to_breakout_f,1)
 globalalloc(vault_inner_ledge_to_hang_coords,16)
 globalalloc(player_rotation,16)
 
@@ -4370,15 +4377,12 @@ label(originalcode5)
 label(exit5)
 
 vault_to_hang:
-mov [vault_inner_ledge_f],00
 cmp byte ptr [vault_enable],01
 je %s
 cmp byte ptr [bindEmptyHand],01
 je %s
 cmp byte ptr [freeform_enable],01
 je originalcode5
-cmp byte ptr [vault_inner_ledge_f],01
-je %s
 
 originalcode5:
 test al,al
@@ -4465,15 +4469,17 @@ label(code9)
 label(exit9)
 
 vault_inner_ledge_3:
-cmp byte ptr [vault_landing_low_enable],01
-je originalcode9
-cmp byte ptr [vault_landing_far_enable],01
-je originalcode9
 cmp byte ptr [vault_enable],01
 je code9
 cmp byte ptr [bindEmptyHand],01
 je code9
+cmp byte ptr [vault_to_breakout_f],01
+je code9
 cmp byte ptr [freeform_enable],01
+je originalcode9
+cmp byte ptr [vault_landing_low_enable],01
+je originalcode9
+cmp byte ptr [vault_landing_far_enable],01
 je originalcode9
 
 code9:
@@ -4485,6 +4491,7 @@ call %s
 push 00
 mov ecx,eax
 call %s
+mov [vault_to_breakout_f],00
 jmp %s
 
 originalcode9:
@@ -4506,10 +4513,6 @@ label(originalcode10)
 label(exit10)
 
 vault_inner_ledge_4:
-cmp byte ptr [vault_landing_low_enable],01
-je originalcode10
-cmp byte ptr [vault_landing_far_enable],01
-je originalcode10
 cmp byte ptr [vault_inner_ledge_f],01
 jne originalcode10
 movaps xmm0,[vault_inner_ledge_to_hang_coords]
@@ -4663,7 +4666,27 @@ jmp returnhere16
 jmp vault_to_fall
 nop 2
 returnhere16:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16, addrE.dynamic17, addrE.dynamic18, addrE.dynamic19, addrE.dynamic20, addrE.dynamic21, addrE.dynamic22, addrE.dynamic23, addrE.dynamic24, addrE.dynamic25, addrE.dynamic26, addrE.dynamic27, addrE.dynamic28, addrE.dynamic29, addrE.dynamic30, addrE.dynamic31, addrE.dynamic32, addrE.dynamic33, addrE.dynamic34, addrE.dynamic35, addrE.dynamic36, addrE.dynamic37, addrE.dynamic38, addrE.dynamic39, addrE.dynamic40)
+
+
+alloc(vault_to_breakout,2048)
+label(returnhere17)
+label(exit17)
+
+vault_to_breakout:
+mov [vault_to_breakout_f],01
+cmp byte ptr [vault_inner_ledge_f],01
+je %s
+mov ecx,esi
+call %s
+
+exit17:
+jmp returnhere17
+
+%s
+jmp vault_to_breakout
+nop 2
+returnhere17:
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16, addrE.dynamic17, addrE.dynamic18, addrE.dynamic19, addrE.dynamic20, addrE.dynamic21, addrE.dynamic22, addrE.dynamic23, addrE.dynamic24, addrE.dynamic25, addrE.dynamic26, addrE.dynamic27, addrE.dynamic28, addrE.dynamic29, addrE.dynamic30, addrE.dynamic31, addrE.dynamic32, addrE.dynamic33, addrE.dynamic34, addrE.dynamic35, addrE.dynamic36, addrE.dynamic37, addrE.dynamic38, addrE.dynamic39, addrE.dynamic40, addrE.dynamic41, addrE.dynamic42)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -4706,7 +4729,9 @@ local config_disable = {
         dynamic24 = "\"ACRSP.exe\"+16FF12B:",
         dynamic25 = "ACRSP.exe+16FF139",
         dynamic26 = "\"ACRSP.exe\"+683980:",
-        dynamic27 = "ACRSP.exe+681610"
+        dynamic27 = "ACRSP.exe+681610",
+        dynamic28 = "\"ACRSP.exe\"+683954:",
+        dynamic29 = "ACRSP.exe+672480"
     },
     [2] = {
         dynamic1 = "\"ACRSP.exe\"+15C3E33:",
@@ -4735,7 +4760,9 @@ local config_disable = {
         dynamic24 = "\"ACRSP.exe\"+1732B3B:",
         dynamic25 = "ACRSP.exe+1732B49",
         dynamic26 = "\"ACRSP.exe\"+6B5110:",
-        dynamic27 = "ACRSP.exe+6B2DA0"
+        dynamic27 = "ACRSP.exe+6B2DA0",
+        dynamic28 = "\"ACRSP.exe\"+6B50E4:",
+        dynamic29 = "ACRSP.exe+6A3C10"
     }
 }
 
@@ -4819,6 +4846,11 @@ db 8B CE E8 89 DC FF FF
 //mov ecx,esi
 //call %s
 
+%s
+db 8B CE E8 25 EB FE FF
+//mov ecx,esi
+//call %s
+
 dealloc(vault)
 dealloc(vault_2)
 dealloc(vault_landing)
@@ -4835,7 +4867,8 @@ dealloc(vault_freeform_3)
 dealloc(vault_from_hang)
 dealloc(vault_from_hang_2)
 dealloc(vault_to_fall)
-]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7, addrD.dynamic8, addrD.dynamic9, addrD.dynamic10, addrD.dynamic11, addrD.dynamic12, addrD.dynamic13, addrD.dynamic14, addrD.dynamic15, addrD.dynamic16, addrD.dynamic17, addrD.dynamic18, addrD.dynamic19, addrD.dynamic20, addrD.dynamic21, addrD.dynamic22, addrD.dynamic23, addrD.dynamic24, addrD.dynamic25, addrD.dynamic26, addrD.dynamic27)
+dealloc(vault_to_breakout)
+]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7, addrD.dynamic8, addrD.dynamic9, addrD.dynamic10, addrD.dynamic11, addrD.dynamic12, addrD.dynamic13, addrD.dynamic14, addrD.dynamic15, addrD.dynamic16, addrD.dynamic17, addrD.dynamic18, addrD.dynamic19, addrD.dynamic20, addrD.dynamic21, addrD.dynamic22, addrD.dynamic23, addrD.dynamic24, addrD.dynamic25, addrD.dynamic26, addrD.dynamic27, addrD.dynamic28, addrD.dynamic29)
 
 
 if disableInfo and disableInfo.info then

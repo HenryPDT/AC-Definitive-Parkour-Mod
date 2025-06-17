@@ -3802,6 +3802,8 @@ globalalloc(vault_enable,1)
 globalalloc(bindEmptyHand,1)
 globalalloc(on_vault_f,1)
 globalalloc(vault_inner_ledge_enable,1)
+globalalloc(vault_landing_low_enable,1)
+globalalloc(vault_landing_far_enable,1)
 globalalloc(parkour_far_enable,1)
 globalalloc(freeform_enable,1)
 globalalloc(on_hang_free_f,1)
@@ -3810,6 +3812,7 @@ globalalloc(vault_ground_land_f,1)
 globalalloc(vault_required_passes,1)
 globalalloc(vault_pass_counter,1)
 globalalloc(vault_to_fall_f,1)
+globalalloc(vault_to_breakout_f,1)
 globalalloc(vault_inner_ledge_to_hang_coords,16)
 globalalloc(player_rotation,16)
 
@@ -3915,15 +3918,12 @@ label(originalcode5)
 label(exit5)
 
 vault_to_hang:
-mov [vault_inner_ledge_f],00
 cmp byte ptr [vault_enable],01
 je ACBSP.exe+164DE47
 cmp byte ptr [bindEmptyHand],01
 je ACBSP.exe+164DE47
 cmp byte ptr [freeform_enable],01
 je originalcode5
-cmp byte ptr [vault_inner_ledge_f],01
-je ACBSP.exe+164DE47
 
 originalcode5:
 test al,al
@@ -4010,15 +4010,17 @@ label(code9)
 label(exit9)
 
 vault_inner_ledge_3:
-cmp byte ptr [vault_landing_low_enable],01
-je originalcode9
-cmp byte ptr [vault_landing_far_enable],01
-je originalcode9
 cmp byte ptr [vault_enable],01
 je code9
 cmp byte ptr [bindEmptyHand],01
 je code9
+cmp byte ptr [vault_to_breakout_f],01
+je code9
 cmp byte ptr [freeform_enable],01
+je originalcode9
+cmp byte ptr [vault_landing_low_enable],01
+je originalcode9
+cmp byte ptr [vault_landing_far_enable],01
 je originalcode9
 
 code9:
@@ -4030,6 +4032,7 @@ call ACBSP.exe+1E9A70
 push 00
 mov ecx,eax
 call ACBSP.exe+1A8480
+mov [vault_to_breakout_f],00
 jmp ACBSP.exe+723C7C
 
 originalcode9:
@@ -4051,10 +4054,6 @@ label(originalcode10)
 label(exit10)
 
 vault_inner_ledge_4:
-cmp byte ptr [vault_landing_low_enable],01
-je originalcode10
-cmp byte ptr [vault_landing_far_enable],01
-je originalcode10
 cmp byte ptr [vault_inner_ledge_f],01
 jne originalcode10
 movaps xmm0,[vault_inner_ledge_to_hang_coords]
@@ -4210,6 +4209,26 @@ nop 2
 returnhere16:
 
 
+alloc(vault_to_breakout,2048)
+label(returnhere17)
+label(exit17)
+
+vault_to_breakout:
+mov [vault_to_breakout_f],01
+cmp byte ptr [vault_inner_ledge_f],01
+je ACBSP.exe+7383D0
+mov ecx,esi
+call ACBSP.exe+72ADF0
+
+exit17:
+jmp returnhere17
+
+"ACBSP.exe"+7383C4:
+jmp vault_to_breakout
+nop 2
+returnhere17:
+
+
 [DISABLE]
 "ACBSP.exe"+150C37E:
 db 75 1E 8B 45 94
@@ -4289,6 +4308,11 @@ db 8B CE E8 29 ED FF FF
 //mov ecx,esi
 //call ACBSP.exe+737120
 
+"ACBSP.exe"+7383C4:
+db 8B CE E8 25 2A FF FF
+//mov ecx,esi
+//call ACBSP.exe+72ADF0
+
 dealloc(vault)
 dealloc(vault_2)
 dealloc(vault_landing)
@@ -4305,6 +4329,7 @@ dealloc(vault_freeform_3)
 dealloc(vault_from_hang)
 dealloc(vault_from_hang_2)
 dealloc(vault_to_fall)
+dealloc(vault_to_breakout)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>

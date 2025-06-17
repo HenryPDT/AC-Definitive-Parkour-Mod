@@ -4036,35 +4036,37 @@ local config_enable = {
         dynamic8 = "AssassinsCreedIIGame.exe+E020EB",
         dynamic9 = "AssassinsCreedIIGame.exe+E020EB",
         dynamic10 = "AssassinsCreedIIGame.exe+E020EB",
-        dynamic11 = "AssassinsCreedIIGame.exe+E020EB",
-        dynamic12 = "\"AssassinsCreedIIGame.exe\"+E0206E:",
-        dynamic13 = "AssassinsCreedIIGame.exe+935D10",
+        dynamic11 = "\"AssassinsCreedIIGame.exe\"+E0206E:",
+        dynamic12 = "AssassinsCreedIIGame.exe+935D10",
+        dynamic13 = "AssassinsCreedIIGame.exe+655FFC",
         dynamic14 = "AssassinsCreedIIGame.exe+655FFC",
         dynamic15 = "AssassinsCreedIIGame.exe+655FFC",
-        dynamic16 = "AssassinsCreedIIGame.exe+655FFC",
-        dynamic17 = "\"AssassinsCreedIIGame.exe\"+655FBA:",
-        dynamic18 = "\"AssassinsCreedIIGame.exe\"+F67A24:",
-        dynamic19 = "AssassinsCreedIIGame.exe+6907A2",
-        dynamic20 = "\"AssassinsCreedIIGame.exe\"+690790:",
-        dynamic21 = "AssassinsCreedIIGame.exe+1C2340",
-        dynamic22 = "AssassinsCreedIIGame.exe+165BA0",
-        dynamic23 = "AssassinsCreedIIGame.exe+655F4C",
-        dynamic24 = "AssassinsCreedIIGame.exe+656007",
-        dynamic25 = "\"AssassinsCreedIIGame.exe\"+655F25:",
-        dynamic26 = "\"AssassinsCreedIIGame.exe\"+66766F:",
-        dynamic27 = "\"AssassinsCreedIIGame.exe\"+66B4D9:",
-        dynamic28 = "AssassinsCreedIIGame.exe+69E229",
-        dynamic29 = "\"AssassinsCreedIIGame.exe\"+69E144:",
-        dynamic30 = "AssassinsCreedIIGame.exe+69E229",
-        dynamic31 = "\"AssassinsCreedIIGame.exe\"+69E159:",
+        dynamic16 = "\"AssassinsCreedIIGame.exe\"+655FBA:",
+        dynamic17 = "\"AssassinsCreedIIGame.exe\"+F67A24:",
+        dynamic18 = "AssassinsCreedIIGame.exe+6907A2",
+        dynamic19 = "\"AssassinsCreedIIGame.exe\"+690790:",
+        dynamic20 = "AssassinsCreedIIGame.exe+1C2340",
+        dynamic21 = "AssassinsCreedIIGame.exe+165BA0",
+        dynamic22 = "AssassinsCreedIIGame.exe+655F4C",
+        dynamic23 = "AssassinsCreedIIGame.exe+656007",
+        dynamic24 = "\"AssassinsCreedIIGame.exe\"+655F25:",
+        dynamic25 = "\"AssassinsCreedIIGame.exe\"+66766F:",
+        dynamic26 = "\"AssassinsCreedIIGame.exe\"+66B4D9:",
+        dynamic27 = "AssassinsCreedIIGame.exe+69E229",
+        dynamic28 = "\"AssassinsCreedIIGame.exe\"+69E144:",
+        dynamic29 = "AssassinsCreedIIGame.exe+69E229",
+        dynamic30 = "\"AssassinsCreedIIGame.exe\"+69E159:",
+        dynamic31 = "AssassinsCreedIIGame.exe+67039C",
         dynamic32 = "AssassinsCreedIIGame.exe+67039C",
-        dynamic33 = "AssassinsCreedIIGame.exe+67039C",
-        dynamic34 = "\"AssassinsCreedIIGame.exe\"+66FDA4:",
+        dynamic33 = "\"AssassinsCreedIIGame.exe\"+66FDA4:",
+        dynamic34 = "AssassinsCreedIIGame.exe+E021B6",
         dynamic35 = "AssassinsCreedIIGame.exe+E021B6",
-        dynamic36 = "AssassinsCreedIIGame.exe+E021B6",
-        dynamic37 = "\"AssassinsCreedIIGame.exe\"+E02198:",
-        dynamic38 = "AssassinsCreedIIGame.exe+66AA70",
-        dynamic39 = "\"AssassinsCreedIIGame.exe\"+66B520:"
+        dynamic36 = "\"AssassinsCreedIIGame.exe\"+E02198:",
+        dynamic37 = "AssassinsCreedIIGame.exe+66AA70",
+        dynamic38 = "\"AssassinsCreedIIGame.exe\"+66B520:",
+        dynamic39 = "AssassinsCreedIIGame.exe+66B500",
+        dynamic40 = "AssassinsCreedIIGame.exe+65D750",
+        dynamic41 = "\"AssassinsCreedIIGame.exe\"+66B4F4:"
     },
     [2] = {
         dynamic1 = "AssassinsCreedIIGame.exe+1541189",
@@ -4077,35 +4079,37 @@ local config_enable = {
         dynamic8 = "AssassinsCreedIIGame.exe+13DBFEB",
         dynamic9 = "AssassinsCreedIIGame.exe+13DBFEB",
         dynamic10 = "AssassinsCreedIIGame.exe+13DBFEB",
-        dynamic11 = "AssassinsCreedIIGame.exe+13DBFEB",
-        dynamic12 = "\"AssassinsCreedIIGame.exe\"+13DBF6E:",
-        dynamic13 = "AssassinsCreedIIGame.exe+F10310",
+        dynamic11 = "\"AssassinsCreedIIGame.exe\"+13DBF6E:",
+        dynamic12 = "AssassinsCreedIIGame.exe+F10310",
+        dynamic13 = "AssassinsCreedIIGame.exe+C3200C",
         dynamic14 = "AssassinsCreedIIGame.exe+C3200C",
         dynamic15 = "AssassinsCreedIIGame.exe+C3200C",
-        dynamic16 = "AssassinsCreedIIGame.exe+C3200C",
-        dynamic17 = "\"AssassinsCreedIIGame.exe\"+C31FCA:",
-        dynamic18 = "\"AssassinsCreedIIGame.exe\"+1540E94:",
-        dynamic19 = "AssassinsCreedIIGame.exe+C6C7B2",
-        dynamic20 = "\"AssassinsCreedIIGame.exe\"+C6C7A0:",
-        dynamic21 = "AssassinsCreedIIGame.exe+1EAFF0",
-        dynamic22 = "AssassinsCreedIIGame.exe+18F010",
-        dynamic23 = "AssassinsCreedIIGame.exe+C31F5C",
-        dynamic24 = "AssassinsCreedIIGame.exe+C32017",
-        dynamic25 = "\"AssassinsCreedIIGame.exe\"+C31F35:",
-        dynamic26 = "\"AssassinsCreedIIGame.exe\"+C4367F:",
-        dynamic27 = "\"AssassinsCreedIIGame.exe\"+C474E9:",
-        dynamic28 = "AssassinsCreedIIGame.exe+C7A239",
-        dynamic29 = "\"AssassinsCreedIIGame.exe\"+C7A154:",
-        dynamic30 = "AssassinsCreedIIGame.exe+C7A239",
-        dynamic31 = "\"AssassinsCreedIIGame.exe\"+C7A169:",
+        dynamic16 = "\"AssassinsCreedIIGame.exe\"+C31FCA:",
+        dynamic17 = "\"AssassinsCreedIIGame.exe\"+1540E94:",
+        dynamic18 = "AssassinsCreedIIGame.exe+C6C7B2",
+        dynamic19 = "\"AssassinsCreedIIGame.exe\"+C6C7A0:",
+        dynamic20 = "AssassinsCreedIIGame.exe+1EAFF0",
+        dynamic21 = "AssassinsCreedIIGame.exe+18F010",
+        dynamic22 = "AssassinsCreedIIGame.exe+C31F5C",
+        dynamic23 = "AssassinsCreedIIGame.exe+C32017",
+        dynamic24 = "\"AssassinsCreedIIGame.exe\"+C31F35:",
+        dynamic25 = "\"AssassinsCreedIIGame.exe\"+C4367F:",
+        dynamic26 = "\"AssassinsCreedIIGame.exe\"+C474E9:",
+        dynamic27 = "AssassinsCreedIIGame.exe+C7A239",
+        dynamic28 = "\"AssassinsCreedIIGame.exe\"+C7A154:",
+        dynamic29 = "AssassinsCreedIIGame.exe+C7A239",
+        dynamic30 = "\"AssassinsCreedIIGame.exe\"+C7A169:",
+        dynamic31 = "AssassinsCreedIIGame.exe+C4C3AC",
         dynamic32 = "AssassinsCreedIIGame.exe+C4C3AC",
-        dynamic33 = "AssassinsCreedIIGame.exe+C4C3AC",
-        dynamic34 = "\"AssassinsCreedIIGame.exe\"+C4BDB4:",
+        dynamic33 = "\"AssassinsCreedIIGame.exe\"+C4BDB4:",
+        dynamic34 = "AssassinsCreedIIGame.exe+13DC0B6",
         dynamic35 = "AssassinsCreedIIGame.exe+13DC0B6",
-        dynamic36 = "AssassinsCreedIIGame.exe+13DC0B6",
-        dynamic37 = "\"AssassinsCreedIIGame.exe\"+13DC098:",
-        dynamic38 = "AssassinsCreedIIGame.exe+C46A80",
-        dynamic39 = "\"AssassinsCreedIIGame.exe\"+C47530:"
+        dynamic36 = "\"AssassinsCreedIIGame.exe\"+13DC098:",
+        dynamic37 = "AssassinsCreedIIGame.exe+C46A80",
+        dynamic38 = "\"AssassinsCreedIIGame.exe\"+C47530:",
+        dynamic39 = "AssassinsCreedIIGame.exe+C47510",
+        dynamic40 = "AssassinsCreedIIGame.exe+C39760",
+        dynamic41 = "\"AssassinsCreedIIGame.exe\"+C47504:"
     }
 }
 
@@ -4122,6 +4126,8 @@ globalalloc(vault_enable,1)
 globalalloc(bindEmptyHand,1)
 globalalloc(on_vault_f,1)
 globalalloc(vault_inner_ledge_enable,1)
+globalalloc(vault_landing_low_enable,1)
+globalalloc(vault_landing_far_enable,1)
 globalalloc(parkour_far_enable,1)
 globalalloc(freeform_enable,1)
 globalalloc(on_hang_free_f,1)
@@ -4130,6 +4136,7 @@ globalalloc(vault_ground_land_f,1)
 globalalloc(vault_required_passes,1)
 globalalloc(vault_pass_counter,1)
 globalalloc(vault_to_fall_f,1)
+globalalloc(vault_to_breakout_f,1)
 globalalloc(vault_inner_ledge_to_hang_coords,16)
 globalalloc(player_rotation,16)
 
@@ -4236,15 +4243,12 @@ label(originalcode5)
 label(exit5)
 
 vault_to_hang:
-mov [vault_inner_ledge_f],00
 cmp byte ptr [vault_enable],01
 je %s
 cmp byte ptr [bindEmptyHand],01
 je %s
 cmp byte ptr [freeform_enable],01
 je originalcode5
-cmp byte ptr [vault_inner_ledge_f],01
-je %s
 
 originalcode5:
 test al,al
@@ -4330,15 +4334,17 @@ label(code9)
 label(exit9)
 
 vault_inner_ledge_3:
-cmp byte ptr [vault_landing_low_enable],01
-je originalcode9
-cmp byte ptr [vault_landing_far_enable],01
-je originalcode9
 cmp byte ptr [vault_enable],01
 je code9
 cmp byte ptr [bindEmptyHand],01
 je code9
+cmp byte ptr [vault_to_breakout_f],01
+je code9
 cmp byte ptr [freeform_enable],01
+je originalcode9
+cmp byte ptr [vault_landing_low_enable],01
+je originalcode9
+cmp byte ptr [vault_landing_far_enable],01
 je originalcode9
 
 code9:
@@ -4350,6 +4356,7 @@ call %s
 push 00
 mov ecx,eax
 call %s
+mov [vault_to_breakout_f],00
 jmp %s
 
 originalcode9:
@@ -4371,10 +4378,6 @@ label(originalcode10)
 label(exit10)
 
 vault_inner_ledge_4:
-cmp byte ptr [vault_landing_low_enable],01
-je originalcode10
-cmp byte ptr [vault_landing_far_enable],01
-je originalcode10
 cmp byte ptr [vault_inner_ledge_f],01
 jne originalcode10
 movaps xmm0,[vault_inner_ledge_to_hang_coords]
@@ -4531,7 +4534,27 @@ jmp returnhere16
 jmp vault_to_fall
 nop 2
 returnhere16:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16, addrE.dynamic17, addrE.dynamic18, addrE.dynamic19, addrE.dynamic20, addrE.dynamic21, addrE.dynamic22, addrE.dynamic23, addrE.dynamic24, addrE.dynamic25, addrE.dynamic26, addrE.dynamic27, addrE.dynamic28, addrE.dynamic29, addrE.dynamic30, addrE.dynamic31, addrE.dynamic32, addrE.dynamic33, addrE.dynamic34, addrE.dynamic35, addrE.dynamic36, addrE.dynamic37, addrE.dynamic38, addrE.dynamic39)
+
+
+alloc(vault_to_breakout,2048)
+label(returnhere17)
+label(exit17)
+
+vault_to_breakout:
+mov [vault_to_breakout_f],01
+cmp byte ptr [vault_inner_ledge_f],01
+je %s
+mov ecx,esi
+call %s
+
+exit17:
+jmp returnhere17
+
+%s
+jmp vault_to_breakout
+nop 2
+returnhere17:
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16, addrE.dynamic17, addrE.dynamic18, addrE.dynamic19, addrE.dynamic20, addrE.dynamic21, addrE.dynamic22, addrE.dynamic23, addrE.dynamic24, addrE.dynamic25, addrE.dynamic26, addrE.dynamic27, addrE.dynamic28, addrE.dynamic29, addrE.dynamic30, addrE.dynamic31, addrE.dynamic32, addrE.dynamic33, addrE.dynamic34, addrE.dynamic35, addrE.dynamic36, addrE.dynamic37, addrE.dynamic38, addrE.dynamic39, addrE.dynamic40, addrE.dynamic41)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -4573,7 +4596,9 @@ local config_disable = {
         dynamic23 = "\"AssassinsCreedIIGame.exe\"+E02198:",
         dynamic24 = "AssassinsCreedIIGame.exe+E021B6",
         dynamic25 = "\"AssassinsCreedIIGame.exe\"+66B520:",
-        dynamic26 = "AssassinsCreedIIGame.exe+66AA70"
+        dynamic26 = "AssassinsCreedIIGame.exe+66AA70",
+        dynamic27 = "\"AssassinsCreedIIGame.exe\"+66B4F4:",
+        dynamic28 = "AssassinsCreedIIGame.exe+65D750"
     },
     [2] = {
         dynamic1 = "\"AssassinsCreedIIGame.exe\"+1541166:",
@@ -4601,7 +4626,9 @@ local config_disable = {
         dynamic23 = "\"AssassinsCreedIIGame.exe\"+13DC098:",
         dynamic24 = "AssassinsCreedIIGame.exe+13DC0B6",
         dynamic25 = "\"AssassinsCreedIIGame.exe\"+C47530:",
-        dynamic26 = "AssassinsCreedIIGame.exe+C46A80"
+        dynamic26 = "AssassinsCreedIIGame.exe+C46A80",
+        dynamic27 = "\"AssassinsCreedIIGame.exe\"+C47504:",
+        dynamic28 = "AssassinsCreedIIGame.exe+C39760"
     }
 }
 
@@ -4685,6 +4712,11 @@ db 8B CE E8 49 F5 FF FF
 //mov ecx,esi
 //call %s
 
+%s
+db 8B CE E8 55 22 FF FF
+//mov ecx,esi
+//call %s
+
 dealloc(vault)
 dealloc(vault_2)
 dealloc(vault_landing)
@@ -4701,7 +4733,8 @@ dealloc(vault_freeform_3)
 dealloc(vault_from_hang)
 dealloc(vault_from_hang_2)
 dealloc(vault_to_fall)
-]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7, addrD.dynamic8, addrD.dynamic9, addrD.dynamic10, addrD.dynamic11, addrD.dynamic12, addrD.dynamic13, addrD.dynamic14, addrD.dynamic15, addrD.dynamic16, addrD.dynamic17, addrD.dynamic18, addrD.dynamic19, addrD.dynamic20, addrD.dynamic21, addrD.dynamic22, addrD.dynamic23, addrD.dynamic24, addrD.dynamic25, addrD.dynamic26)
+dealloc(vault_to_breakout)
+]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7, addrD.dynamic8, addrD.dynamic9, addrD.dynamic10, addrD.dynamic11, addrD.dynamic12, addrD.dynamic13, addrD.dynamic14, addrD.dynamic15, addrD.dynamic16, addrD.dynamic17, addrD.dynamic18, addrD.dynamic19, addrD.dynamic20, addrD.dynamic21, addrD.dynamic22, addrD.dynamic23, addrD.dynamic24, addrD.dynamic25, addrD.dynamic26, addrD.dynamic27, addrD.dynamic28)
 
 
 if disableInfo and disableInfo.info then

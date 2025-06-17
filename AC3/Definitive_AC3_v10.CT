@@ -3873,6 +3873,8 @@ globalalloc(vault_kenway_enable,1)
 globalalloc(bindEmptyHand,1)
 globalalloc(on_vault_f,1)
 globalalloc(vault_inner_ledge_enable,1)
+globalalloc(vault_landing_low_enable,1)
+globalalloc(vault_landing_far_enable,1)
 globalalloc(parkour_far_enable,1)
 globalalloc(freeform_enable,1)
 globalalloc(on_hang_free_f,1)
@@ -3881,6 +3883,7 @@ globalalloc(vault_ground_land_f,1)
 globalalloc(vault_required_passes,1)
 globalalloc(vault_pass_counter,1)
 globalalloc(vault_to_fall_f,1)
+globalalloc(vault_to_breakout_f,1)
 globalalloc(vault_inner_ledge_to_hang_coords,16)
 globalalloc(player_rotation,16)
 
@@ -4120,15 +4123,17 @@ label(code9)
 label(exit9)
 
 vault_inner_ledge_3:
-cmp byte ptr [vault_landing_low_enable],01
-je originalcode9
-cmp byte ptr [vault_landing_far_enable],01
-je originalcode9
 cmp byte ptr [vault_enable],01
 je code9
 cmp byte ptr [bindEmptyHand],01
 je code9
+cmp byte ptr [vault_to_breakout_f],01
+je code9
 cmp byte ptr [freeform_enable],01
+je originalcode9
+cmp byte ptr [vault_landing_low_enable],01
+je originalcode9
+cmp byte ptr [vault_landing_far_enable],01
 je originalcode9
 
 code9:
@@ -4142,6 +4147,7 @@ push 00
 push 00
 mov ecx,eax
 call AC3SP.exe+212300
+mov [vault_to_breakout_f],00
 jmp AC3SP.exe+16A16AD
 
 originalcode9:
@@ -4304,6 +4310,26 @@ nop 2
 returnhere16:
 
 
+alloc(vault_to_breakout,2048)
+label(returnhere17)
+label(exit17)
+
+vault_to_breakout:
+mov [vault_to_breakout_f],01
+cmp byte ptr [vault_inner_ledge_f],01
+je AC3SP.exe+16BF2B0
+mov ecx,edi
+call AC3SP.exe+16B69B0
+
+exit17:
+jmp returnhere17
+
+"AC3SP.exe"+16BF2A1:
+jmp vault_to_breakout
+nop 2
+returnhere17:
+
+
 [DISABLE]
 "AC3SP.exe"+157D006:
 db D9 55 D0 D9 E8
@@ -4379,6 +4405,11 @@ db 8B CF E8 94 FB FF FF
 //mov ecx,edi
 //call AC3SP.exe+16BEE70
 
+"AC3SP.exe"+16BF2A1:
+db 8B CF E8 08 77 FF FF
+//mov ecx,edi
+//call AC3SP.exe+16B69B0
+
 dealloc(vault)
 dealloc(vault_1)
 dealloc(vault_2)
@@ -4396,6 +4427,7 @@ dealloc(vault_freeform_3)
 dealloc(vault_from_hang)
 dealloc(vault_from_hang_2)
 dealloc(vault_to_fall)
+dealloc(vault_to_breakout)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
