@@ -9300,10 +9300,8 @@ label(exit2)
 
 nso_idle_coords_2:
 call AC4BFSP.exe+16D9510
-cmp byte ptr [eax+00002208],00
-je exit2
-cmp byte ptr [eax+00002201],00
-je exit2
+cmp byte ptr [eax+000021A8],03
+jne exit2
 mov [nso_idle_f],01
 
 exit2:
@@ -9490,10 +9488,8 @@ label(exit2)
 
 nso_run_coords_2:
 call AC4BFSP.exe+16D9510
-cmp byte ptr [eax+00002208],00
-je exit2
-cmp byte ptr [eax+00002201],00
-je exit2
+cmp byte ptr [eax+000021A8],03
+jne exit2
 mov [nso_run_f],01
 
 exit2:
