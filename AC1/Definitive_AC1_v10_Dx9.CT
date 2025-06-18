@@ -276,8 +276,6 @@ cmp edx,0
 je originalcode6
 cmp edx,00100000
 jb originalcode6
-cmp edx,80000000
-jae originalcode6
 mov edx,[edx+10]
 cmp edx,0
 je originalcode6
