@@ -8163,7 +8163,7 @@ vault_landing_low_height:
 dd (float)0 (float)0 (float)-3.25 (float)0
 
 vault_target_height:
-dd (float)0 (float)0 (float)2 (float)0
+dd (float)0 (float)0 (float)1.5 (float)0
 
 forced_hang_wall_height:
 dd (float)0 (float)0 (float)0.5 (float)0
