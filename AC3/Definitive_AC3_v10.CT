@@ -290,8 +290,6 @@ cmp esi,0
 je originalcode6
 cmp esi,00100000
 jb originalcode6
-cmp esi,80000000
-jae originalcode6
 mov esi,[esi+DC]
 cmp esi,0
 je originalcode6
