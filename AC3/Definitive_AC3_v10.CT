@@ -1879,16 +1879,12 @@ cmp byte ptr [forced_hang_enable],00
 je dive_beam_far
 cmp byte ptr [parkour_down_enable],00
 je dive_beam_far
-cmp byte ptr [bindHighProfile],00
-je dive_beam_far
 mov [dive_beam_enable],01
 
 dive_beam_far:
 cmp byte ptr [forced_hang_enable],00
 je short_freeform
 cmp byte ptr [parkour_far_enable],00
-je short_freeform
-cmp byte ptr [bindHighProfile],00
 je short_freeform
 mov [dive_beam_far_enable],01
 
