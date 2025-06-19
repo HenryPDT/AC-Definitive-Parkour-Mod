@@ -280,66 +280,70 @@ cmp esi,0
 je originalcode6
 cmp esi,00100000
 jb originalcode6
+cmp esi,FFFF0000
+jae originalcode6
 mov esi,[esi+60]
 cmp esi,0
 je originalcode6
 cmp esi,00100000
 jb originalcode6
+cmp esi,FFFF0000
+jae originalcode6
 mov esi,[esi+0]
 cmp esi,0
 je originalcode6
 cmp esi,00100000
 jb originalcode6
-cmp esi,80000000
+cmp esi,FFFF0000
 jae originalcode6
 mov esi,[esi+114]
 cmp esi,0
 je originalcode6
 cmp esi,00100000
 jb originalcode6
-cmp esi,80000000
+cmp esi,FFFF0000
 jae originalcode6
 mov esi,[esi+8C]
 cmp esi,0
 je originalcode6
 cmp esi,00100000
 jb originalcode6
-cmp esi,80000000
+cmp esi,FFFF0000
 jae originalcode6
 mov esi,[esi+18]
 cmp esi,0
 je originalcode6
 cmp esi,00100000
 jb originalcode6
-cmp esi,80000000
+cmp esi,FFFF0000
 jae originalcode6
 mov esi,[esi+0]
 cmp esi,0
 je originalcode6
 cmp esi,00100000
 jb originalcode6
-cmp esi,80000000
+cmp esi,FFFF0000
 jae originalcode6
 mov esi,[esi+40]
 cmp esi,0
 je originalcode6
 cmp esi,00100000
 jb originalcode6
-cmp esi,80000000
+cmp esi,FFFF0000
 jae originalcode6
 mov esi,[esi+C]
 cmp esi,0
 je originalcode6
 cmp esi,00100000
 jb originalcode6
-cmp esi,80000000
+cmp esi,FFFF0000
 jae originalcode6
 lea esi,[esi+A0]
 cmp esi,0
 je originalcode6
 cmp esi,00100000
 jb originalcode6
-cmp esi,80000000
+cmp esi,FFFF0000
 jae originalcode6
 movaps xmm0,[esi]
 movaps [player_velocity],xmm0
@@ -3702,6 +3706,9 @@ globalalloc(parkour_mode_enable,1)
 globalalloc(forced_hang_enable,1)
 globalalloc(parkour_mode_hud_hide_f,1)
 
+parkour_mode_enable:
+db 00
+
 pause:
 mov [pause_f],cl
 mov ecx,[esi+0C]
@@ -4838,6 +4845,8 @@ je forced_hang_code
 jmp originalcode4
 
 forced_hang_code:
+cmp [ebx+14],00004000
+je originalcode4
 mov [ebx+14],00000080
 jmp originalcode4
 

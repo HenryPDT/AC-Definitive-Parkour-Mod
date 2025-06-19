@@ -285,52 +285,56 @@ cmp esi,0
 je originalcode6
 cmp esi,00100000
 jb originalcode6
+cmp esi,FFFF0000
+jae originalcode6
 mov esi,[esi+0]
 cmp esi,0
 je originalcode6
 cmp esi,00100000
 jb originalcode6
+cmp esi,FFFF0000
+jae originalcode6
 mov esi,[esi+DC]
 cmp esi,0
 je originalcode6
 cmp esi,00100000
 jb originalcode6
-cmp esi,80000000
+cmp esi,FFFF0000
 jae originalcode6
 mov esi,[esi+84]
 cmp esi,0
 je originalcode6
 cmp esi,00100000
 jb originalcode6
-cmp esi,80000000
+cmp esi,FFFF0000
 jae originalcode6
 mov esi,[esi+D8]
 cmp esi,0
 je originalcode6
 cmp esi,00100000
 jb originalcode6
-cmp esi,80000000
+cmp esi,FFFF0000
 jae originalcode6
 mov esi,[esi+98]
 cmp esi,0
 je originalcode6
 cmp esi,00100000
 jb originalcode6
-cmp esi,80000000
+cmp esi,FFFF0000
 jae originalcode6
 mov esi,[esi+224]
 cmp esi,0
 je originalcode6
 cmp esi,00100000
 jb originalcode6
-cmp esi,80000000
+cmp esi,FFFF0000
 jae originalcode6
 lea esi,[esi+A0]
 cmp esi,0
 je originalcode6
 cmp esi,00100000
 jb originalcode6
-cmp esi,80000000
+cmp esi,FFFF0000
 jae originalcode6
 movaps xmm0,[esi]
 movaps [player_velocity],xmm0
@@ -3663,6 +3667,9 @@ globalalloc(parkour_mode_enable,1)
 globalalloc(forced_hang_enable,1)
 globalalloc(parkour_mode_hud_hide_f,1)
 
+parkour_mode_enable:
+db 00
+
 pause:
 mov [pause_f],al
 mov ecx,[esi+08]
@@ -5033,6 +5040,8 @@ je forced_hang_code
 jmp originalcode4
 
 forced_hang_code:
+cmp [ebx+14],00080000
+je originalcode4
 mov [ebx+14],00000100
 jmp originalcode4
 

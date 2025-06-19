@@ -320,52 +320,56 @@ cmp edx,0
 je originalcode6
 cmp edx,00100000
 jb originalcode6
+cmp edx,FFFF0000
+jae originalcode6
 mov edx,[edx+10]
 cmp edx,0
 je originalcode6
 cmp edx,00100000
 jb originalcode6
+cmp edx,FFFF0000
+jae originalcode6
 mov edx,[edx+3C]
 cmp edx,0
 je originalcode6
 cmp edx,00100000
 jb originalcode6
-cmp edx,80000000
+cmp edx,FFFF0000
 jae originalcode6
 mov edx,[edx+0]
 cmp edx,0
 je originalcode6
 cmp edx,00100000
 jb originalcode6
-cmp edx,80000000
+cmp edx,FFFF0000
 jae originalcode6
 mov edx,[edx+6C]
 cmp edx,0
 je originalcode6
 cmp edx,00100000
 jb originalcode6
-cmp edx,80000000
+cmp edx,FFFF0000
 jae originalcode6
 mov edx,[edx+A4]
 cmp edx,0
 je originalcode6
 cmp edx,00100000
 jb originalcode6
-cmp edx,80000000
+cmp edx,FFFF0000
 jae originalcode6
 mov edx,[edx+0]
 cmp edx,0
 je originalcode6
 cmp edx,00100000
 jb originalcode6
-cmp edx,80000000
+cmp edx,FFFF0000
 jae originalcode6
 lea edx,[edx+90]
 cmp edx,0
 je originalcode6
 cmp edx,00100000
 jb originalcode6
-cmp edx,80000000
+cmp edx,FFFF0000
 jae originalcode6
 movaps xmm0,[edx]
 movaps [player_velocity],xmm0
@@ -3642,6 +3646,9 @@ globalalloc(parkour_mode_enable,1)
 globalalloc(forced_hang_enable,1)
 globalalloc(parkour_mode_hud_hide_f,1)
 
+parkour_mode_enable:
+db 00
+
 pause:
 mov al,[eax+5C]
 mov [pause_f],al
@@ -5133,6 +5140,8 @@ je forced_hang_code
 jmp originalcode4
 
 forced_hang_code:
+cmp [ebp+14],00004000
+je originalcode4
 mov [ebp+14],00000080
 jmp originalcode4
 
