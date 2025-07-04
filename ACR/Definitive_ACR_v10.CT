@@ -2055,13 +2055,8 @@ cmp byte ptr [freeform_enable],00
 je dive_beam_alt
 cmp byte ptr [bindLegs],01
 je dive_beam_alt
-cmp byte ptr [bindEmptyHand],01
-je drop_to_fall_2
-cmp byte ptr [vault_enable],01
-je drop_to_fall_2
-jmp dive_beam_alt
-
-drop_to_fall_2:
+cmp byte ptr [bindEmptyHand],00
+je dive_beam_alt
 mov [drop_to_fall_enable],01
 
 dive_beam_alt:
