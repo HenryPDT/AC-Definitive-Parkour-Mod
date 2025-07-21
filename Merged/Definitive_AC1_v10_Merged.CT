@@ -10348,7 +10348,7 @@ if syntaxcheck then return end
 
 local config_enable = {
     [1] = {
-        dynamic1 = "\"AssassinsCreed_Dx10.exe\"+C82520:",
+        dynamic1 = "\"AssassinsCreed_Dx10.exe\"+D55CBC:",
         dynamic2 = "AssassinsCreed_Dx10.exe+CB2170",
         dynamic3 = "\"AssassinsCreed_Dx10.exe\"+CC1565:",
         dynamic4 = "\"AssassinsCreed_Dx10.exe\"+CC151F:",
@@ -10356,7 +10356,7 @@ local config_enable = {
         dynamic6 = "\"AssassinsCreed_Dx10.exe\"+8F2722:"
     },
     [2] = {
-        dynamic1 = "\"AssassinsCreed_Dx9.exe\"+AAF6F0:",
+        dynamic1 = "\"AssassinsCreed_Dx9.exe\"+B82E8C:",
         dynamic2 = "AssassinsCreed_Dx9.exe+ADF340",
         dynamic3 = "\"AssassinsCreed_Dx9.exe\"+AEE735:",
         dynamic4 = "\"AssassinsCreed_Dx9.exe\"+AEE6EF:",
@@ -10653,14 +10653,14 @@ movaps xmm0,[eax+10]
 movaps [player_rotation],xmm0
 movaps xmm0,[eax+30]
 movaps [player_coords],xmm0
-movaps xmm3,[esp+20]
+mov eax,[esp+18]
 
 exit1:
 jmp returnhere1
 
 %s
 jmp coords_modifier_1
-nop 4
+nop 3
 returnhere1:
 
 
@@ -10784,7 +10784,7 @@ if syntaxcheck then return end
 
 local config_disable = {
     [1] = {
-        dynamic1 = "\"AssassinsCreed_Dx10.exe\"+C82520:",
+        dynamic1 = "\"AssassinsCreed_Dx10.exe\"+D55CBC:",
         dynamic2 = "\"AssassinsCreed_Dx10.exe\"+CC1565:",
         dynamic3 = "AssassinsCreed_Dx10.exe+CB2170",
         dynamic4 = "\"AssassinsCreed_Dx10.exe\"+CC151F:",
@@ -10792,7 +10792,7 @@ local config_disable = {
         dynamic6 = "AssassinsCreed_Dx10.exe+8F28F7"
     },
     [2] = {
-        dynamic1 = "\"AssassinsCreed_Dx9.exe\"+AAF6F0:",
+        dynamic1 = "\"AssassinsCreed_Dx9.exe\"+B82E8C:",
         dynamic2 = "\"AssassinsCreed_Dx9.exe\"+AEE735:",
         dynamic3 = "AssassinsCreed_Dx9.exe+ADF340",
         dynamic4 = "\"AssassinsCreed_Dx9.exe\"+AEE6EF:",
@@ -10806,9 +10806,9 @@ if not addrD then error("Could not determine disable addresses for the current g
 
 local disableScript = string.format([==[
 %s
-db 0F 28 40 30 0F 28 5C 24 20
+db 0F 28 40 30 8B 44 24 18
 //movaps xmm0,[eax+30]
-//movaps xmm3,[esp+20]
+//mov eax,[esp+18]
 
 %s
 db E9 06 0C FF FF

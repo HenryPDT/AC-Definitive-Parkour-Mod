@@ -8056,14 +8056,14 @@ movaps xmm0,[eax+10]
 movaps [player_rotation],xmm0
 movaps xmm0,[eax+30]
 movaps [player_coords],xmm0
-movaps xmm3,[esp+20]
+mov eax,[esp+18]
 
 exit1:
 jmp returnhere1
 
-"AssassinsCreed_Dx9.exe"+AAF6F0:
+"AssassinsCreed_Dx9.exe"+B82E8C:
 jmp coords_modifier_1
-nop 4
+nop 3
 returnhere1:
 
 
@@ -8173,10 +8173,10 @@ returnhere4:
 
 
 [DISABLE]
-"AssassinsCreed_Dx9.exe"+AAF6F0:
-db 0F 28 40 30 0F 28 5C 24 20
+"AssassinsCreed_Dx9.exe"+B82E8C:
+db 0F 28 40 30 8B 44 24 18
 //movaps xmm0,[eax+30]
-//movaps xmm3,[esp+20]
+//mov eax,[esp+18]
 
 "AssassinsCreed_Dx9.exe"+AEE735:
 db E9 06 0C FF FF
