@@ -269,82 +269,39 @@ label(originalcode6)
 label(exit6)
 
 get_velocity:
-mov [pVelocity],eax
-push edx
-mov edx,eax
+mov eax,[ecx+8]
+mov edx,[pEntity]
+cmp eax,0
+je originalcode6
 cmp edx,0
 je originalcode6
-cmp edx,00100000
-jb originalcode6
-cmp edx,FFFF0000
-jae originalcode6
-mov edx,[edx+10]
-cmp edx,0
+cmp eax,edx
+jne originalcode6
+mov eax,[ecx+38]
+cmp eax,C11CCCCD
+jne originalcode6
+lea eax,[ecx+90]
+cmp eax,0
 je originalcode6
-cmp edx,00100000
-jb originalcode6
-cmp edx,FFFF0000
-jae originalcode6
-mov edx,[edx+3C]
-cmp edx,0
-je originalcode6
-cmp edx,00100000
-jb originalcode6
-cmp edx,FFFF0000
-jae originalcode6
-mov edx,[edx+0]
-cmp edx,0
-je originalcode6
-cmp edx,00100000
-jb originalcode6
-cmp edx,FFFF0000
-jae originalcode6
-mov edx,[edx+6C]
-cmp edx,0
-je originalcode6
-cmp edx,00100000
-jb originalcode6
-cmp edx,FFFF0000
-jae originalcode6
-mov edx,[edx+A4]
-cmp edx,0
-je originalcode6
-cmp edx,00100000
-jb originalcode6
-cmp edx,FFFF0000
-jae originalcode6
-mov edx,[edx+0]
-cmp edx,0
-je originalcode6
-cmp edx,00100000
-jb originalcode6
-cmp edx,FFFF0000
-jae originalcode6
-lea edx,[edx+90]
-cmp edx,0
-je originalcode6
-cmp edx,00100000
-jb originalcode6
-cmp edx,FFFF0000
-jae originalcode6
-movaps xmm0,[edx]
+movaps xmm0,[eax]
 movaps [player_velocity],xmm0
 movaps xmm1, xmm0
 mulps xmm1, xmm1
 haddps xmm1, xmm1
 sqrtss xmm1, xmm1
 movss [horizontal_velocity],xmm1
+xorps xmm0,xmm0
+xorps xmm1,xmm1
 
 originalcode6:
-pop edx
-mov ebp,[esi+000001D4]
+mov eax,[ecx]
+mov edx,[eax+10]
 
 exit6:
 jmp returnhere6
 
-"AssassinsCreed_Dx9.exe"+74B9D:
+"AssassinsCreed_Dx9.exe"+52DA80:
 jmp get_velocity
-nop
 returnhere6:
 
 
@@ -648,9 +605,10 @@ db D9 9E 44 12 00 00
 db 0F 29 86 70 12 00 00
 //movaps [esi+00001270],xmm0
 
-"AssassinsCreed_Dx9.exe"+74B9D:
-db 8B AE D4 01 00 00
-//mov ebp,[esi+000001D4]
+"AssassinsCreed_Dx9.exe"+52DA80:
+db 8B 01 8B 50 10
+//mov eax,[ecx]
+//mov edx,[eax+10]
 
 "AssassinsCreed_Dx9.exe"+A0BF23:
 db D9 5C 24 20 80 7D 08 00
@@ -6098,32 +6056,12 @@ dealloc(prescriptive_ledge_grab)
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-alloc(hang,2048)
-label(returnhere)
-label(originalcode)
-label(exit)
-
-globalalloc(forced_hang_enable,1)
-globalalloc(vanilla_beam_entry_enable,1)
-
-hang:
-
-originalcode:
-mov [edi+10],ecx
-movaps xmm0,[esi]
-
-exit:
-jmp returnhere
-
-"AssassinsCreed_Dx9.exe"+9D05A9:
-jmp hang
-nop
-returnhere:
-
-
 alloc(pole_to_beam,2048)
 label(returnhere2)
 label(exit2)
+
+globalalloc(forced_hang_enable,1)
+globalalloc(vanilla_beam_entry_enable,1)
 
 pole_to_beam:
 mov esi,[esp+0000054C]
@@ -6248,11 +6186,6 @@ returnhere8:
 
 
 [DISABLE]
-"AssassinsCreed_Dx9.exe"+9D05A9:
-db 89 4F 10 0F 28 06
-//mov [edi+10],ecx
-//movaps xmm0,[esi]
-
 "AssassinsCreed_Dx9.exe"+A1A128:
 db 8B B4 24 4C 05 00 00
 //mov esi,[esp+0000054C]
@@ -6284,7 +6217,6 @@ db 75 08 39 86 04 07 00 00
 db 39 86 00 07 00 00
 //cmp [esi+00000700],eax
 
-dealloc(hang)
 dealloc(pole_to_beam)
 dealloc(release_beam)
 dealloc(pull_up)

@@ -274,96 +274,36 @@ label(originalcode6)
 label(exit6)
 
 get_velocity:
-mov [pVelocity],eax
-push esi
-mov esi,eax
-cmp esi,0
+mov eax,[ecx+8]
+mov edx,[pEntity]
+cmp eax,0
 je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+C]
-cmp esi,0
+cmp edx,0
 je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+4]
-cmp esi,0
+cmp eax,edx
+jne originalcode6
+lea eax,[ecx+A0]
+cmp eax,0
 je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+0]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+18]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+5E8]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+40]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+0]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+60]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-lea esi,[esi+A0]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-movaps xmm0,[esi]
+movaps xmm0,[eax]
 movaps [player_velocity],xmm0
 movaps xmm1, xmm0
 mulps xmm1, xmm1
 haddps xmm1, xmm1
 sqrtss xmm1, xmm1
 movss [horizontal_velocity],xmm1
+xorps xmm0,xmm0
+xorps xmm1,xmm1
 
 originalcode6:
-pop esi
-and ecx,00003FFF
+mov eax,[ecx]
+mov edx,[eax+10]
 
 exit6:
 jmp returnhere6
 
-"ACBSP.exe"+CE4DEF:
+"ACBSP.exe"+7A1ED3:
 jmp get_velocity
-nop
 returnhere6:
 
 
@@ -722,9 +662,10 @@ db D9 9E A8 22 00 00
 db 0F 29 86 D0 22 00 00
 //movaps [esi+000022D0],xmm0
 
-"ACBSP.exe"+CE4DEF:
-db 81 E1 FF 3F 00 00
-//and ecx,00003FFF
+"ACBSP.exe"+7A1ED3:
+db 8B 01 8B 50 10
+//mov eax,[ecx]
+//mov edx,[eax+10]
 
 "ACBSP.exe"+E0AE78:
 db D9 5D C8 80 7B 08 00
@@ -6263,22 +6204,32 @@ label(exit)
 
 globalalloc(horse_flip_enable,1)
 globalalloc(on_hang_free_f,1)
+globalalloc(horse_flip_speed,4)
+
+horse_flip_speed:
+dd (float)3
 
 horse_flip:
 cmp byte ptr [horse_flip_enable],01
 jne originalcode
-mov eax,00000005
-jmp exit
+cmp eax,03
+jne originalcode
+mov [ebx+30],05
+mov eax,[ebx+30]
+mov [ebp-10],eax
+mov esi,01
+jmp ACBSP.exe+127830E
 
 originalcode:
-cmp byte ptr [esi+00000AAC],00
-mov eax,00000003
+mov [ebp-10],eax
+cmp eax,05
 
 exit:
 jmp returnhere
 
-"ACBSP.exe"+DB2405:
+"ACBSP.exe"+12782DA:
 jmp horse_flip
+nop
 returnhere:
 
 
@@ -6305,18 +6256,49 @@ nop
 returnhere2:
 
 
+alloc(horse_flip_3,2048)
+label(returnhere3)
+label(originalcode3)
+label(exit3)
+
+horse_flip_3:
+cmp byte ptr [horse_flip_enable],01
+jne originalcode3
+movss xmm0,[horse_flip_speed]
+jmp ACBSP.exe+12793B3
+
+originalcode3:
+comisd xmm1,xmm7
+jb ACBSP.exe+12793B3
+
+exit3:
+jmp returnhere3
+
+"ACBSP.exe"+12793A5:
+jmp horse_flip_3
+nop
+returnhere3:
+
+
 [DISABLE]
-"ACBSP.exe"+DB2405:
-db B8 03 00 00 00
-//mov eax,00000003
+"ACBSP.exe"+12782DA:
+db 89 45 F0 83 F8 05
+//mov [ebp-10],eax
+//cmp eax,05
 
 "ACBSP.exe"+1278AD4:
 db 66 0F 2F C8 76 29
 //comisd xmm1,xmm0
 //jna ACBSP.exe+1278B03
 
+"ACBSP.exe"+12793A5:
+db 66 0F 2F CF 72 08
+//comisd xmm1,xmm7
+//jb ACBSP.exe+12793B3
+
 dealloc(horse_flip)
 dealloc(horse_flip_2)
+dealloc(horse_flip_3)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
@@ -6727,56 +6709,35 @@ dealloc(prescriptive_ledge_grab)
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-alloc(hang,2048)
+alloc(ledge_self_flip,2048)
 label(returnhere)
 label(originalcode)
 label(exit)
 
-globalalloc(pVelocity,4)
 globalalloc(ledge_self_flip_f,1)
 globalalloc(self_flip_f,1)
 globalalloc(forced_hang_enable,1)
 globalalloc(horse_flip_enable,1)
 globalalloc(vanilla_beam_entry_enable,1)
 
-hang:
+ledge_self_flip:
 mov [ledge_self_flip_f],00
-push eax
-mov eax,[pVelocity]
-cmp eax,0
-je originalcode
-mov eax,[eax+C]
-cmp eax,0
-je originalcode
-mov eax,[eax+4]
-cmp eax,0
-je originalcode
-mov eax,[eax+0]
-cmp eax,0
-je originalcode
-mov eax,[eax+18]
-cmp eax,0
-je originalcode
-mov eax,[eax+644]
-cmp eax,0
-je originalcode
-shr eax,10
-cmp al,00
+mov eax,[ecx]
+lea edx,[ecx]
+mov edx,[edx+644]
+shr edx,10
+cmp dl,00
 jne originalcode
 mov [ledge_self_flip_f],01
 
 originalcode:
-pop eax
-mov [eax+30],ecx
-inc edi
-add eax,04
+mov edx,[eax+44]
 
 exit:
 jmp returnhere
 
-"ACBSP.exe"+DB573A:
-jmp hang
-nop 2
+"ACBSP.exe"+1087EF6:
+jmp ledge_self_flip
 returnhere:
 
 
@@ -6948,11 +6909,10 @@ returnhere10:
 
 
 [DISABLE]
-"ACBSP.exe"+DB573A:
-db 89 48 30 47 83 C0 04
-//mov [eax+30],ecx
-//inc edi
-//add eax,04
+"ACBSP.exe"+1087EF6:
+db 8B 01 8B 50 44
+//mov eax,[ecx]
+//mov edx,[eax+44]
 
 "ACBSP.exe"+1B545A6:
 db 8B 75 B0 0F 28 D4
@@ -6995,7 +6955,7 @@ db 74 10 39 86 74 0A 00 00
 db B8 03 00 00 00
 //mov eax,00000003
 
-dealloc(hang)
+dealloc(ledge_self_flip)
 dealloc(pole_to_beam)
 dealloc(release_beam)
 dealloc(pull_up)

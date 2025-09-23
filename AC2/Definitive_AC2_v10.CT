@@ -276,96 +276,36 @@ label(originalcode6)
 label(exit6)
 
 get_velocity:
-mov [pVelocity],eax
-push esi
-mov esi,eax
-cmp esi,0
+mov eax,[ecx+8]
+mov edx,[pEntity]
+cmp eax,0
 je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+C]
-cmp esi,0
+cmp edx,0
 je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+4]
-cmp esi,0
+cmp eax,edx
+jne originalcode6
+lea eax,[ecx+A0]
+cmp eax,0
 je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+0]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+18]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+19C]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+0]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+144]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+C]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-lea esi,[esi+A0]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-movaps xmm0,[esi]
+movaps xmm0,[eax]
 movaps [player_velocity],xmm0
 movaps xmm1, xmm0
 mulps xmm1, xmm1
 haddps xmm1, xmm1
 sqrtss xmm1, xmm1
 movss [horizontal_velocity],xmm1
+xorps xmm0,xmm0
+xorps xmm1,xmm1
 
 originalcode6:
-pop esi
-and ecx,00003FFF
+mov eax,[ecx]
+mov edx,[eax+10]
 
 exit6:
 jmp returnhere6
 
-"AssassinsCreedIIGame.exe"+5BBB7F:
+"AssassinsCreedIIGame.exe"+10AE8E3:
 jmp get_velocity
-nop
 returnhere6:
 
 
@@ -725,9 +665,10 @@ db D9 9E C4 0E 00 00
 db 0F 29 86 F0 0E 00 00
 //movaps [esi+00000EF0],xmm0
 
-"AssassinsCreedIIGame.exe"+5BBB7F:
-db 81 E1 FF 3F 00 00
-//and ecx,00003FFF
+"AssassinsCreedIIGame.exe"+10AE8E3:
+db 8B 01 8B 50 10
+//mov eax,[ecx]
+//mov edx,[eax+10]
 
 "AssassinsCreedIIGame.exe"+6A2680:
 db D9 5D C4 80 7B 08 00
@@ -6619,32 +6560,12 @@ dealloc(prescriptive_ledge_grab)
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
-alloc(hang,2048)
-label(returnhere)
-label(originalcode)
-label(exit)
-
-globalalloc(forced_hang_enable,1)
-globalalloc(vanilla_beam_entry_enable,1)
-
-hang:
-
-originalcode:
-mov [eax+30],ecx
-add edi,01
-
-exit:
-jmp returnhere
-
-"AssassinsCreedIIGame.exe"+65330A:
-jmp hang
-nop
-returnhere:
-
-
 alloc(pole_to_beam,2048)
 label(returnhere2)
 label(exit2)
+
+globalalloc(forced_hang_enable,1)
+globalalloc(vanilla_beam_entry_enable,1)
 
 pole_to_beam:
 mov ecx,[ebp-000002C4]
@@ -6799,11 +6720,6 @@ returnhere10:
 
 
 [DISABLE]
-"AssassinsCreedIIGame.exe"+65330A:
-db 89 48 30 83 C7 01
-//mov [eax+30],ecx
-//add edi,01
-
 "AssassinsCreedIIGame.exe"+F2CE70:
 db 8B 8D 3C FD FF FF
 //mov ecx,[ebp-000002C4]
@@ -6844,7 +6760,6 @@ db 74 10 39 86 54 0A 00 00
 db B8 03 00 00 00
 //mov eax,00000003
 
-dealloc(hang)
 dealloc(pole_to_beam)
 dealloc(release_beam)
 dealloc(pull_up)

@@ -46,7 +46,7 @@ local config_enable = {
         dynamic1 = "\"AssassinsCreed_Dx10.exe\"+94D468:",
         dynamic2 = "\"AssassinsCreed_Dx10.exe\"+CC1123:",
         dynamic3 = "\"AssassinsCreed_Dx10.exe\"+CC1018:",
-        dynamic4 = "\"AssassinsCreed_Dx10.exe\"+8CCED:",
+        dynamic4 = "\"AssassinsCreed_Dx10.exe\"+511C80:",
         dynamic5 = "\"AssassinsCreed_Dx10.exe\"+BB85E3:",
         dynamic6 = "\"AssassinsCreed_Dx10.exe\"+B79F31:",
         dynamic7 = "\"AssassinsCreed_Dx10.exe\"+CB8F6F:",
@@ -63,7 +63,7 @@ local config_enable = {
         dynamic1 = "\"AssassinsCreed_Dx9.exe\"+779478:",
         dynamic2 = "\"AssassinsCreed_Dx9.exe\"+AEE2F3:",
         dynamic3 = "\"AssassinsCreed_Dx9.exe\"+AEE1E8:",
-        dynamic4 = "\"AssassinsCreed_Dx9.exe\"+74B9D:",
+        dynamic4 = "\"AssassinsCreed_Dx9.exe\"+52DA80:",
         dynamic5 = "\"AssassinsCreed_Dx9.exe\"+A0BF23:",
         dynamic6 = "\"AssassinsCreed_Dx9.exe\"+9CD8A1:",
         dynamic7 = "\"AssassinsCreed_Dx9.exe\"+AE613F:",
@@ -313,82 +313,39 @@ label(originalcode6)
 label(exit6)
 
 get_velocity:
-mov [pVelocity],eax
-push edx
-mov edx,eax
+mov eax,[ecx+8]
+mov edx,[pEntity]
+cmp eax,0
+je originalcode6
 cmp edx,0
 je originalcode6
-cmp edx,00100000
-jb originalcode6
-cmp edx,FFFF0000
-jae originalcode6
-mov edx,[edx+10]
-cmp edx,0
+cmp eax,edx
+jne originalcode6
+mov eax,[ecx+38]
+cmp eax,C11CCCCD
+jne originalcode6
+lea eax,[ecx+90]
+cmp eax,0
 je originalcode6
-cmp edx,00100000
-jb originalcode6
-cmp edx,FFFF0000
-jae originalcode6
-mov edx,[edx+3C]
-cmp edx,0
-je originalcode6
-cmp edx,00100000
-jb originalcode6
-cmp edx,FFFF0000
-jae originalcode6
-mov edx,[edx+0]
-cmp edx,0
-je originalcode6
-cmp edx,00100000
-jb originalcode6
-cmp edx,FFFF0000
-jae originalcode6
-mov edx,[edx+6C]
-cmp edx,0
-je originalcode6
-cmp edx,00100000
-jb originalcode6
-cmp edx,FFFF0000
-jae originalcode6
-mov edx,[edx+A4]
-cmp edx,0
-je originalcode6
-cmp edx,00100000
-jb originalcode6
-cmp edx,FFFF0000
-jae originalcode6
-mov edx,[edx+0]
-cmp edx,0
-je originalcode6
-cmp edx,00100000
-jb originalcode6
-cmp edx,FFFF0000
-jae originalcode6
-lea edx,[edx+90]
-cmp edx,0
-je originalcode6
-cmp edx,00100000
-jb originalcode6
-cmp edx,FFFF0000
-jae originalcode6
-movaps xmm0,[edx]
+movaps xmm0,[eax]
 movaps [player_velocity],xmm0
 movaps xmm1, xmm0
 mulps xmm1, xmm1
 haddps xmm1, xmm1
 sqrtss xmm1, xmm1
 movss [horizontal_velocity],xmm1
+xorps xmm0,xmm0
+xorps xmm1,xmm1
 
 originalcode6:
-pop edx
-mov ebp,[esi+000001D4]
+mov eax,[ecx]
+mov edx,[eax+10]
 
 exit6:
 jmp returnhere6
 
 %s
 jmp get_velocity
-nop
 returnhere6:
 
 
@@ -687,7 +644,7 @@ local config_disable = {
         dynamic1 = "\"AssassinsCreed_Dx10.exe\"+94D468:",
         dynamic2 = "\"AssassinsCreed_Dx10.exe\"+CC1123:",
         dynamic3 = "\"AssassinsCreed_Dx10.exe\"+CC1018:",
-        dynamic4 = "\"AssassinsCreed_Dx10.exe\"+8CCED:",
+        dynamic4 = "\"AssassinsCreed_Dx10.exe\"+511C80:",
         dynamic5 = "\"AssassinsCreed_Dx10.exe\"+BB85E3:",
         dynamic6 = "\"AssassinsCreed_Dx10.exe\"+B79F31:",
         dynamic7 = "\"AssassinsCreed_Dx10.exe\"+CB8F6F:",
@@ -704,7 +661,7 @@ local config_disable = {
         dynamic1 = "\"AssassinsCreed_Dx9.exe\"+779478:",
         dynamic2 = "\"AssassinsCreed_Dx9.exe\"+AEE2F3:",
         dynamic3 = "\"AssassinsCreed_Dx9.exe\"+AEE1E8:",
-        dynamic4 = "\"AssassinsCreed_Dx9.exe\"+74B9D:",
+        dynamic4 = "\"AssassinsCreed_Dx9.exe\"+52DA80:",
         dynamic5 = "\"AssassinsCreed_Dx9.exe\"+A0BF23:",
         dynamic6 = "\"AssassinsCreed_Dx9.exe\"+9CD8A1:",
         dynamic7 = "\"AssassinsCreed_Dx9.exe\"+AE613F:",
@@ -746,8 +703,9 @@ db 0F 29 86 70 12 00 00
 //movaps [esi+00001270],xmm0
 
 %s
-db 8B AE D4 01 00 00
-//mov ebp,[esi+000001D4]
+db 8B 01 8B 50 10
+//mov eax,[ecx]
+//mov edx,[eax+10]
 
 %s
 db D9 5C 24 20 80 7D 08 00
@@ -7693,36 +7651,34 @@ if syntaxcheck then return end
 
 local config_enable = {
     [1] = {
-        dynamic1 = "\"AssassinsCreed_Dx10.exe\"+B7CC39:",
-        dynamic2 = "\"AssassinsCreed_Dx10.exe\"+BECF68:",
-        dynamic3 = "AssassinsCreed_Dx10.exe+B796AD",
-        dynamic4 = "\"AssassinsCreed_Dx10.exe\"+B7969A:",
-        dynamic5 = "AssassinsCreed_Dx10.exe+B8E980",
-        dynamic6 = "\"AssassinsCreed_Dx10.exe\"+B8E954:",
-        dynamic7 = "AssassinsCreed_Dx10.exe+B7FE23",
-        dynamic8 = "\"AssassinsCreed_Dx10.exe\"+B7FE10:",
-        dynamic9 = "AssassinsCreed_Dx10.exe+B7FF21",
-        dynamic10 = "\"AssassinsCreed_Dx10.exe\"+B7FF16:",
-        dynamic11 = "AssassinsCreed_Dx10.exe+B799EA",
-        dynamic12 = "\"AssassinsCreed_Dx10.exe\"+B7999F:",
-        dynamic13 = "AssassinsCreed_Dx10.exe+B799A9",
-        dynamic14 = "\"AssassinsCreed_Dx10.exe\"+B79998:"
+        dynamic1 = "\"AssassinsCreed_Dx10.exe\"+BECF68:",
+        dynamic2 = "AssassinsCreed_Dx10.exe+B796AD",
+        dynamic3 = "\"AssassinsCreed_Dx10.exe\"+B7969A:",
+        dynamic4 = "AssassinsCreed_Dx10.exe+B8E980",
+        dynamic5 = "\"AssassinsCreed_Dx10.exe\"+B8E954:",
+        dynamic6 = "AssassinsCreed_Dx10.exe+B7FE23",
+        dynamic7 = "\"AssassinsCreed_Dx10.exe\"+B7FE10:",
+        dynamic8 = "AssassinsCreed_Dx10.exe+B7FF21",
+        dynamic9 = "\"AssassinsCreed_Dx10.exe\"+B7FF16:",
+        dynamic10 = "AssassinsCreed_Dx10.exe+B799EA",
+        dynamic11 = "\"AssassinsCreed_Dx10.exe\"+B7999F:",
+        dynamic12 = "AssassinsCreed_Dx10.exe+B799A9",
+        dynamic13 = "\"AssassinsCreed_Dx10.exe\"+B79998:"
     },
     [2] = {
-        dynamic1 = "\"AssassinsCreed_Dx9.exe\"+9D05A9:",
-        dynamic2 = "\"AssassinsCreed_Dx9.exe\"+A1A128:",
-        dynamic3 = "AssassinsCreed_Dx9.exe+9CD01D",
-        dynamic4 = "\"AssassinsCreed_Dx9.exe\"+9CD00A:",
-        dynamic5 = "AssassinsCreed_Dx9.exe+9E22F0",
-        dynamic6 = "\"AssassinsCreed_Dx9.exe\"+9E22C4:",
-        dynamic7 = "AssassinsCreed_Dx9.exe+9D3793",
-        dynamic8 = "\"AssassinsCreed_Dx9.exe\"+9D3780:",
-        dynamic9 = "AssassinsCreed_Dx9.exe+9D3891",
-        dynamic10 = "\"AssassinsCreed_Dx9.exe\"+9D3886:",
-        dynamic11 = "AssassinsCreed_Dx9.exe+9CD35A",
-        dynamic12 = "\"AssassinsCreed_Dx9.exe\"+9CD30F:",
-        dynamic13 = "AssassinsCreed_Dx9.exe+9CD319",
-        dynamic14 = "\"AssassinsCreed_Dx9.exe\"+9CD308:"
+        dynamic1 = "\"AssassinsCreed_Dx9.exe\"+A1A128:",
+        dynamic2 = "AssassinsCreed_Dx9.exe+9CD01D",
+        dynamic3 = "\"AssassinsCreed_Dx9.exe\"+9CD00A:",
+        dynamic4 = "AssassinsCreed_Dx9.exe+9E22F0",
+        dynamic5 = "\"AssassinsCreed_Dx9.exe\"+9E22C4:",
+        dynamic6 = "AssassinsCreed_Dx9.exe+9D3793",
+        dynamic7 = "\"AssassinsCreed_Dx9.exe\"+9D3780:",
+        dynamic8 = "AssassinsCreed_Dx9.exe+9D3891",
+        dynamic9 = "\"AssassinsCreed_Dx9.exe\"+9D3886:",
+        dynamic10 = "AssassinsCreed_Dx9.exe+9CD35A",
+        dynamic11 = "\"AssassinsCreed_Dx9.exe\"+9CD30F:",
+        dynamic12 = "AssassinsCreed_Dx9.exe+9CD319",
+        dynamic13 = "\"AssassinsCreed_Dx9.exe\"+9CD308:"
     }
 }
 
@@ -7730,32 +7686,12 @@ local addrE = config_enable[version]
 if not addrE then error("Could not determine addresses for the current game version (" .. tostring(version) .. ")") end
 
 local enableScript = string.format([==[
-alloc(hang,2048)
-label(returnhere)
-label(originalcode)
-label(exit)
-
-globalalloc(forced_hang_enable,1)
-globalalloc(vanilla_beam_entry_enable,1)
-
-hang:
-
-originalcode:
-mov [edi+10],ecx
-movaps xmm0,[esi]
-
-exit:
-jmp returnhere
-
-%s
-jmp hang
-nop
-returnhere:
-
-
 alloc(pole_to_beam,2048)
 label(returnhere2)
 label(exit2)
+
+globalalloc(forced_hang_enable,1)
+globalalloc(vanilla_beam_entry_enable,1)
 
 pole_to_beam:
 mov esi,[esp+0000054C]
@@ -7877,7 +7813,7 @@ jmp returnhere8
 jmp vanilla_beam_entry
 nop
 returnhere8:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14)
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -7894,34 +7830,32 @@ if syntaxcheck then return end
 
 local config_disable = {
     [1] = {
-        dynamic1 = "\"AssassinsCreed_Dx10.exe\"+B7CC39:",
-        dynamic2 = "\"AssassinsCreed_Dx10.exe\"+BECF68:",
-        dynamic3 = "\"AssassinsCreed_Dx10.exe\"+B7969A:",
-        dynamic4 = "AssassinsCreed_Dx10.exe+B79737",
-        dynamic5 = "\"AssassinsCreed_Dx10.exe\"+B8E954:",
-        dynamic6 = "AssassinsCreed_Dx10.exe+B8ED45",
-        dynamic7 = "\"AssassinsCreed_Dx10.exe\"+B7FE10:",
-        dynamic8 = "AssassinsCreed_Dx10.exe+B7FF1C",
-        dynamic9 = "\"AssassinsCreed_Dx10.exe\"+B7FF16:",
-        dynamic10 = "AssassinsCreed_Dx10.exe+B7FF21",
-        dynamic11 = "\"AssassinsCreed_Dx10.exe\"+B7999F:",
-        dynamic12 = "AssassinsCreed_Dx10.exe+B799A9",
-        dynamic13 = "\"AssassinsCreed_Dx10.exe\"+B79998:"
+        dynamic1 = "\"AssassinsCreed_Dx10.exe\"+BECF68:",
+        dynamic2 = "\"AssassinsCreed_Dx10.exe\"+B7969A:",
+        dynamic3 = "AssassinsCreed_Dx10.exe+B79737",
+        dynamic4 = "\"AssassinsCreed_Dx10.exe\"+B8E954:",
+        dynamic5 = "AssassinsCreed_Dx10.exe+B8ED45",
+        dynamic6 = "\"AssassinsCreed_Dx10.exe\"+B7FE10:",
+        dynamic7 = "AssassinsCreed_Dx10.exe+B7FF1C",
+        dynamic8 = "\"AssassinsCreed_Dx10.exe\"+B7FF16:",
+        dynamic9 = "AssassinsCreed_Dx10.exe+B7FF21",
+        dynamic10 = "\"AssassinsCreed_Dx10.exe\"+B7999F:",
+        dynamic11 = "AssassinsCreed_Dx10.exe+B799A9",
+        dynamic12 = "\"AssassinsCreed_Dx10.exe\"+B79998:"
     },
     [2] = {
-        dynamic1 = "\"AssassinsCreed_Dx9.exe\"+9D05A9:",
-        dynamic2 = "\"AssassinsCreed_Dx9.exe\"+A1A128:",
-        dynamic3 = "\"AssassinsCreed_Dx9.exe\"+9CD00A:",
-        dynamic4 = "AssassinsCreed_Dx9.exe+9CD0A7",
-        dynamic5 = "\"AssassinsCreed_Dx9.exe\"+9E22C4:",
-        dynamic6 = "AssassinsCreed_Dx9.exe+9E26B5",
-        dynamic7 = "\"AssassinsCreed_Dx9.exe\"+9D3780:",
-        dynamic8 = "AssassinsCreed_Dx9.exe+9D388C",
-        dynamic9 = "\"AssassinsCreed_Dx9.exe\"+9D3886:",
-        dynamic10 = "AssassinsCreed_Dx9.exe+9D3891",
-        dynamic11 = "\"AssassinsCreed_Dx9.exe\"+9CD30F:",
-        dynamic12 = "AssassinsCreed_Dx9.exe+9CD319",
-        dynamic13 = "\"AssassinsCreed_Dx9.exe\"+9CD308:"
+        dynamic1 = "\"AssassinsCreed_Dx9.exe\"+A1A128:",
+        dynamic2 = "\"AssassinsCreed_Dx9.exe\"+9CD00A:",
+        dynamic3 = "AssassinsCreed_Dx9.exe+9CD0A7",
+        dynamic4 = "\"AssassinsCreed_Dx9.exe\"+9E22C4:",
+        dynamic5 = "AssassinsCreed_Dx9.exe+9E26B5",
+        dynamic6 = "\"AssassinsCreed_Dx9.exe\"+9D3780:",
+        dynamic7 = "AssassinsCreed_Dx9.exe+9D388C",
+        dynamic8 = "\"AssassinsCreed_Dx9.exe\"+9D3886:",
+        dynamic9 = "AssassinsCreed_Dx9.exe+9D3891",
+        dynamic10 = "\"AssassinsCreed_Dx9.exe\"+9CD30F:",
+        dynamic11 = "AssassinsCreed_Dx9.exe+9CD319",
+        dynamic12 = "\"AssassinsCreed_Dx9.exe\"+9CD308:"
     }
 }
 
@@ -7929,11 +7863,6 @@ local addrD = config_disable[version]
 if not addrD then error("Could not determine disable addresses for the current game version (" .. tostring(version) .. ")") end
 
 local disableScript = string.format([==[
-%s
-db 89 4F 10 0F 28 06
-//mov [edi+10],ecx
-//movaps xmm0,[esi]
-
 %s
 db 8B B4 24 4C 05 00 00
 //mov esi,[esp+0000054C]
@@ -7965,7 +7894,6 @@ db 75 08 39 86 04 07 00 00
 db 39 86 00 07 00 00
 //cmp [esi+00000700],eax
 
-dealloc(hang)
 dealloc(pole_to_beam)
 dealloc(release_beam)
 dealloc(pull_up)
@@ -7973,7 +7901,7 @@ dealloc(swing_idle)
 dealloc(swing_idle_2)
 dealloc(swing_entry)
 dealloc(vanilla_beam_entry)
-]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7, addrD.dynamic8, addrD.dynamic9, addrD.dynamic10, addrD.dynamic11, addrD.dynamic12, addrD.dynamic13)
+]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5, addrD.dynamic6, addrD.dynamic7, addrD.dynamic8, addrD.dynamic9, addrD.dynamic10, addrD.dynamic11, addrD.dynamic12)
 
 
 if disableInfo and disableInfo.info then

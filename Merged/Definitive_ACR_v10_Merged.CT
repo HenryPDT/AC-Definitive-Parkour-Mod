@@ -48,7 +48,7 @@ local config_enable = {
         dynamic3 = "\"ACRSP.exe\"+1829332:",
         dynamic4 = "\"ACRSP.exe\"+133F9E2:",
         dynamic5 = "\"ACRSP.exe\"+133F903:",
-        dynamic6 = "\"ACRSP.exe\"+3AC6B:",
+        dynamic6 = "\"ACRSP.exe\"+17B6543:",
         dynamic7 = "\"ACRSP.exe\"+6D08CE:",
         dynamic8 = "\"ACRSP.exe\"+665785:",
         dynamic9 = "\"ACRSP.exe\"+16FFFBD:",
@@ -68,7 +68,7 @@ local config_enable = {
         dynamic3 = "\"ACRSP.exe\"+185C902:",
         dynamic4 = "\"ACRSP.exe\"+1373432:",
         dynamic5 = "\"ACRSP.exe\"+1373353:",
-        dynamic6 = "\"ACRSP.exe\"+3ABCB:",
+        dynamic6 = "\"ACRSP.exe\"+17E9B03:",
         dynamic7 = "\"ACRSP.exe\"+701FFE:",
         dynamic8 = "\"ACRSP.exe\"+696F15:",
         dynamic9 = "\"ACRSP.exe\"+17339CD:",
@@ -323,90 +323,33 @@ label(originalcode6)
 label(exit6)
 
 get_velocity:
-mov [pVelocity],eax
-push esi
-mov esi,eax
-cmp esi,0
+mov eax,[ecx+8]
+mov edx,[pEntity]
+cmp eax,0
 je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+60]
-cmp esi,0
+cmp edx,0
 je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+0]
-cmp esi,0
+cmp eax,edx
+jne originalcode6
+mov eax,[ecx+0C]
+cmp eax,01000000
+jne originalcode6
+lea eax,[ecx+A0]
+cmp eax,0
 je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+114]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+8C]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+18]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+0]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+40]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+C]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-lea esi,[esi+A0]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-movaps xmm0,[esi]
+movaps xmm0,[eax]
 movaps [player_velocity],xmm0
 movaps xmm1, xmm0
 mulps xmm1, xmm1
 haddps xmm1, xmm1
 sqrtss xmm1, xmm1
 movss [horizontal_velocity],xmm1
+xorps xmm0,xmm0
+xorps xmm1,xmm1
 
 originalcode6:
-pop esi
-sub esp,10
-test eax,eax
+mov eax,[ecx]
+mov edx,[eax+10]
 
 exit6:
 jmp returnhere6
@@ -768,7 +711,7 @@ local config_disable = {
         dynamic3 = "\"ACRSP.exe\"+1829332:",
         dynamic4 = "\"ACRSP.exe\"+133F9E2:",
         dynamic5 = "\"ACRSP.exe\"+133F903:",
-        dynamic6 = "\"ACRSP.exe\"+3AC6B:",
+        dynamic6 = "\"ACRSP.exe\"+17B6543:",
         dynamic7 = "\"ACRSP.exe\"+6D08CE:",
         dynamic8 = "\"ACRSP.exe\"+665785:",
         dynamic9 = "\"ACRSP.exe\"+16FFFBD:",
@@ -788,7 +731,7 @@ local config_disable = {
         dynamic3 = "\"ACRSP.exe\"+185C902:",
         dynamic4 = "\"ACRSP.exe\"+1373432:",
         dynamic5 = "\"ACRSP.exe\"+1373353:",
-        dynamic6 = "\"ACRSP.exe\"+3ABCB:",
+        dynamic6 = "\"ACRSP.exe\"+17E9B03:",
         dynamic7 = "\"ACRSP.exe\"+701FFE:",
         dynamic8 = "\"ACRSP.exe\"+696F15:",
         dynamic9 = "\"ACRSP.exe\"+17339CD:",
@@ -830,9 +773,9 @@ db 0F 29 86 C0 23 00 00
 //movaps [esi+000023C0],xmm0
 
 %s
-db 83 EC 10 85 C0
-//sub esp,10
-//test eax,eax
+db 8B 01 8B 50 10
+//mov eax,[ecx]
+//mov edx,[eax+10]
 
 %s
 db D9 5D CC 80 7B 08 00
@@ -8195,16 +8138,24 @@ if syntaxcheck then return end
 
 local config_enable = {
     [1] = {
-        dynamic1 = "\"ACRSP.exe\"+664235:",
-        dynamic2 = "ACRSP.exe+BBB04B",
+        dynamic1 = "ACRSP.exe+BBA7CE",
+        dynamic2 = "\"ACRSP.exe\"+BBA79A:",
         dynamic3 = "ACRSP.exe+BBB04B",
-        dynamic4 = "\"ACRSP.exe\"+BBB01C:"
+        dynamic4 = "ACRSP.exe+BBB04B",
+        dynamic5 = "\"ACRSP.exe\"+BBB01C:",
+        dynamic6 = "ACRSP.exe+BBB8FE",
+        dynamic7 = "ACRSP.exe+BBB8FE",
+        dynamic8 = "\"ACRSP.exe\"+BBB8F0:"
     },
     [2] = {
-        dynamic1 = "\"ACRSP.exe\"+6959C5:",
-        dynamic2 = "ACRSP.exe+BEEAEB",
+        dynamic1 = "ACRSP.exe+BEE26E",
+        dynamic2 = "\"ACRSP.exe\"+BEE23A:",
         dynamic3 = "ACRSP.exe+BEEAEB",
-        dynamic4 = "\"ACRSP.exe\"+BEEABC:"
+        dynamic4 = "ACRSP.exe+BEEAEB",
+        dynamic5 = "\"ACRSP.exe\"+BEEABC:",
+        dynamic6 = "ACRSP.exe+BEF39E",
+        dynamic7 = "ACRSP.exe+BEF39E",
+        dynamic8 = "\"ACRSP.exe\"+BEF390:"
     }
 }
 
@@ -8219,22 +8170,32 @@ label(exit)
 
 globalalloc(horse_flip_enable,1)
 globalalloc(on_hang_free_f,1)
+globalalloc(horse_flip_speed,4)
+
+horse_flip_speed:
+dd (float)3
 
 horse_flip:
 cmp byte ptr [horse_flip_enable],01
 jne originalcode
-mov eax,00000005
-jmp exit
+cmp eax,03
+jne originalcode
+mov [ebx+30],05
+mov eax,[ebx+30]
+mov [ebp-18],eax
+mov edi,01
+jmp %s
 
 originalcode:
-cmp byte ptr [esi+00000BEC],00
-mov eax,00000003
+mov [ebp-18],eax
+cmp eax,05
 
 exit:
 jmp returnhere
 
 %s
 jmp horse_flip
+nop
 returnhere:
 
 
@@ -8259,7 +8220,31 @@ jmp returnhere2
 jmp horse_flip_2
 nop
 returnhere2:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4)
+
+
+alloc(horse_flip_3,2048)
+label(returnhere3)
+label(originalcode3)
+label(exit3)
+
+horse_flip_3:
+cmp byte ptr [horse_flip_enable],01
+jne originalcode3
+movss xmm0,[horse_flip_speed]
+jmp %s
+
+originalcode3:
+comisd xmm1,xmm7
+jb %s
+
+exit3:
+jmp returnhere3
+
+%s
+jmp horse_flip_3
+nop
+returnhere3:
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -8276,14 +8261,18 @@ if syntaxcheck then return end
 
 local config_disable = {
     [1] = {
-        dynamic1 = "\"ACRSP.exe\"+664235:",
+        dynamic1 = "\"ACRSP.exe\"+BBA79A:",
         dynamic2 = "\"ACRSP.exe\"+BBB01C:",
-        dynamic3 = "ACRSP.exe+BBB04B"
+        dynamic3 = "ACRSP.exe+BBB04B",
+        dynamic4 = "\"ACRSP.exe\"+BBB8F0:",
+        dynamic5 = "ACRSP.exe+BBB8FE"
     },
     [2] = {
-        dynamic1 = "\"ACRSP.exe\"+6959C5:",
+        dynamic1 = "\"ACRSP.exe\"+BEE23A:",
         dynamic2 = "\"ACRSP.exe\"+BEEABC:",
-        dynamic3 = "ACRSP.exe+BEEAEB"
+        dynamic3 = "ACRSP.exe+BEEAEB",
+        dynamic4 = "\"ACRSP.exe\"+BEF390:",
+        dynamic5 = "ACRSP.exe+BEF39E"
     }
 }
 
@@ -8292,17 +8281,24 @@ if not addrD then error("Could not determine disable addresses for the current g
 
 local disableScript = string.format([==[
 %s
-db B8 03 00 00 00
-//mov eax,00000003
+db 89 45 E8 83 F8 05
+//mov [ebp-18],eax
+//cmp eax,05
 
 %s
 db 66 0F 2F C8 76 29
 //comisd xmm1,xmm0
 //jna %s
 
+%s
+db 66 0F 2F CF 72 08
+//comisd xmm1,xmm7
+//jb %s
+
 dealloc(horse_flip)
 dealloc(horse_flip_2)
-]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3)
+dealloc(horse_flip_3)
+]==], addrD.dynamic1, addrD.dynamic2, addrD.dynamic3, addrD.dynamic4, addrD.dynamic5)
 
 
 if disableInfo and disableInfo.info then
@@ -8937,7 +8933,7 @@ if syntaxcheck then return end
 
 local config_enable = {
     [1] = {
-        dynamic1 = "\"ACRSP.exe\"+664EAA:",
+        dynamic1 = "\"ACRSP.exe\"+8910C6:",
         dynamic2 = "\"ACRSP.exe\"+1548925:",
         dynamic3 = "ACRSP.exe+66414C",
         dynamic4 = "ACRSP.exe+66414C",
@@ -8959,7 +8955,7 @@ local config_enable = {
         dynamic20 = "\"ACRSP.exe\"+6644B1:"
     },
     [2] = {
-        dynamic1 = "\"ACRSP.exe\"+69663A:",
+        dynamic1 = "\"ACRSP.exe\"+8C4B46:",
         dynamic2 = "\"ACRSP.exe\"+157C385:",
         dynamic3 = "ACRSP.exe+6958DC",
         dynamic4 = "ACRSP.exe+6958DC",
@@ -8986,62 +8982,35 @@ local addrE = config_enable[version]
 if not addrE then error("Could not determine addresses for the current game version (" .. tostring(version) .. ")") end
 
 local enableScript = string.format([==[
-alloc(hang,2048)
+alloc(ledge_self_flip,2048)
 label(returnhere)
 label(originalcode)
 label(exit)
 
-globalalloc(pVelocity,4)
 globalalloc(ledge_self_flip_f,1)
 globalalloc(self_flip_f,1)
 globalalloc(forced_hang_enable,1)
 globalalloc(horse_flip_enable,1)
 globalalloc(vanilla_beam_entry_enable,1)
 
-hang:
+ledge_self_flip:
 mov [ledge_self_flip_f],00
-push eax
-mov eax,[pVelocity]
-cmp eax,0
-je originalcode
-mov eax,[eax+60]
-cmp eax,0
-je originalcode
-mov eax,[eax+0]
-cmp eax,0
-je originalcode
-mov eax,[eax+114]
-cmp eax,0
-je originalcode
-mov eax,[eax+60]
-cmp eax,0
-je originalcode
-mov eax,[eax+0]
-cmp eax,0
-je originalcode
-mov eax,[eax+18]
-cmp eax,0
-je originalcode
-mov eax,[eax+744]
-cmp eax,0
-je originalcode
-shr eax,10
-cmp al,00
+mov eax,[ecx]
+lea edx,[ecx]
+mov edx,[edx+744]
+shr edx,10
+cmp dl,00
 jne originalcode
 mov [ledge_self_flip_f],01
 
 originalcode:
-pop eax
-mov [eax+3C],ecx
-inc edi
-add eax,04
+mov edx,[eax+44]
 
 exit:
 jmp returnhere
 
 %s
-jmp hang
-nop 2
+jmp ledge_self_flip
 returnhere:
 
 
@@ -9211,7 +9180,7 @@ if syntaxcheck then return end
 
 local config_disable = {
     [1] = {
-        dynamic1 = "\"ACRSP.exe\"+664EAA:",
+        dynamic1 = "\"ACRSP.exe\"+8910C6:",
         dynamic2 = "\"ACRSP.exe\"+1548925:",
         dynamic3 = "\"ACRSP.exe\"+664141:",
         dynamic4 = "ACRSP.exe+66412E",
@@ -9228,7 +9197,7 @@ local config_disable = {
         dynamic15 = "\"ACRSP.exe\"+6644B1:"
     },
     [2] = {
-        dynamic1 = "\"ACRSP.exe\"+69663A:",
+        dynamic1 = "\"ACRSP.exe\"+8C4B46:",
         dynamic2 = "\"ACRSP.exe\"+157C385:",
         dynamic3 = "\"ACRSP.exe\"+6958D1:",
         dynamic4 = "ACRSP.exe+6958BE",
@@ -9251,10 +9220,9 @@ if not addrD then error("Could not determine disable addresses for the current g
 
 local disableScript = string.format([==[
 %s
-db 89 48 3C 47 83 C0 04
-//mov [eax+3C],ecx
-//inc edi
-//add eax,04
+db 8B 01 8B 50 44
+//mov eax,[ecx]
+//mov edx,[eax+44]
 
 %s
 db 8B 45 B4 83 F8 04
@@ -9292,7 +9260,6 @@ db 74 09 83 BE B0 0B 00 00 03
 db B8 03 00 00 00
 //mov eax,00000003
 
-dealloc(hang)
 dealloc(pole_to_beam)
 dealloc(release_beam)
 dealloc(pull_up)
