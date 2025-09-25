@@ -6,6 +6,8 @@ import argparse
 import logging
 import os  # Import the os module for directory operations
 from typing import Tuple, List, Dict
+from common.utils import find_ct_files
+from common.ct_file import get_assembler_scripts
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
@@ -239,31 +241,6 @@ if not addrD then error("Could not determine disable addresses for the current g
     return merged_script
 
 
-def get_assembler_scripts(tree: ET.ElementTree) -> Dict[str, ET.Element]:
-    """
-    Build a dictionary of cheat entries (keyed by ID) that have an AssemblerScript.
-
-    Args:
-        tree: An XML ElementTree representing the CT file.
-
-    Returns:
-        A dictionary mapping cheat entry IDs to their <AssemblerScript> element.
-    """
-    mapping: Dict[str, ET.Element] = {}
-    for cheat in tree.iter('CheatEntry'):
-        id_elem = cheat.find('ID')
-        if id_elem is not None and id_elem.text:
-            cheat_id = id_elem.text.strip()
-            asm_elem = cheat.find('AssemblerScript')
-            # Ensure the element exists and has text content (even if empty)
-            if asm_elem is not None and asm_elem.text is not None:
-                mapping[cheat_id] = asm_elem
-            elif asm_elem is not None and asm_elem.text is None:
-                 # Handle cases where <AssemblerScript/> exists but is empty
-                 asm_elem.text = "" # Assign empty string to allow processing
-                 mapping[cheat_id] = asm_elem
-
-    return mapping
 
 def merge_cheat_entries(asm_map1: Dict[str, ET.Element], asm_map2: Dict[str, ET.Element]) -> int:
     """
@@ -307,21 +284,6 @@ def merge_cheat_entries(asm_map1: Dict[str, ET.Element], asm_map2: Dict[str, ET.
     return merged_count
 
 
-def find_ct_files(folder_path: str) -> List[str]:
-    """Finds files ending with .ct (case-insensitive) in the given folder."""
-    ct_files = []
-    try:
-        for item in os.listdir(folder_path):
-            item_path = os.path.join(folder_path, item)
-            if os.path.isfile(item_path) and item.lower().endswith('.ct'):
-                ct_files.append(item_path)
-    except FileNotFoundError:
-        logging.error(f"Folder not found: {folder_path}")
-        sys.exit(1)
-    except Exception as e:
-        logging.error(f"Error accessing folder {folder_path}: {e}")
-        sys.exit(1)
-    return ct_files
 
 def parse_arguments() -> argparse.Namespace:
     """

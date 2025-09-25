@@ -1,6 +1,7 @@
 import sys
 import os
 import re
+from common.utils import find_ct_files
 
 # Regular expression to find addresses in the format ["']Process.exe+hex or Process.exe+hex
 address_re = re.compile(
@@ -42,12 +43,12 @@ def find_addresses(line):
     return addresses
 
 def verify_files(folder_path):
-    files = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
-    if len(files) != 2:
-        return ["Error: Folder must contain exactly two files."]
+    ct_files = find_ct_files(folder_path)
+    if len(ct_files) != 2:
+        return [f"Error: Folder must contain exactly two .CT files, but found {len(ct_files)}."]
 
-    file1, file2 = files[0], files[1]
-    with open(os.path.join(folder_path, file1), 'r') as f1, open(os.path.join(folder_path, file2), 'r') as f2:
+    file1, file2 = ct_files[0], ct_files[1]
+    with open(file1, 'r') as f1, open(file2, 'r') as f2:
         lines1 = f1.read().splitlines()
         lines2 = f2.read().splitlines()
 
@@ -83,18 +84,22 @@ def verify_files(folder_path):
             if proc1 != proc2:
                 errors.append(f"Error line {line_num}: Process names differ '{proc1}' vs '{proc2}'")
 
-            if hex1 == hex2:
-                errors.append(f"Error line {line_num}: Addresses are identical '{hex1}'")
+            # Check if the line contains addresses in square brackets
+            is_bracket_address = '[' in line1 and ']' in line1 and '[' in line2 and ']' in line2
 
-            if len(hex1) == 0 or len(hex2) == 0:
-                errors.append(f"Error line {line_num}: Invalid hex part in address.")
-
-            last_char1 = hex1[-1]
-            last_char2 = hex2[-1]
-            if last_char1 != last_char2:
-                errors.append(f"Error line {line_num}: Last hex character differs '{hex1}' vs '{hex2}'")
-                errors.append(f"  Line 1: {line1}")
-                errors.append(f"  Line 2: {line2}")
+            if is_bracket_address:
+                # Lenient check for addresses in brackets: must be different.
+                if hex1 == hex2:
+                    errors.append(f"Error line {line_num}: Addresses are identical '{hex1}'")
+            else:
+                # Strict check for other addresses (e.g., jumps)
+                if hex1 == hex2:
+                    errors.append(f"Error line {line_num}: Addresses are identical '{hex1}'")
+                
+                if len(hex1) > 0 and len(hex2) > 0 and hex1[-1] != hex2[-1]:
+                    errors.append(f"Error line {line_num}: Last hex character must be the same for jumps, but differs '{hex1}' vs '{hex2}'")
+                    errors.append(f"  Line 1: {line1}")
+                    errors.append(f"  Line 2: {line2}")
 
             # rest1 = hex1[:-1]
             # rest2 = hex2[:-1]
