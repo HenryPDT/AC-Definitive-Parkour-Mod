@@ -93,6 +93,7 @@ globalalloc(on_water_f,1)
 
 globalalloc(already_rolled_f,1)
 globalalloc(dive_beam_f,1)
+globalalloc(forced_hang_climb_pass_f,1)
 globalalloc(near_miss_f,1)
 globalalloc(smooth_fall_f,1)
 globalalloc(instant_swingoff_f,1)
@@ -278,80 +279,35 @@ label(originalcode6)
 label(exit6)
 
 get_velocity:
-mov [pVelocity],ecx
-push esi
-mov esi,ecx
-cmp esi,0
+mov eax,[ecx+8]
+mov edx,[pEntity]
+cmp eax,0
 je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+0]
-cmp esi,0
+cmp edx,0
 je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+DC]
-cmp esi,0
+cmp eax,edx
+jne originalcode6
+lea eax,[ecx+A0]
+cmp eax,0
 je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+84]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+D8]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+98]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-mov esi,[esi+224]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-lea esi,[esi+A0]
-cmp esi,0
-je originalcode6
-cmp esi,00100000
-jb originalcode6
-cmp esi,FFFF0000
-jae originalcode6
-movaps xmm0,[esi]
+movaps xmm0,[eax]
 movaps [player_velocity],xmm0
-mulps xmm0, xmm0
-haddps xmm0, xmm0
-sqrtss xmm0, xmm0
-movss [horizontal_velocity],xmm0
+movaps xmm1, xmm0
+mulps xmm1, xmm1
+haddps xmm1, xmm1
+sqrtss xmm1, xmm1
+movss [horizontal_velocity],xmm1
+xorps xmm0,xmm0
+xorps xmm1,xmm1
 
 originalcode6:
-pop esi
-lea edx,[ecx+edx*4]
-xor eax,eax
+mov eax,[ecx]
+mov edx,[eax+10]
 
 exit6:
 jmp returnhere6
 
-"AC3SP.exe"+16D75F:
+"AC3SP.exe"+522FC3:
 jmp get_velocity
 returnhere6:
 
@@ -427,6 +383,7 @@ mov [on_hang_crouch_f],00
 mov [on_hang_stand_f],00
 mov [on_vault_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [freeform_jump_f],00
 mov [eject_clamp_f],00
 mov [on_water_f],00
@@ -478,6 +435,7 @@ mov [on_vault_f],00
 mov [vault_inner_ledge_f],00
 mov [already_rolled_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [ledge_drop_f],00
@@ -558,6 +516,7 @@ label(exit14)
 on_ledge_grab:
 mov [already_rolled_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [on_vault_f],00
@@ -639,6 +598,7 @@ mov [on_hang_stand_f],00
 mov [on_vault_f],01
 mov [already_rolled_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [ledge_drop_f],00
@@ -672,6 +632,7 @@ mov [on_hang_crouch_f],00
 mov [on_hang_stand_f],00
 mov [already_rolled_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [on_vault_f],00
@@ -714,10 +675,10 @@ db D9 9E B0 25 00 00
 db 0F 29 86 C0 25 00 00
 //movaps [esi+000025C0],xmm0
 
-"AC3SP.exe"+16D75F:
-db 8D 14 91 33 C0
-//lea edx,[ecx+edx*4]
-//xor eax,eax
+"AC3SP.exe"+522FC3:
+db 8B 01 8B 50 10
+//mov eax,[ecx]
+//mov edx,[eax+10]
 
 "AC3SP.exe"+10B04BB:
 db D9 5D DC 80 7B 08 00
@@ -1361,6 +1322,7 @@ label(drop_to_fall)
 label(dive_beam_alt)
 label(dive_beam_alt_2)
 label(forced_hang_alt)
+label(forced_hang_climb_pass)
 
 // Labels for deactivation code
 label(kiosk_roll_disable)
@@ -1380,6 +1342,7 @@ label(swan_dive_disable)
 label(forced_ledge_grab_disable)
 label(dive_beam_alt_disable)
 label(forced_hang_alt_disable)
+label(forced_hang_climb_pass_disable)
 
 globalalloc(buttonA,1)          // Button A
 globalalloc(buttonX,1)          // Button X
@@ -1536,6 +1499,7 @@ globalalloc(self_swing_enable,1)
 globalalloc(drop_to_fall_enable,1)
 globalalloc(dive_beam_alt_enable,1)
 globalalloc(forced_hang_alt_enable,1)
+globalalloc(forced_hang_climb_pass_enable,1)
 globalalloc(horse_flip_enable,1)
 
 globalalloc(on_hang_free_f,1)
@@ -1602,6 +1566,7 @@ mov [self_swing_enable],00
 mov [drop_to_fall_enable],00
 mov [dive_beam_alt_enable],00
 mov [forced_hang_alt_enable],00
+mov [forced_hang_climb_pass_enable],00
 mov [horse_flip_enable],00
 
 // Controller Activation Code
@@ -2085,16 +2050,30 @@ mov [dive_beam_alt_enable],01
 
 forced_hang_alt:
 cmp byte ptr [vault_enable],00
-je kiosk_roll_disable
+je forced_hang_climb_pass
 cmp byte ptr [forced_hang_enable],00
-je kiosk_roll_disable
+je forced_hang_climb_pass
 mov [forced_hang_alt_enable],01
+
+forced_hang_climb_pass:
+cmp byte ptr [kiosk_roll_enable],00
+je kiosk_roll_disable
+cmp byte ptr [forced_hang_alt_enable],00
+je kiosk_roll_disable
+mov [forced_hang_climb_pass_enable],01
 
 // Deactivation Code
 kiosk_roll_disable:
 cmp byte ptr [kiosk_roll_enable],00
-je kiosk_swing_disable
+je forced_hang_climb_pass_disable
 mov [vault_enable],00
+
+forced_hang_climb_pass_disable:
+cmp byte ptr [forced_hang_climb_pass_enable],00
+je kiosk_swing_disable
+mov [kiosk_roll_enable],00
+mov [kiosk_swing_enable],00
+mov [forced_hang_alt_enable],00
 
 kiosk_swing_disable:
 cmp byte ptr [kiosk_swing_enable],00
@@ -3635,18 +3614,25 @@ dealloc(bind_legs_tap_2)
                               <VariableType>Byte</VariableType>
                               <Address>forced_hang_alt_enable</Address>
                             </CheatEntry>
+                            <CheatEntry>
+                              <ID>247</ID>
+                              <Description>"Forced Hang Climb Pass"</Description>
+                              <ShowAsSigned>0</ShowAsSigned>
+                              <VariableType>Byte</VariableType>
+                              <Address>forced_hang_climb_pass_enable</Address>
+                            </CheatEntry>
                           </CheatEntries>
                         </CheatEntry>
                       </CheatEntries>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>247</ID>
+                      <ID>248</ID>
                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                       <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                       <GroupHeader>1</GroupHeader>
                       <CheatEntries>
                         <CheatEntry>
-                          <ID>248</ID>
+                          <ID>249</ID>
                           <Description>"Parkour Mode"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -4729,6 +4715,7 @@ label(exit)
 globalalloc(parkour_down_enable,1)
 globalalloc(parkour_far_enable,1)
 globalalloc(forced_hang_enable,1)
+globalalloc(forced_hang_climb_pass_enable,1)
 globalalloc(parkour_down_low_enable,1)
 globalalloc(freeform_enable,1)
 globalalloc(vault_inner_ledge_enable,1)
@@ -4736,11 +4723,18 @@ globalalloc(forced_step_enable,1)
 globalalloc(dive_beam_alt_enable,1)
 globalalloc(self_swing_enable,1)
 globalalloc(on_vault_f,1)
+globalalloc(target_angle,4)
+globalalloc(forced_hang_climb_pass_f,1)
+
+target_angle:
+dd (float)0.55
 
 parkour_down:
 cmp byte ptr [on_vault_f],01
 je vault_freeform
 cmp byte ptr [dive_beam_alt_enable],01
+je AC3SP.exe+157CE49
+cmp byte ptr [forced_hang_climb_pass_enable],01
 je AC3SP.exe+157CE49
 cmp byte ptr [parkour_far_enable],01
 je AC3SP.exe+157CE49
@@ -4774,6 +4768,7 @@ returnhere:
 alloc(parkour_down_2,2048)
 label(returnhere2)
 label(originalcode2)
+label(climb_pass_2)
 label(exit2)
 
 parkour_down_2:
@@ -4783,8 +4778,18 @@ cmp byte ptr [parkour_down_enable],01
 je AC3SP.exe+157CD55
 cmp byte ptr [self_swing_enable],01
 je AC3SP.exe+157CD55
+cmp byte ptr [forced_hang_climb_pass_enable],01
+je climb_pass_2
 cmp byte ptr [forced_hang_enable],01
 je exit2
+jmp originalcode2
+
+climb_pass_2:
+movss xmm1,[target_angle]
+comiss xmm1,xmm0
+ja AC3SP.exe+157CF24
+mov [forced_hang_climb_pass_f],01
+jmp exit2
 
 originalcode2:
 comiss xmm1,xmm0
@@ -4802,6 +4807,7 @@ returnhere2:
 alloc(parkour_down_3,2048)
 label(returnhere3)
 label(originalcode3)
+label(climb_pass_3)
 label(exit3)
 
 parkour_down_3:
@@ -4811,8 +4817,18 @@ cmp byte ptr [parkour_down_enable],01
 je AC3SP.exe+157CE36
 cmp byte ptr [self_swing_enable],01
 je AC3SP.exe+157CE36
+cmp byte ptr [forced_hang_climb_pass_enable],01
+je climb_pass_3
 cmp byte ptr [forced_hang_enable],01
 je exit3
+jmp originalcode3
+
+climb_pass_3:
+movss xmm1,[target_angle]
+comiss xmm1,xmm0
+ja AC3SP.exe+157CF24
+mov [forced_hang_climb_pass_f],01
+jmp exit3
 
 originalcode3:
 comiss xmm1,xmm0
@@ -4830,6 +4846,7 @@ returnhere3:
 alloc(parkour_far_2,2048)
 label(returnhere4)
 label(originalcode4)
+label(climb_pass_4)
 label(exit4)
 
 parkour_far_2:
@@ -4837,8 +4854,18 @@ cmp byte ptr [dive_beam_alt_enable],01
 je AC3SP.exe+157CF16
 cmp byte ptr [parkour_far_enable],01
 je exit4
+cmp byte ptr [forced_hang_climb_pass_enable],01
+je climb_pass_4
 cmp byte ptr [forced_hang_enable],01
 je AC3SP.exe+157CF16
+jmp originalcode4
+
+climb_pass_4:
+movss xmm1,[target_angle]
+comiss xmm1,xmm0
+ja AC3SP.exe+157CF24
+mov [forced_hang_climb_pass_f],01
+jmp exit4
 
 originalcode4:
 comiss xmm1,xmm0
@@ -4892,6 +4919,7 @@ label(exit)
 
 globalalloc(forced_hang_enable,1)
 globalalloc(forced_hang_alt_enable,1)
+globalalloc(forced_hang_climb_pass_enable,1)
 globalalloc(parkour_down_enable,1)
 globalalloc(dive_beam_enable,1)
 globalalloc(dive_beam_far_enable,1)
@@ -4911,6 +4939,8 @@ je originalcode
 cmp byte ptr [parkour_down_low_enable],01
 je AC3SP.exe+157CCD3
 cmp byte ptr [dive_beam_enable],01
+je AC3SP.exe+157CCF0
+cmp byte ptr [forced_hang_climb_pass_enable],01
 je AC3SP.exe+157CCF0
 cmp byte ptr [dive_beam_far_enable],01
 je AC3SP.exe+157CCF0
@@ -4955,6 +4985,8 @@ cmp byte ptr [dive_beam_alt_enable],01
 je originalcode2
 cmp byte ptr [parkour_down_low_enable],01
 je originalcode2
+cmp byte ptr [forced_hang_climb_pass_enable],01
+je AC3SP.exe+157CD37
 cmp byte ptr [dive_beam_enable],01
 je AC3SP.exe+157CD37
 cmp byte ptr [dive_beam_far_enable],01
@@ -4993,6 +5025,8 @@ cmp byte ptr [dive_beam_alt_enable],01
 je AC3SP.exe+157CDE9
 cmp byte ptr [dive_beam_far_enable],01
 je AC3SP.exe+157CDE9
+cmp byte ptr [forced_hang_climb_pass_enable],01
+je AC3SP.exe+157CE0B
 
 originalcode3:
 test eax,00080000
@@ -6313,12 +6347,15 @@ label(exit)
 
 globalalloc(disable_ledge_grab_enable,1)
 globalalloc(dive_beam_f,1)
+globalalloc(forced_hang_climb_pass_f,1)
 globalalloc(vault_inner_ledge_f,1)
 
 disable_wall_rebound:
 cmp byte ptr [disable_ledge_grab_enable],01
 je AC3SP.exe+115B717
 cmp byte ptr [dive_beam_f],01
+je AC3SP.exe+115B717
+cmp byte ptr [forced_hang_climb_pass_f],01
 je AC3SP.exe+115B717
 cmp byte ptr [vault_inner_ledge_f],01
 je AC3SP.exe+115B717
@@ -6597,6 +6634,76 @@ dealloc(hang_to_hang_crouch_2)
                         </CheatEntry>
                         <CheatEntry>
                           <ID>316</ID>
+                          <Description>"Quick Eject"</Description>
+                          <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
+                          <VariableType>Auto Assembler Script</VariableType>
+                          <AssemblerScript>[ENABLE]
+alloc(quick_eject,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+quick_eject:
+mov eax,[eax]
+cmp byte ptr [bindHighProfile],01
+jne originalcode
+cmp byte ptr [bindLegsTap],01
+jne originalcode
+mov eax,00000001
+
+originalcode:
+dec eax
+je AC3SP.exe+1470FD3
+
+exit:
+jmp returnhere
+
+"AC3SP.exe"+1470FA6:
+jmp quick_eject
+returnhere:
+
+
+alloc(quick_eject_hang,2048)
+label(returnhere2)
+label(originalcode2)
+label(exit2)
+
+quick_eject_hang:
+cmp byte ptr [bindHighProfile],01
+jne originalcode2
+cmp byte ptr [bindLegsTap],01
+je AC3SP.exe+13C7A68
+
+originalcode2:
+test al,al
+je AC3SP.exe+13C7E94
+
+exit2:
+jmp returnhere2
+
+"AC3SP.exe"+13C7A29:
+jmp quick_eject_hang
+nop
+returnhere2:
+
+
+[DISABLE]
+"AC3SP.exe"+1470FA6:
+db 8B 00 48 74 28
+//mov eax,[eax]
+//dec eax
+//je AC3SP.exe+1470FD3
+
+"AC3SP.exe"+13C7A29:
+db 0F 84 65 04 00 00
+//je AC3SP.exe+13C7E94
+
+dealloc(quick_eject)
+dealloc(quick_eject_hang)
+</AssemblerScript>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>317</ID>
                           <Description>"Swing Off Beam / Pull up Pole"</Description>
                           <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                           <VariableType>Auto Assembler Script</VariableType>
@@ -6840,7 +6947,6 @@ db DF F1 DD D8 72 0A
 //fstp st(0)
 //jb AC3SP.exe+13C7398
 
-dealloc(hang)
 dealloc(pole_to_beam)
 dealloc(pull_up)
 dealloc(swing_idle)
@@ -6850,78 +6956,6 @@ dealloc(instant_swing_off)
 dealloc(enhanced_swing)
 dealloc(enhanced_swing_2)
 </AssemblerScript>
-                          <CheatEntries>
-                            <CheatEntry>
-                              <ID>317</ID>
-                              <Description>"Quick Eject"</Description>
-                              <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
-                              <VariableType>Auto Assembler Script</VariableType>
-                              <AssemblerScript>[ENABLE]
-alloc(quick_eject,2048)
-label(returnhere)
-label(originalcode)
-label(exit)
-
-quick_eject:
-mov eax,[eax]
-cmp byte ptr [bindHighProfile],01
-jne originalcode
-cmp byte ptr [bindLegsTap],01
-jne originalcode
-mov eax,00000001
-
-originalcode:
-dec eax
-je AC3SP.exe+1470FD3
-
-exit:
-jmp returnhere
-
-"AC3SP.exe"+1470FA6:
-jmp quick_eject
-returnhere:
-
-
-alloc(quick_eject_hang,2048)
-label(returnhere2)
-label(originalcode2)
-label(exit2)
-
-quick_eject_hang:
-cmp byte ptr [bindHighProfile],01
-jne originalcode2
-cmp byte ptr [bindLegsTap],01
-je AC3SP.exe+13C7A68
-
-originalcode2:
-test al,al
-je AC3SP.exe+13C7E94
-
-exit2:
-jmp returnhere2
-
-"AC3SP.exe"+13C7A29:
-jmp quick_eject_hang
-nop
-returnhere2:
-
-
-[DISABLE]
-"AC3SP.exe"+1470FA6:
-db 8B 00 48 74 28
-//mov eax,[eax]
-//dec eax
-//je AC3SP.exe+1470FD3
-
-"AC3SP.exe"+13C7A29:
-db 0F 84 65 04 00 00
-//je AC3SP.exe+13C7E94
-
-dealloc(quick_eject)
-dealloc(quick_eject_hang)
-</AssemblerScript>
-                            </CheatEntry>
-                          </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
                           <ID>318</ID>
@@ -10684,193 +10718,6 @@ dealloc(nso_run_coords_3)
               </CheatEntries>
             </CheatEntry>
           </CheatEntries>
-        </CheatEntry>
-      </CheatEntries>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>798</ID>
-      <Description>"Recruites"</Description>
-      <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
-      <GroupHeader>1</GroupHeader>
-      <CheatEntries>
-        <CheatEntry>
-          <ID>799</ID>
-          <Description>"Auto Assemble script"</Description>
-          <VariableType>Auto Assembler Script</VariableType>
-          <AssemblerScript>[ENABLE]
-alloc(newmem,2048)
-label(returnhere)
-label(originalcode)
-label(exit)
-
-newmem:
-
-originalcode:
-jmp AC3SP.exe+12CD0A5
-
-exit:
-jmp returnhere
-
-"AC3SP.exe"+12CD092:
-jmp newmem
-nop
-returnhere:
-
-
-
-
-[DISABLE]
-dealloc(newmem)
-"AC3SP.exe"+12CD092:
-db 0F 85 68 01 00 00
-//jne AC3SP.exe+12CD200
-</AssemblerScript>
-        </CheatEntry>
-        <CheatEntry>
-          <ID>800</ID>
-          <Description>"Auto Assemble script"</Description>
-          <VariableType>Auto Assembler Script</VariableType>
-          <AssemblerScript>[ENABLE]
-alloc(newmem,2048)
-label(returnhere)
-label(originalcode)
-label(exit)
-
-newmem:
-
-originalcode:
-jmp AC3SP.exe+12CD0EA
-//call AC3SP.exe+17CC80
-
-exit:
-jmp returnhere
-
-"AC3SP.exe"+12CD0AF:
-jmp newmem
-nop 2
-returnhere:
-
-
-
-
-[DISABLE]
-dealloc(newmem)
-"AC3SP.exe"+12CD0AF:
-db 75 39 E8 CA FB EA FE
-//jne AC3SP.exe+12CD0EA
-//call AC3SP.exe+17CC80
-</AssemblerScript>
-        </CheatEntry>
-        <CheatEntry>
-          <ID>801</ID>
-          <Description>"Auto Assemble script"</Description>
-          <VariableType>Auto Assembler Script</VariableType>
-          <AssemblerScript>[ENABLE]
-alloc(newmem,2048)
-label(returnhere)
-label(originalcode)
-label(exit)
-
-newmem:
-
-originalcode:
-jmp AC3SP.exe+12CD159
-push 00
-push 000001AD
-
-exit:
-jmp returnhere
-
-"AC3SP.exe"+12CD109:
-jmp newmem
-nop 4
-returnhere:
-
-
-
-
-[DISABLE]
-dealloc(newmem)
-"AC3SP.exe"+12CD109:
-db 75 4E 6A 00 68 AD 01 00 00
-//jne AC3SP.exe+12CD159
-//push 00
-//push 000001AD
-</AssemblerScript>
-        </CheatEntry>
-        <CheatEntry>
-          <ID>802</ID>
-          <Description>"Auto Assemble script"</Description>
-          <VariableType>Auto Assembler Script</VariableType>
-          <AssemblerScript>[ENABLE]
-alloc(newmem,2048)
-label(returnhere)
-label(originalcode)
-label(exit)
-
-newmem:
-
-originalcode:
-//je AC3SP.exe+12CD1F8
-mov ecx,[esi+00000168]
-
-exit:
-jmp returnhere
-
-"AC3SP.exe"+12CD1A2:
-jmp newmem
-nop 3
-returnhere:
-
-
-
-
-[DISABLE]
-dealloc(newmem)
-"AC3SP.exe"+12CD1A2:
-db 74 54 8B 8E 68 01 00 00
-//je AC3SP.exe+12CD1F8
-//mov ecx,[esi+00000168]
-</AssemblerScript>
-        </CheatEntry>
-        <CheatEntry>
-          <ID>803</ID>
-          <Description>"Auto Assemble script"</Description>
-          <VariableType>Auto Assembler Script</VariableType>
-          <AssemblerScript>[ENABLE]
-alloc(newmem,2048)
-label(returnhere)
-label(originalcode)
-label(exit)
-
-newmem:
-
-originalcode:
-jmp AC3SP.exe+12CCF2F
-pop ebx
-pop edi
-mov eax,00000004
-
-exit:
-jmp returnhere
-
-"AC3SP.exe"+12CCF1F:
-jmp newmem
-nop 4
-returnhere:
-
-
-
-
-[DISABLE]
-dealloc(newmem)
-"AC3SP.exe"+12CCF1F:
-db 74 0E 5B 5F B8 04 00 00 00
-//je AC3SP.exe+12CCF2F
-//pop ebx
-//pop edi
-//mov eax,00000004
-</AssemblerScript>
         </CheatEntry>
       </CheatEntries>
     </CheatEntry>

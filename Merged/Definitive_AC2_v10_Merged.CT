@@ -138,6 +138,7 @@ globalalloc(on_water_f,1)
 
 globalalloc(already_rolled_f,1)
 globalalloc(dive_beam_f,1)
+globalalloc(forced_hang_climb_pass_f,1)
 globalalloc(near_miss_f,1)
 globalalloc(smooth_fall_f,1)
 globalalloc(instant_swingoff_f,1)
@@ -455,6 +456,7 @@ mov [on_hang_crouch_f],00
 mov [on_hang_stand_f],00
 mov [on_vault_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [freeform_jump_f],00
 mov [eject_clamp_f],00
 mov [on_water_f],00
@@ -507,6 +509,7 @@ mov [on_vault_f],00
 mov [vault_inner_ledge_f],00
 mov [already_rolled_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [ledge_drop_f],00
@@ -553,6 +556,7 @@ label(exit14)
 on_ledge_grab:
 mov [already_rolled_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [on_vault_f],00
@@ -580,6 +584,7 @@ mov [walk_strength],(float)1
 mov [walk_mode_index],00
 mov [already_rolled_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [dismount_hang_free_eject_f],00
@@ -632,6 +637,7 @@ mov [on_hang_stand_f],00
 mov [on_vault_f],01
 mov [already_rolled_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [ledge_drop_f],00
@@ -666,6 +672,7 @@ mov [on_hang_crouch_f],00
 mov [on_hang_stand_f],00
 mov [already_rolled_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [on_vault_f],00
@@ -1445,6 +1452,7 @@ label(drop_to_fall)
 label(dive_beam_alt)
 label(dive_beam_alt_2)
 label(forced_hang_alt)
+label(forced_hang_climb_pass)
 
 // Labels for deactivation code
 label(kiosk_roll_disable)
@@ -1464,6 +1472,7 @@ label(swan_dive_disable)
 label(forced_ledge_grab_disable)
 label(dive_beam_alt_disable)
 label(forced_hang_alt_disable)
+label(forced_hang_climb_pass_disable)
 
 globalalloc(buttonA,1)          // Button A
 globalalloc(buttonX,1)          // Button X
@@ -1616,6 +1625,7 @@ globalalloc(self_swing_enable,1)
 globalalloc(drop_to_fall_enable,1)
 globalalloc(dive_beam_alt_enable,1)
 globalalloc(forced_hang_alt_enable,1)
+globalalloc(forced_hang_climb_pass_enable,1)
 
 globalalloc(on_hang_free_f,1)
 globalalloc(on_vault_f,1)
@@ -1678,6 +1688,7 @@ mov [self_swing_enable],00
 mov [drop_to_fall_enable],00
 mov [dive_beam_alt_enable],00
 mov [forced_hang_alt_enable],00
+mov [forced_hang_climb_pass_enable],00
 
 // Controller Activation Code
 parkour_mode_controller:
@@ -2106,16 +2117,30 @@ mov [dive_beam_alt_enable],01
 
 forced_hang_alt:
 cmp byte ptr [vault_enable],00
-je kiosk_roll_disable
+je forced_hang_climb_pass
 cmp byte ptr [forced_hang_enable],00
-je kiosk_roll_disable
+je forced_hang_climb_pass
 mov [forced_hang_alt_enable],01
+
+forced_hang_climb_pass:
+cmp byte ptr [kiosk_roll_enable],00
+je kiosk_roll_disable
+cmp byte ptr [forced_hang_alt_enable],00
+je kiosk_roll_disable
+mov [forced_hang_climb_pass_enable],01
 
 // Deactivation Code
 kiosk_roll_disable:
 cmp byte ptr [kiosk_roll_enable],00
-je kiosk_swing_disable
+je forced_hang_climb_pass_disable
 mov [vault_enable],00
+
+forced_hang_climb_pass_disable:
+cmp byte ptr [forced_hang_climb_pass_enable],00
+je kiosk_swing_disable
+mov [kiosk_roll_enable],00
+mov [kiosk_swing_enable],00
+mov [forced_hang_alt_enable],00
 
 kiosk_swing_disable:
 cmp byte ptr [kiosk_swing_enable],00
@@ -3672,18 +3697,25 @@ disableInfo = nil
                               <VariableType>Byte</VariableType>
                               <Address>forced_hang_alt_enable</Address>
                             </CheatEntry>
+                            <CheatEntry>
+                              <ID>244</ID>
+                              <Description>"Forced Hang Climb Pass"</Description>
+                              <ShowAsSigned>0</ShowAsSigned>
+                              <VariableType>Byte</VariableType>
+                              <Address>forced_hang_climb_pass_enable</Address>
+                            </CheatEntry>
                           </CheatEntries>
                         </CheatEntry>
                       </CheatEntries>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>244</ID>
+                      <ID>245</ID>
                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                       <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                       <GroupHeader>1</GroupHeader>
                       <CheatEntries>
                         <CheatEntry>
-                          <ID>245</ID>
+                          <ID>246</ID>
                           <Description>"Parkour Mode"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -4877,44 +4909,52 @@ local config_enable = {
     [1] = {
         dynamic1 = "AssassinsCreedIIGame.exe+F67BE8",
         dynamic2 = "AssassinsCreedIIGame.exe+F67BE8",
-        dynamic3 = "AssassinsCreedIIGame.exe+18A7B38",
-        dynamic4 = "AssassinsCreedIIGame.exe+F67BE8",
-        dynamic5 = "\"AssassinsCreedIIGame.exe\"+F679DA:",
-        dynamic6 = "AssassinsCreedIIGame.exe+F67ADF",
+        dynamic3 = "AssassinsCreedIIGame.exe+F67BE8",
+        dynamic4 = "AssassinsCreedIIGame.exe+18A7B38",
+        dynamic5 = "AssassinsCreedIIGame.exe+F67BE8",
+        dynamic6 = "\"AssassinsCreedIIGame.exe\"+F679DA:",
         dynamic7 = "AssassinsCreedIIGame.exe+F67ADF",
         dynamic8 = "AssassinsCreedIIGame.exe+F67ADF",
-        dynamic9 = "AssassinsCreedIIGame.exe+F67CCE",
-        dynamic10 = "\"AssassinsCreedIIGame.exe\"+F67AC8:",
-        dynamic11 = "AssassinsCreedIIGame.exe+F67BD5",
-        dynamic12 = "AssassinsCreedIIGame.exe+F67BD5",
+        dynamic9 = "AssassinsCreedIIGame.exe+F67ADF",
+        dynamic10 = "AssassinsCreedIIGame.exe+F67CCE",
+        dynamic11 = "AssassinsCreedIIGame.exe+F67CCE",
+        dynamic12 = "\"AssassinsCreedIIGame.exe\"+F67AC8:",
         dynamic13 = "AssassinsCreedIIGame.exe+F67BD5",
-        dynamic14 = "AssassinsCreedIIGame.exe+F67CCE",
-        dynamic15 = "\"AssassinsCreedIIGame.exe\"+F67BA9:",
-        dynamic16 = "AssassinsCreedIIGame.exe+F67CC0",
-        dynamic17 = "AssassinsCreedIIGame.exe+F67CC0",
-        dynamic18 = "AssassinsCreedIIGame.exe+F67CCE",
-        dynamic19 = "\"AssassinsCreedIIGame.exe\"+F67C9B:"
+        dynamic14 = "AssassinsCreedIIGame.exe+F67BD5",
+        dynamic15 = "AssassinsCreedIIGame.exe+F67BD5",
+        dynamic16 = "AssassinsCreedIIGame.exe+F67CCE",
+        dynamic17 = "AssassinsCreedIIGame.exe+F67CCE",
+        dynamic18 = "\"AssassinsCreedIIGame.exe\"+F67BA9:",
+        dynamic19 = "AssassinsCreedIIGame.exe+F67CC0",
+        dynamic20 = "AssassinsCreedIIGame.exe+F67CC0",
+        dynamic21 = "AssassinsCreedIIGame.exe+F67CCE",
+        dynamic22 = "AssassinsCreedIIGame.exe+F67CCE",
+        dynamic23 = "\"AssassinsCreedIIGame.exe\"+F67C9B:"
     },
     [2] = {
         dynamic1 = "AssassinsCreedIIGame.exe+1541058",
         dynamic2 = "AssassinsCreedIIGame.exe+1541058",
-        dynamic3 = "AssassinsCreedIIGame.exe+18A5B08",
-        dynamic4 = "AssassinsCreedIIGame.exe+1541058",
-        dynamic5 = "\"AssassinsCreedIIGame.exe\"+1540E4A:",
-        dynamic6 = "AssassinsCreedIIGame.exe+1540F4F",
+        dynamic3 = "AssassinsCreedIIGame.exe+1541058",
+        dynamic4 = "AssassinsCreedIIGame.exe+18A5B08",
+        dynamic5 = "AssassinsCreedIIGame.exe+1541058",
+        dynamic6 = "\"AssassinsCreedIIGame.exe\"+1540E4A:",
         dynamic7 = "AssassinsCreedIIGame.exe+1540F4F",
         dynamic8 = "AssassinsCreedIIGame.exe+1540F4F",
-        dynamic9 = "AssassinsCreedIIGame.exe+154113E",
-        dynamic10 = "\"AssassinsCreedIIGame.exe\"+1540F38:",
-        dynamic11 = "AssassinsCreedIIGame.exe+1541045",
-        dynamic12 = "AssassinsCreedIIGame.exe+1541045",
+        dynamic9 = "AssassinsCreedIIGame.exe+1540F4F",
+        dynamic10 = "AssassinsCreedIIGame.exe+154113E",
+        dynamic11 = "AssassinsCreedIIGame.exe+154113E",
+        dynamic12 = "\"AssassinsCreedIIGame.exe\"+1540F38:",
         dynamic13 = "AssassinsCreedIIGame.exe+1541045",
-        dynamic14 = "AssassinsCreedIIGame.exe+154113E",
-        dynamic15 = "\"AssassinsCreedIIGame.exe\"+1541019:",
-        dynamic16 = "AssassinsCreedIIGame.exe+1541130",
-        dynamic17 = "AssassinsCreedIIGame.exe+1541130",
-        dynamic18 = "AssassinsCreedIIGame.exe+154113E",
-        dynamic19 = "\"AssassinsCreedIIGame.exe\"+154110B:"
+        dynamic14 = "AssassinsCreedIIGame.exe+1541045",
+        dynamic15 = "AssassinsCreedIIGame.exe+1541045",
+        dynamic16 = "AssassinsCreedIIGame.exe+154113E",
+        dynamic17 = "AssassinsCreedIIGame.exe+154113E",
+        dynamic18 = "\"AssassinsCreedIIGame.exe\"+1541019:",
+        dynamic19 = "AssassinsCreedIIGame.exe+1541130",
+        dynamic20 = "AssassinsCreedIIGame.exe+1541130",
+        dynamic21 = "AssassinsCreedIIGame.exe+154113E",
+        dynamic22 = "AssassinsCreedIIGame.exe+154113E",
+        dynamic23 = "\"AssassinsCreedIIGame.exe\"+154110B:"
     }
 }
 
@@ -4931,6 +4971,7 @@ label(exit)
 globalalloc(parkour_down_enable,1)
 globalalloc(parkour_far_enable,1)
 globalalloc(forced_hang_enable,1)
+globalalloc(forced_hang_climb_pass_enable,1)
 globalalloc(parkour_down_low_enable,1)
 globalalloc(freeform_enable,1)
 globalalloc(vault_inner_ledge_enable,1)
@@ -4938,11 +4979,18 @@ globalalloc(forced_step_enable,1)
 globalalloc(dive_beam_alt_enable,1)
 globalalloc(self_swing_enable,1)
 globalalloc(on_vault_f,1)
+globalalloc(target_angle,8)
+globalalloc(forced_hang_climb_pass_f,1)
+
+target_angle:
+dq (double)0.55
 
 parkour_down:
 cmp byte ptr [on_vault_f],01
 je vault_freeform
 cmp byte ptr [dive_beam_alt_enable],01
+je %s
+cmp byte ptr [forced_hang_climb_pass_enable],01
 je %s
 cmp byte ptr [parkour_far_enable],01
 je %s
@@ -4976,6 +5024,7 @@ returnhere:
 alloc(parkour_down_2,2048)
 label(returnhere2)
 label(originalcode2)
+label(climb_pass_2)
 label(exit2)
 
 parkour_down_2:
@@ -4985,8 +5034,18 @@ cmp byte ptr [parkour_down_enable],01
 je %s
 cmp byte ptr [self_swing_enable],01
 je %s
+cmp byte ptr [forced_hang_climb_pass_enable],01
+je climb_pass_2
 cmp byte ptr [forced_hang_enable],01
 je exit2
+jmp originalcode2
+
+climb_pass_2:
+movsd xmm3,[target_angle]
+comisd xmm3,xmm2
+ja %s
+mov [forced_hang_climb_pass_f],01
+jmp exit2
 
 originalcode2:
 comisd xmm3,xmm2
@@ -5004,6 +5063,7 @@ returnhere2:
 alloc(parkour_down_3,2048)
 label(returnhere3)
 label(originalcode3)
+label(climb_pass_3)
 label(exit3)
 
 parkour_down_3:
@@ -5013,8 +5073,18 @@ cmp byte ptr [parkour_down_enable],01
 je %s
 cmp byte ptr [self_swing_enable],01
 je %s
+cmp byte ptr [forced_hang_climb_pass_enable],01
+je climb_pass_3
 cmp byte ptr [forced_hang_enable],01
 je exit3
+jmp originalcode3
+
+climb_pass_3:
+movsd xmm2,[target_angle]
+comisd xmm2,xmm1
+ja %s
+mov [forced_hang_climb_pass_f],01
+jmp exit3
 
 originalcode3:
 comisd xmm2,xmm1
@@ -5032,6 +5102,7 @@ returnhere3:
 alloc(parkour_far_2,2048)
 label(returnhere4)
 label(originalcode4)
+label(climb_pass_4)
 label(exit4)
 
 parkour_far_2:
@@ -5039,8 +5110,18 @@ cmp byte ptr [dive_beam_alt_enable],01
 je %s
 cmp byte ptr [parkour_far_enable],01
 je exit4
+cmp byte ptr [forced_hang_climb_pass_enable],01
+je climb_pass_4
 cmp byte ptr [forced_hang_enable],01
 je %s
+jmp originalcode4
+
+climb_pass_4:
+movsd xmm1,[target_angle]
+comisd xmm1,xmm0
+ja %s
+mov [forced_hang_climb_pass_f],01
+jmp exit4
 
 originalcode4:
 comisd xmm1,xmm0
@@ -5053,7 +5134,7 @@ jmp returnhere4
 jmp parkour_far_2
 nop
 returnhere4:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16, addrE.dynamic17, addrE.dynamic18, addrE.dynamic19)
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16, addrE.dynamic17, addrE.dynamic18, addrE.dynamic19, addrE.dynamic20, addrE.dynamic21, addrE.dynamic22, addrE.dynamic23)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -5144,59 +5225,65 @@ local config_enable = {
         dynamic1 = "AssassinsCreedIIGame.exe+F67A32",
         dynamic2 = "AssassinsCreedIIGame.exe+F67A54",
         dynamic3 = "AssassinsCreedIIGame.exe+F67A54",
-        dynamic4 = "AssassinsCreedIIGame.exe+F67A32",
-        dynamic5 = "AssassinsCreedIIGame.exe+F67A54",
-        dynamic6 = "AssassinsCreedIIGame.exe+F67A1C",
+        dynamic4 = "AssassinsCreedIIGame.exe+F67A54",
+        dynamic5 = "AssassinsCreedIIGame.exe+F67A32",
+        dynamic6 = "AssassinsCreedIIGame.exe+F67A54",
         dynamic7 = "AssassinsCreedIIGame.exe+F67A1C",
-        dynamic8 = "AssassinsCreedIIGame.exe+F67A32",
-        dynamic9 = "\"AssassinsCreedIIGame.exe\"+F67A13:",
-        dynamic10 = "AssassinsCreedIIGame.exe+F67ABB",
+        dynamic8 = "AssassinsCreedIIGame.exe+F67A1C",
+        dynamic9 = "AssassinsCreedIIGame.exe+F67A32",
+        dynamic10 = "\"AssassinsCreedIIGame.exe\"+F67A13:",
         dynamic11 = "AssassinsCreedIIGame.exe+F67ABB",
         dynamic12 = "AssassinsCreedIIGame.exe+F67ABB",
         dynamic13 = "AssassinsCreedIIGame.exe+F67ABB",
-        dynamic14 = "\"AssassinsCreedIIGame.exe\"+F67AB4:",
-        dynamic15 = "AssassinsCreedIIGame.exe+F67C57",
-        dynamic16 = "AssassinsCreedIIGame.exe+F67C6D",
-        dynamic17 = "AssassinsCreedIIGame.exe+F67C26",
-        dynamic18 = "\"AssassinsCreedIIGame.exe\"+F67C1D:",
-        dynamic19 = "\"AssassinsCreedIIGame.exe\"+92BF31:",
-        dynamic20 = "AssassinsCreedIIGame.exe+F67AB4",
-        dynamic21 = "\"AssassinsCreedIIGame.exe\"+F67AAD:",
-        dynamic22 = "\"AssassinsCreedIIGame.exe\"+F6771C:",
-        dynamic23 = "AssassinsCreedIIGame.exe+F67A97",
-        dynamic24 = "AssassinsCreedIIGame.exe+F67A97",
-        dynamic25 = "AssassinsCreedIIGame.exe+F67A97",
-        dynamic26 = "AssassinsCreedIIGame.exe+F67A65",
-        dynamic27 = "\"AssassinsCreedIIGame.exe\"+F67A59:"
+        dynamic14 = "AssassinsCreedIIGame.exe+F67ABB",
+        dynamic15 = "AssassinsCreedIIGame.exe+F67ABB",
+        dynamic16 = "\"AssassinsCreedIIGame.exe\"+F67AB4:",
+        dynamic17 = "AssassinsCreedIIGame.exe+F67C57",
+        dynamic18 = "AssassinsCreedIIGame.exe+F67C6D",
+        dynamic19 = "AssassinsCreedIIGame.exe+F67C26",
+        dynamic20 = "AssassinsCreedIIGame.exe+F67C26",
+        dynamic21 = "\"AssassinsCreedIIGame.exe\"+F67C1D:",
+        dynamic22 = "\"AssassinsCreedIIGame.exe\"+92BF31:",
+        dynamic23 = "AssassinsCreedIIGame.exe+F67AB4",
+        dynamic24 = "\"AssassinsCreedIIGame.exe\"+F67AAD:",
+        dynamic25 = "\"AssassinsCreedIIGame.exe\"+F6771C:",
+        dynamic26 = "AssassinsCreedIIGame.exe+F67A97",
+        dynamic27 = "AssassinsCreedIIGame.exe+F67A97",
+        dynamic28 = "AssassinsCreedIIGame.exe+F67A97",
+        dynamic29 = "AssassinsCreedIIGame.exe+F67A65",
+        dynamic30 = "\"AssassinsCreedIIGame.exe\"+F67A59:"
     },
     [2] = {
         dynamic1 = "AssassinsCreedIIGame.exe+1540EA2",
         dynamic2 = "AssassinsCreedIIGame.exe+1540EC4",
         dynamic3 = "AssassinsCreedIIGame.exe+1540EC4",
-        dynamic4 = "AssassinsCreedIIGame.exe+1540EA2",
-        dynamic5 = "AssassinsCreedIIGame.exe+1540EC4",
-        dynamic6 = "AssassinsCreedIIGame.exe+1540E8C",
+        dynamic4 = "AssassinsCreedIIGame.exe+1540EC4",
+        dynamic5 = "AssassinsCreedIIGame.exe+1540EA2",
+        dynamic6 = "AssassinsCreedIIGame.exe+1540EC4",
         dynamic7 = "AssassinsCreedIIGame.exe+1540E8C",
-        dynamic8 = "AssassinsCreedIIGame.exe+1540EA2",
-        dynamic9 = "\"AssassinsCreedIIGame.exe\"+1540E83:",
-        dynamic10 = "AssassinsCreedIIGame.exe+1540F2B",
+        dynamic8 = "AssassinsCreedIIGame.exe+1540E8C",
+        dynamic9 = "AssassinsCreedIIGame.exe+1540EA2",
+        dynamic10 = "\"AssassinsCreedIIGame.exe\"+1540E83:",
         dynamic11 = "AssassinsCreedIIGame.exe+1540F2B",
         dynamic12 = "AssassinsCreedIIGame.exe+1540F2B",
         dynamic13 = "AssassinsCreedIIGame.exe+1540F2B",
-        dynamic14 = "\"AssassinsCreedIIGame.exe\"+1540F24:",
-        dynamic15 = "AssassinsCreedIIGame.exe+15410C7",
-        dynamic16 = "AssassinsCreedIIGame.exe+15410DD",
-        dynamic17 = "AssassinsCreedIIGame.exe+1541096",
-        dynamic18 = "\"AssassinsCreedIIGame.exe\"+154108D:",
-        dynamic19 = "\"AssassinsCreedIIGame.exe\"+F06531:",
-        dynamic20 = "AssassinsCreedIIGame.exe+1540F24",
-        dynamic21 = "\"AssassinsCreedIIGame.exe\"+1540F1D:",
-        dynamic22 = "\"AssassinsCreedIIGame.exe\"+1540B8C:",
-        dynamic23 = "AssassinsCreedIIGame.exe+1540F07",
-        dynamic24 = "AssassinsCreedIIGame.exe+1540F07",
-        dynamic25 = "AssassinsCreedIIGame.exe+1540F07",
-        dynamic26 = "AssassinsCreedIIGame.exe+1540ED5",
-        dynamic27 = "\"AssassinsCreedIIGame.exe\"+1540EC9:"
+        dynamic14 = "AssassinsCreedIIGame.exe+1540F2B",
+        dynamic15 = "AssassinsCreedIIGame.exe+1540F2B",
+        dynamic16 = "\"AssassinsCreedIIGame.exe\"+1540F24:",
+        dynamic17 = "AssassinsCreedIIGame.exe+15410C7",
+        dynamic18 = "AssassinsCreedIIGame.exe+15410DD",
+        dynamic19 = "AssassinsCreedIIGame.exe+1541096",
+        dynamic20 = "AssassinsCreedIIGame.exe+1541096",
+        dynamic21 = "\"AssassinsCreedIIGame.exe\"+154108D:",
+        dynamic22 = "\"AssassinsCreedIIGame.exe\"+F06531:",
+        dynamic23 = "AssassinsCreedIIGame.exe+1540F24",
+        dynamic24 = "\"AssassinsCreedIIGame.exe\"+1540F1D:",
+        dynamic25 = "\"AssassinsCreedIIGame.exe\"+1540B8C:",
+        dynamic26 = "AssassinsCreedIIGame.exe+1540F07",
+        dynamic27 = "AssassinsCreedIIGame.exe+1540F07",
+        dynamic28 = "AssassinsCreedIIGame.exe+1540F07",
+        dynamic29 = "AssassinsCreedIIGame.exe+1540ED5",
+        dynamic30 = "\"AssassinsCreedIIGame.exe\"+1540EC9:"
     }
 }
 
@@ -5212,6 +5299,7 @@ label(exit)
 
 globalalloc(forced_hang_enable,1)
 globalalloc(forced_hang_alt_enable,1)
+globalalloc(forced_hang_climb_pass_enable,1)
 globalalloc(parkour_down_enable,1)
 globalalloc(dive_beam_enable,1)
 globalalloc(dive_beam_far_enable,1)
@@ -5231,6 +5319,8 @@ je originalcode
 cmp byte ptr [parkour_down_low_enable],01
 je %s
 cmp byte ptr [dive_beam_enable],01
+je %s
+cmp byte ptr [forced_hang_climb_pass_enable],01
 je %s
 cmp byte ptr [dive_beam_far_enable],01
 je %s
@@ -5276,6 +5366,8 @@ cmp byte ptr [dive_beam_alt_enable],01
 je originalcode2
 cmp byte ptr [parkour_down_low_enable],01
 je originalcode2
+cmp byte ptr [forced_hang_climb_pass_enable],01
+je %s
 cmp byte ptr [dive_beam_enable],01
 je %s
 cmp byte ptr [dive_beam_far_enable],01
@@ -5312,6 +5404,8 @@ dive_beam_far:
 cmp byte ptr [dive_beam_alt_enable],01
 je %s
 cmp byte ptr [dive_beam_far_enable],01
+je %s
+cmp byte ptr [forced_hang_climb_pass_enable],01
 je %s
 
 originalcode3:
@@ -5459,7 +5553,7 @@ jmp returnhere7
 %s
 jmp inner_ledge
 returnhere7:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16, addrE.dynamic17, addrE.dynamic18, addrE.dynamic19, addrE.dynamic20, addrE.dynamic21, addrE.dynamic22, addrE.dynamic23, addrE.dynamic24, addrE.dynamic25, addrE.dynamic26, addrE.dynamic27)
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16, addrE.dynamic17, addrE.dynamic18, addrE.dynamic19, addrE.dynamic20, addrE.dynamic21, addrE.dynamic22, addrE.dynamic23, addrE.dynamic24, addrE.dynamic25, addrE.dynamic26, addrE.dynamic27, addrE.dynamic28, addrE.dynamic29, addrE.dynamic30)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -7377,14 +7471,16 @@ local config_enable = {
         dynamic2 = "AssassinsCreedIIGame.exe+DEC95A",
         dynamic3 = "AssassinsCreedIIGame.exe+DEC95A",
         dynamic4 = "AssassinsCreedIIGame.exe+DEC95A",
-        dynamic5 = "\"AssassinsCreedIIGame.exe\"+DEC933:"
+        dynamic5 = "AssassinsCreedIIGame.exe+DEC95A",
+        dynamic6 = "\"AssassinsCreedIIGame.exe\"+DEC933:"
     },
     [2] = {
         dynamic1 = "AssassinsCreedIIGame.exe+13C685A",
         dynamic2 = "AssassinsCreedIIGame.exe+13C685A",
         dynamic3 = "AssassinsCreedIIGame.exe+13C685A",
         dynamic4 = "AssassinsCreedIIGame.exe+13C685A",
-        dynamic5 = "\"AssassinsCreedIIGame.exe\"+13C6833:"
+        dynamic5 = "AssassinsCreedIIGame.exe+13C685A",
+        dynamic6 = "\"AssassinsCreedIIGame.exe\"+13C6833:"
     }
 }
 
@@ -7399,12 +7495,15 @@ label(exit)
 
 globalalloc(disable_ledge_grab_enable,1)
 globalalloc(dive_beam_f,1)
+globalalloc(forced_hang_climb_pass_f,1)
 globalalloc(vault_inner_ledge_f,1)
 
 disable_wall_rebound:
 cmp byte ptr [disable_ledge_grab_enable],01
 je %s
 cmp byte ptr [dive_beam_f],01
+je %s
+cmp byte ptr [forced_hang_climb_pass_f],01
 je %s
 cmp byte ptr [vault_inner_ledge_f],01
 je %s
@@ -7421,7 +7520,7 @@ jmp returnhere
 jmp disable_wall_rebound
 nop
 returnhere:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5)
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6)
 
 local success, info = autoAssemble(enableScript)
 if not success then

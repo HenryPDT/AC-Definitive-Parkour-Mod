@@ -142,6 +142,7 @@ globalalloc(on_water_f,1)
 
 globalalloc(already_rolled_f,1)
 globalalloc(dive_beam_f,1)
+globalalloc(forced_hang_climb_pass_f,1)
 globalalloc(near_miss_f,1)
 globalalloc(smooth_fall_f,1)
 globalalloc(instant_swingoff_f,1)
@@ -457,6 +458,7 @@ mov [on_hang_crouch_f],00
 mov [on_hang_stand_f],00
 mov [on_vault_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [freeform_jump_f],00
 mov [eject_clamp_f],00
 mov [on_water_f],00
@@ -509,6 +511,7 @@ mov [on_vault_f],00
 mov [vault_inner_ledge_f],00
 mov [already_rolled_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [ledge_drop_f],00
@@ -555,6 +558,7 @@ label(exit14)
 on_ledge_grab:
 mov [already_rolled_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [on_vault_f],00
@@ -582,6 +586,7 @@ mov [walk_strength],(float)1
 mov [walk_mode_index],00
 mov [already_rolled_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [dismount_hang_free_eject_f],00
@@ -634,6 +639,7 @@ mov [on_hang_stand_f],00
 mov [on_vault_f],01
 mov [already_rolled_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [ledge_drop_f],00
@@ -668,6 +674,7 @@ mov [on_hang_crouch_f],00
 mov [on_hang_stand_f],00
 mov [already_rolled_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [on_vault_f],00
@@ -1454,6 +1461,7 @@ label(drop_to_fall)
 label(dive_beam_alt)
 label(dive_beam_alt_2)
 label(forced_hang_alt)
+label(forced_hang_climb_pass)
 
 // Labels for deactivation code
 label(kiosk_roll_disable)
@@ -1473,6 +1481,7 @@ label(swan_dive_disable)
 label(forced_ledge_grab_disable)
 label(dive_beam_alt_disable)
 label(forced_hang_alt_disable)
+label(forced_hang_climb_pass_disable)
 
 globalalloc(buttonA,1)          // Button A
 globalalloc(buttonX,1)          // Button X
@@ -1625,6 +1634,7 @@ globalalloc(self_swing_enable,1)
 globalalloc(drop_to_fall_enable,1)
 globalalloc(dive_beam_alt_enable,1)
 globalalloc(forced_hang_alt_enable,1)
+globalalloc(forced_hang_climb_pass_enable,1)
 globalalloc(horse_flip_enable,1)
 
 globalalloc(on_hang_free_f,1)
@@ -1688,6 +1698,7 @@ mov [self_swing_enable],00
 mov [drop_to_fall_enable],00
 mov [dive_beam_alt_enable],00
 mov [forced_hang_alt_enable],00
+mov [forced_hang_climb_pass_enable],00
 mov [horse_flip_enable],00
 
 // Controller Activation Code
@@ -2142,16 +2153,30 @@ mov [dive_beam_alt_enable],01
 
 forced_hang_alt:
 cmp byte ptr [vault_enable],00
-je kiosk_roll_disable
+je forced_hang_climb_pass
 cmp byte ptr [forced_hang_enable],00
-je kiosk_roll_disable
+je forced_hang_climb_pass
 mov [forced_hang_alt_enable],01
+
+forced_hang_climb_pass:
+cmp byte ptr [kiosk_roll_enable],00
+je kiosk_roll_disable
+cmp byte ptr [forced_hang_alt_enable],00
+je kiosk_roll_disable
+mov [forced_hang_climb_pass_enable],01
 
 // Deactivation Code
 kiosk_roll_disable:
 cmp byte ptr [kiosk_roll_enable],00
-je kiosk_swing_disable
+je forced_hang_climb_pass_disable
 mov [vault_enable],00
+
+forced_hang_climb_pass_disable:
+cmp byte ptr [forced_hang_climb_pass_enable],00
+je kiosk_swing_disable
+mov [kiosk_roll_enable],00
+mov [kiosk_swing_enable],00
+mov [forced_hang_alt_enable],00
 
 kiosk_swing_disable:
 cmp byte ptr [kiosk_swing_enable],00
@@ -3718,18 +3743,25 @@ disableInfo = nil
                               <VariableType>Byte</VariableType>
                               <Address>forced_hang_alt_enable</Address>
                             </CheatEntry>
+                            <CheatEntry>
+                              <ID>245</ID>
+                              <Description>"Forced Hang Climb Pass"</Description>
+                              <ShowAsSigned>0</ShowAsSigned>
+                              <VariableType>Byte</VariableType>
+                              <Address>forced_hang_climb_pass_enable</Address>
+                            </CheatEntry>
                           </CheatEntries>
                         </CheatEntry>
                       </CheatEntries>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>245</ID>
+                      <ID>246</ID>
                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                       <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" />
                       <GroupHeader>1</GroupHeader>
                       <CheatEntries>
                         <CheatEntry>
-                          <ID>246</ID>
+                          <ID>247</ID>
                           <Description>"Parkour Mode"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -4931,44 +4963,52 @@ local config_enable = {
     [1] = {
         dynamic1 = "ACBSP.exe+1B98B2C",
         dynamic2 = "ACBSP.exe+1B98B2C",
-        dynamic3 = "ACBSP.exe+1F7F7C0",
-        dynamic4 = "ACBSP.exe+1B98B2C",
-        dynamic5 = "\"ACBSP.exe\"+1B98944:",
-        dynamic6 = "ACBSP.exe+1B98A30",
+        dynamic3 = "ACBSP.exe+1B98B2C",
+        dynamic4 = "ACBSP.exe+1F7F7C0",
+        dynamic5 = "ACBSP.exe+1B98B2C",
+        dynamic6 = "\"ACBSP.exe\"+1B98944:",
         dynamic7 = "ACBSP.exe+1B98A30",
         dynamic8 = "ACBSP.exe+1B98A30",
-        dynamic9 = "ACBSP.exe+1B98BED",
-        dynamic10 = "\"ACBSP.exe\"+1B98A19:",
-        dynamic11 = "ACBSP.exe+1B98B1F",
-        dynamic12 = "ACBSP.exe+1B98B1F",
+        dynamic9 = "ACBSP.exe+1B98A30",
+        dynamic10 = "ACBSP.exe+1B98BED",
+        dynamic11 = "ACBSP.exe+1B98BED",
+        dynamic12 = "\"ACBSP.exe\"+1B98A19:",
         dynamic13 = "ACBSP.exe+1B98B1F",
-        dynamic14 = "ACBSP.exe+1B98BED",
-        dynamic15 = "\"ACBSP.exe\"+1B98AF6:",
-        dynamic16 = "ACBSP.exe+1B98BE5",
-        dynamic17 = "ACBSP.exe+1B98BE5",
-        dynamic18 = "ACBSP.exe+1B98BED",
-        dynamic19 = "\"ACBSP.exe\"+1B98BC3:"
+        dynamic14 = "ACBSP.exe+1B98B1F",
+        dynamic15 = "ACBSP.exe+1B98B1F",
+        dynamic16 = "ACBSP.exe+1B98BED",
+        dynamic17 = "ACBSP.exe+1B98BED",
+        dynamic18 = "\"ACBSP.exe\"+1B98AF6:",
+        dynamic19 = "ACBSP.exe+1B98BE5",
+        dynamic20 = "ACBSP.exe+1B98BE5",
+        dynamic21 = "ACBSP.exe+1B98BED",
+        dynamic22 = "ACBSP.exe+1B98BED",
+        dynamic23 = "\"ACBSP.exe\"+1B98BC3:"
     },
     [2] = {
         dynamic1 = "ACBSP.exe+150C29C",
         dynamic2 = "ACBSP.exe+150C29C",
-        dynamic3 = "ACBSP.exe+1FE2CC8",
-        dynamic4 = "ACBSP.exe+150C29C",
-        dynamic5 = "\"ACBSP.exe\"+150C0B4:",
-        dynamic6 = "ACBSP.exe+150C1A0",
+        dynamic3 = "ACBSP.exe+150C29C",
+        dynamic4 = "ACBSP.exe+1FE2CC8",
+        dynamic5 = "ACBSP.exe+150C29C",
+        dynamic6 = "\"ACBSP.exe\"+150C0B4:",
         dynamic7 = "ACBSP.exe+150C1A0",
         dynamic8 = "ACBSP.exe+150C1A0",
-        dynamic9 = "ACBSP.exe+150C35D",
-        dynamic10 = "\"ACBSP.exe\"+150C189:",
-        dynamic11 = "ACBSP.exe+150C28F",
-        dynamic12 = "ACBSP.exe+150C28F",
+        dynamic9 = "ACBSP.exe+150C1A0",
+        dynamic10 = "ACBSP.exe+150C35D",
+        dynamic11 = "ACBSP.exe+150C35D",
+        dynamic12 = "\"ACBSP.exe\"+150C189:",
         dynamic13 = "ACBSP.exe+150C28F",
-        dynamic14 = "ACBSP.exe+150C35D",
-        dynamic15 = "\"ACBSP.exe\"+150C266:",
-        dynamic16 = "ACBSP.exe+150C355",
-        dynamic17 = "ACBSP.exe+150C355",
-        dynamic18 = "ACBSP.exe+150C35D",
-        dynamic19 = "\"ACBSP.exe\"+150C333:"
+        dynamic14 = "ACBSP.exe+150C28F",
+        dynamic15 = "ACBSP.exe+150C28F",
+        dynamic16 = "ACBSP.exe+150C35D",
+        dynamic17 = "ACBSP.exe+150C35D",
+        dynamic18 = "\"ACBSP.exe\"+150C266:",
+        dynamic19 = "ACBSP.exe+150C355",
+        dynamic20 = "ACBSP.exe+150C355",
+        dynamic21 = "ACBSP.exe+150C35D",
+        dynamic22 = "ACBSP.exe+150C35D",
+        dynamic23 = "\"ACBSP.exe\"+150C333:"
     }
 }
 
@@ -4985,6 +5025,7 @@ label(exit)
 globalalloc(parkour_down_enable,1)
 globalalloc(parkour_far_enable,1)
 globalalloc(forced_hang_enable,1)
+globalalloc(forced_hang_climb_pass_enable,1)
 globalalloc(parkour_down_low_enable,1)
 globalalloc(freeform_enable,1)
 globalalloc(vault_inner_ledge_enable,1)
@@ -4992,11 +5033,18 @@ globalalloc(forced_step_enable,1)
 globalalloc(dive_beam_alt_enable,1)
 globalalloc(self_swing_enable,1)
 globalalloc(on_vault_f,1)
+globalalloc(target_angle,8)
+globalalloc(forced_hang_climb_pass_f,1)
+
+target_angle:
+dq (double)0.55
 
 parkour_down:
 cmp byte ptr [on_vault_f],01
 je vault_freeform
 cmp byte ptr [dive_beam_alt_enable],01
+je %s
+cmp byte ptr [forced_hang_climb_pass_enable],01
 je %s
 cmp byte ptr [parkour_far_enable],01
 je %s
@@ -5030,6 +5078,7 @@ returnhere:
 alloc(parkour_down_2,2048)
 label(returnhere2)
 label(originalcode2)
+label(climb_pass_2)
 label(exit2)
 
 parkour_down_2:
@@ -5039,8 +5088,18 @@ cmp byte ptr [parkour_down_enable],01
 je %s
 cmp byte ptr [self_swing_enable],01
 je %s
+cmp byte ptr [forced_hang_climb_pass_enable],01
+je climb_pass_2
 cmp byte ptr [forced_hang_enable],01
 je exit2
+jmp originalcode2
+
+climb_pass_2:
+movsd xmm3,[target_angle]
+comisd xmm3,xmm2
+ja %s
+mov [forced_hang_climb_pass_f],01
+jmp exit2
 
 originalcode2:
 comisd xmm3,xmm2
@@ -5058,6 +5117,7 @@ returnhere2:
 alloc(parkour_down_3,2048)
 label(returnhere3)
 label(originalcode3)
+label(climb_pass_3)
 label(exit3)
 
 parkour_down_3:
@@ -5067,8 +5127,18 @@ cmp byte ptr [parkour_down_enable],01
 je %s
 cmp byte ptr [self_swing_enable],01
 je %s
+cmp byte ptr [forced_hang_climb_pass_enable],01
+je climb_pass_3
 cmp byte ptr [forced_hang_enable],01
 je exit3
+jmp originalcode3
+
+climb_pass_3:
+movsd xmm2,[target_angle]
+comisd xmm2,xmm1
+ja %s
+mov [forced_hang_climb_pass_f],01
+jmp exit3
 
 originalcode3:
 comisd xmm2,xmm1
@@ -5086,6 +5156,7 @@ returnhere3:
 alloc(parkour_far_2,2048)
 label(returnhere4)
 label(originalcode4)
+label(climb_pass_4)
 label(exit4)
 
 parkour_far_2:
@@ -5093,8 +5164,18 @@ cmp byte ptr [dive_beam_alt_enable],01
 je %s
 cmp byte ptr [parkour_far_enable],01
 je exit4
+cmp byte ptr [forced_hang_climb_pass_enable],01
+je climb_pass_4
 cmp byte ptr [forced_hang_enable],01
 je %s
+jmp originalcode4
+
+climb_pass_4:
+movsd xmm1,[target_angle]
+comisd xmm1,xmm0
+ja %s
+mov [forced_hang_climb_pass_f],01
+jmp exit4
 
 originalcode4:
 comisd xmm1,xmm0
@@ -5107,7 +5188,7 @@ jmp returnhere4
 jmp parkour_far_2
 nop
 returnhere4:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16, addrE.dynamic17, addrE.dynamic18, addrE.dynamic19)
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16, addrE.dynamic17, addrE.dynamic18, addrE.dynamic19, addrE.dynamic20, addrE.dynamic21, addrE.dynamic22, addrE.dynamic23)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -5198,53 +5279,57 @@ local config_enable = {
         dynamic1 = "ACBSP.exe+1B98993",
         dynamic2 = "ACBSP.exe+1B989B8",
         dynamic3 = "ACBSP.exe+1B989B8",
-        dynamic4 = "ACBSP.exe+1B98993",
-        dynamic5 = "ACBSP.exe+1B989B8",
-        dynamic6 = "ACBSP.exe+1B98980",
+        dynamic4 = "ACBSP.exe+1B989B8",
+        dynamic5 = "ACBSP.exe+1B98993",
+        dynamic6 = "ACBSP.exe+1B989B8",
         dynamic7 = "ACBSP.exe+1B98980",
-        dynamic8 = "ACBSP.exe+1B98993",
-        dynamic9 = "\"ACBSP.exe\"+1B98979:",
-        dynamic10 = "ACBSP.exe+1B98A84",
-        dynamic11 = "\"ACBSP.exe\"+1B98A06:",
-        dynamic12 = "ACBSP.exe+1B98B8A",
-        dynamic13 = "ACBSP.exe+1B98B9E",
-        dynamic14 = "ACBSP.exe+1B98B60",
-        dynamic15 = "\"ACBSP.exe\"+1B98B58:",
-        dynamic16 = "\"ACBSP.exe\"+127A5CE:",
-        dynamic17 = "ACBSP.exe+1B98A84",
-        dynamic18 = "\"ACBSP.exe\"+1B98A00:",
-        dynamic19 = "\"ACBSP.exe\"+1B9868E:",
-        dynamic20 = "ACBSP.exe+1B989F0",
-        dynamic21 = "ACBSP.exe+1B989F0",
+        dynamic8 = "ACBSP.exe+1B98980",
+        dynamic9 = "ACBSP.exe+1B98993",
+        dynamic10 = "\"ACBSP.exe\"+1B98979:",
+        dynamic11 = "ACBSP.exe+1B98A84",
+        dynamic12 = "\"ACBSP.exe\"+1B98A06:",
+        dynamic13 = "ACBSP.exe+1B98B8A",
+        dynamic14 = "ACBSP.exe+1B98B9E",
+        dynamic15 = "ACBSP.exe+1B98B60",
+        dynamic16 = "ACBSP.exe+1B98B60",
+        dynamic17 = "\"ACBSP.exe\"+1B98B58:",
+        dynamic18 = "\"ACBSP.exe\"+127A5CE:",
+        dynamic19 = "ACBSP.exe+1B98A84",
+        dynamic20 = "\"ACBSP.exe\"+1B98A00:",
+        dynamic21 = "\"ACBSP.exe\"+1B9868E:",
         dynamic22 = "ACBSP.exe+1B989F0",
-        dynamic23 = "ACBSP.exe+1B989C6",
-        dynamic24 = "\"ACBSP.exe\"+1B989BD:"
+        dynamic23 = "ACBSP.exe+1B989F0",
+        dynamic24 = "ACBSP.exe+1B989F0",
+        dynamic25 = "ACBSP.exe+1B989C6",
+        dynamic26 = "\"ACBSP.exe\"+1B989BD:"
     },
     [2] = {
         dynamic1 = "ACBSP.exe+150C103",
         dynamic2 = "ACBSP.exe+150C128",
         dynamic3 = "ACBSP.exe+150C128",
-        dynamic4 = "ACBSP.exe+150C103",
-        dynamic5 = "ACBSP.exe+150C128",
-        dynamic6 = "ACBSP.exe+150C0F0",
+        dynamic4 = "ACBSP.exe+150C128",
+        dynamic5 = "ACBSP.exe+150C103",
+        dynamic6 = "ACBSP.exe+150C128",
         dynamic7 = "ACBSP.exe+150C0F0",
-        dynamic8 = "ACBSP.exe+150C103",
-        dynamic9 = "\"ACBSP.exe\"+150C0E9:",
-        dynamic10 = "ACBSP.exe+150C1F4",
-        dynamic11 = "\"ACBSP.exe\"+150C176:",
-        dynamic12 = "ACBSP.exe+150C2FA",
-        dynamic13 = "ACBSP.exe+150C30E",
-        dynamic14 = "ACBSP.exe+150C2D0",
-        dynamic15 = "\"ACBSP.exe\"+150C2C8:",
-        dynamic16 = "\"ACBSP.exe\"+BE8BFE:",
-        dynamic17 = "ACBSP.exe+150C1F4",
-        dynamic18 = "\"ACBSP.exe\"+150C170:",
-        dynamic19 = "\"ACBSP.exe\"+150BDFE:",
-        dynamic20 = "ACBSP.exe+150C160",
-        dynamic21 = "ACBSP.exe+150C160",
+        dynamic8 = "ACBSP.exe+150C0F0",
+        dynamic9 = "ACBSP.exe+150C103",
+        dynamic10 = "\"ACBSP.exe\"+150C0E9:",
+        dynamic11 = "ACBSP.exe+150C1F4",
+        dynamic12 = "\"ACBSP.exe\"+150C176:",
+        dynamic13 = "ACBSP.exe+150C2FA",
+        dynamic14 = "ACBSP.exe+150C30E",
+        dynamic15 = "ACBSP.exe+150C2D0",
+        dynamic16 = "ACBSP.exe+150C2D0",
+        dynamic17 = "\"ACBSP.exe\"+150C2C8:",
+        dynamic18 = "\"ACBSP.exe\"+BE8BFE:",
+        dynamic19 = "ACBSP.exe+150C1F4",
+        dynamic20 = "\"ACBSP.exe\"+150C170:",
+        dynamic21 = "\"ACBSP.exe\"+150BDFE:",
         dynamic22 = "ACBSP.exe+150C160",
-        dynamic23 = "ACBSP.exe+150C136",
-        dynamic24 = "\"ACBSP.exe\"+150C12D:"
+        dynamic23 = "ACBSP.exe+150C160",
+        dynamic24 = "ACBSP.exe+150C160",
+        dynamic25 = "ACBSP.exe+150C136",
+        dynamic26 = "\"ACBSP.exe\"+150C12D:"
     }
 }
 
@@ -5260,6 +5345,7 @@ label(exit)
 
 globalalloc(forced_hang_enable,1)
 globalalloc(forced_hang_alt_enable,1)
+globalalloc(forced_hang_climb_pass_enable,1)
 globalalloc(parkour_down_enable,1)
 globalalloc(dive_beam_enable,1)
 globalalloc(dive_beam_far_enable,1)
@@ -5279,6 +5365,8 @@ je originalcode
 cmp byte ptr [parkour_down_low_enable],01
 je %s
 cmp byte ptr [dive_beam_enable],01
+je %s
+cmp byte ptr [forced_hang_climb_pass_enable],01
 je %s
 cmp byte ptr [dive_beam_far_enable],01
 je %s
@@ -5324,6 +5412,8 @@ cmp byte ptr [dive_beam_alt_enable],01
 je originalcode2
 cmp byte ptr [parkour_down_low_enable],01
 je originalcode2
+cmp byte ptr [forced_hang_climb_pass_enable],01
+je exit2
 cmp byte ptr [dive_beam_enable],01
 je exit2
 cmp byte ptr [dive_beam_far_enable],01
@@ -5362,6 +5452,8 @@ dive_beam_far:
 cmp byte ptr [dive_beam_alt_enable],01
 je %s
 cmp byte ptr [dive_beam_far_enable],01
+je %s
+cmp byte ptr [forced_hang_climb_pass_enable],01
 je %s
 
 originalcode3:
@@ -5512,7 +5604,7 @@ jmp returnhere7
 jmp inner_ledge
 nop 2
 returnhere7:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16, addrE.dynamic17, addrE.dynamic18, addrE.dynamic19, addrE.dynamic20, addrE.dynamic21, addrE.dynamic22, addrE.dynamic23, addrE.dynamic24)
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6, addrE.dynamic7, addrE.dynamic8, addrE.dynamic9, addrE.dynamic10, addrE.dynamic11, addrE.dynamic12, addrE.dynamic13, addrE.dynamic14, addrE.dynamic15, addrE.dynamic16, addrE.dynamic17, addrE.dynamic18, addrE.dynamic19, addrE.dynamic20, addrE.dynamic21, addrE.dynamic22, addrE.dynamic23, addrE.dynamic24, addrE.dynamic25, addrE.dynamic26)
 
 local success, info = autoAssemble(enableScript)
 if not success then
@@ -7433,14 +7525,16 @@ local config_enable = {
         dynamic2 = "ACBSP.exe+1CD83BE",
         dynamic3 = "ACBSP.exe+1CD83BE",
         dynamic4 = "ACBSP.exe+1CD83BE",
-        dynamic5 = "\"ACBSP.exe\"+1CD83A8:"
+        dynamic5 = "ACBSP.exe+1CD83BE",
+        dynamic6 = "\"ACBSP.exe\"+1CD83A8:"
     },
     [2] = {
         dynamic1 = "ACBSP.exe+164BFBE",
         dynamic2 = "ACBSP.exe+164BFBE",
         dynamic3 = "ACBSP.exe+164BFBE",
         dynamic4 = "ACBSP.exe+164BFBE",
-        dynamic5 = "\"ACBSP.exe\"+164BFA8:"
+        dynamic5 = "ACBSP.exe+164BFBE",
+        dynamic6 = "\"ACBSP.exe\"+164BFA8:"
     }
 }
 
@@ -7455,12 +7549,15 @@ label(exit)
 
 globalalloc(disable_ledge_grab_enable,1)
 globalalloc(dive_beam_f,1)
+globalalloc(forced_hang_climb_pass_f,1)
 globalalloc(vault_inner_ledge_f,1)
 
 disable_wall_rebound:
 cmp byte ptr [disable_ledge_grab_enable],01
 je %s
 cmp byte ptr [dive_beam_f],01
+je %s
+cmp byte ptr [forced_hang_climb_pass_f],01
 je %s
 cmp byte ptr [vault_inner_ledge_f],01
 je %s
@@ -7477,7 +7574,7 @@ jmp returnhere
 jmp disable_wall_rebound
 nop
 returnhere:
-]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5)
+]==], addrE.dynamic1, addrE.dynamic2, addrE.dynamic3, addrE.dynamic4, addrE.dynamic5, addrE.dynamic6)
 
 local success, info = autoAssemble(enableScript)
 if not success then

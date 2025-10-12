@@ -92,6 +92,7 @@ globalalloc(on_water_f,1)
 
 globalalloc(already_rolled_f,1)
 globalalloc(dive_beam_f,1)
+globalalloc(forced_hang_climb_pass_f,1)
 globalalloc(near_miss_f,1)
 globalalloc(smooth_fall_f,1)
 globalalloc(instant_swingoff_f,1)
@@ -409,6 +410,7 @@ mov [on_hang_crouch_f],00
 mov [on_hang_stand_f],00
 mov [on_vault_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [freeform_jump_f],00
 mov [eject_clamp_f],00
 mov [on_water_f],00
@@ -461,6 +463,7 @@ mov [on_vault_f],00
 mov [vault_inner_ledge_f],00
 mov [already_rolled_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [ledge_drop_f],00
@@ -507,6 +510,7 @@ label(exit14)
 on_ledge_grab:
 mov [already_rolled_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [on_vault_f],00
@@ -534,6 +538,7 @@ mov [walk_strength],(float)1
 mov [walk_mode_index],00
 mov [already_rolled_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [dismount_hang_free_eject_f],00
@@ -586,6 +591,7 @@ mov [on_hang_stand_f],00
 mov [on_vault_f],01
 mov [already_rolled_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [ledge_drop_f],00
@@ -620,6 +626,7 @@ mov [on_hang_crouch_f],00
 mov [on_hang_stand_f],00
 mov [already_rolled_f],00
 mov [dive_beam_f],00
+mov [forced_hang_climb_pass_f],00
 mov [near_miss_f],00
 mov [freeform_jump_f],00
 mov [on_vault_f],00
@@ -1312,6 +1319,7 @@ label(drop_to_fall)
 label(dive_beam_alt)
 label(dive_beam_alt_2)
 label(forced_hang_alt)
+label(forced_hang_climb_pass)
 label(forced_hook_climb_leap)
 label(forced_hook_climb_leap_double)
 label(forced_hook_climb_leap_hand)
@@ -1336,6 +1344,7 @@ label(swan_dive_disable)
 label(forced_ledge_grab_disable)
 label(dive_beam_alt_disable)
 label(forced_hang_alt_disable)
+label(forced_hang_climb_pass_disable)
 label(forced_hook_climb_leap_hand_disable)
 
 globalalloc(buttonA,1)          // Button A
@@ -1489,6 +1498,7 @@ globalalloc(self_swing_enable,1)
 globalalloc(drop_to_fall_enable,1)
 globalalloc(dive_beam_alt_enable,1)
 globalalloc(forced_hang_alt_enable,1)
+globalalloc(forced_hang_climb_pass_enable,1)
 globalalloc(horse_flip_enable,1)
 globalalloc(forced_hook_climb_leap_enable,1)
 globalalloc(forced_hook_climb_leap_double_enable,1)
@@ -1557,6 +1567,7 @@ mov [self_swing_enable],00
 mov [drop_to_fall_enable],00
 mov [dive_beam_alt_enable],00
 mov [forced_hang_alt_enable],00
+mov [forced_hang_climb_pass_enable],00
 mov [horse_flip_enable],00
 mov [forced_hook_climb_leap_enable],00
 mov [forced_hook_climb_leap_double_enable],00
@@ -2016,10 +2027,17 @@ mov [dive_beam_alt_enable],01
 
 forced_hang_alt:
 cmp byte ptr [vault_enable],00
-je forced_hook_climb_leap
+je forced_hang_climb_pass
 cmp byte ptr [forced_hang_enable],00
-je forced_hook_climb_leap
+je forced_hang_climb_pass
 mov [forced_hang_alt_enable],01
+
+forced_hang_climb_pass:
+cmp byte ptr [kiosk_roll_enable],00
+je forced_hook_climb_leap
+cmp byte ptr [forced_hang_alt_enable],00
+je forced_hook_climb_leap
+mov [forced_hang_climb_pass_enable],01
 
 forced_hook_climb_leap:
 cmp byte ptr [parkour_down_enable],00
@@ -2051,8 +2069,15 @@ mov [forced_hook_pull_up_enable],01
 // Deactivation Code
 kiosk_roll_disable:
 cmp byte ptr [kiosk_roll_enable],00
-je kiosk_swing_disable
+je forced_hang_climb_pass_disable
 mov [vault_enable],00
+
+forced_hang_climb_pass_disable:
+cmp byte ptr [forced_hang_climb_pass_enable],00
+je kiosk_swing_disable
+mov [kiosk_roll_enable],00
+mov [kiosk_swing_enable],00
+mov [forced_hang_alt_enable],00
 
 kiosk_swing_disable:
 cmp byte ptr [kiosk_swing_enable],00
@@ -3584,34 +3609,41 @@ dealloc(bind_legs_tap)
                             </CheatEntry>
                             <CheatEntry>
                               <ID>245</ID>
+                              <Description>"Forced Hang Climb Pass"</Description>
+                              <ShowAsSigned>0</ShowAsSigned>
+                              <VariableType>Byte</VariableType>
+                              <Address>forced_hang_climb_pass_enable</Address>
+                            </CheatEntry>
+                            <CheatEntry>
+                              <ID>246</ID>
                               <Description>"Forced Hook Climb Leap"</Description>
                               <ShowAsSigned>0</ShowAsSigned>
                               <VariableType>Byte</VariableType>
                               <Address>forced_hook_climb_leap_enable</Address>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>246</ID>
+                              <ID>247</ID>
                               <Description>"Forced Hook Climb Leap Double"</Description>
                               <ShowAsSigned>0</ShowAsSigned>
                               <VariableType>Byte</VariableType>
                               <Address>forced_hook_climb_leap_double_enable</Address>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>247</ID>
+                              <ID>248</ID>
                               <Description>"Forced Hook Climb Leap Hand"</Description>
                               <ShowAsSigned>0</ShowAsSigned>
                               <VariableType>Byte</VariableType>
                               <Address>forced_hook_climb_leap_hand_enable</Address>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>248</ID>
+                              <ID>249</ID>
                               <Description>"Forced Hook Climb Leap Hang"</Description>
                               <ShowAsSigned>0</ShowAsSigned>
                               <VariableType>Byte</VariableType>
                               <Address>forced_hook_climb_leap_hang_enable</Address>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>249</ID>
+                              <ID>250</ID>
                               <Description>"Forced Hook Pull Up"</Description>
                               <ShowAsSigned>0</ShowAsSigned>
                               <VariableType>Byte</VariableType>
@@ -3622,13 +3654,13 @@ dealloc(bind_legs_tap)
                       </CheatEntries>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>250</ID>
+                      <ID>251</ID>
                       <Description>"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"</Description>
                       <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
                       <GroupHeader>1</GroupHeader>
                       <CheatEntries>
                         <CheatEntry>
-                          <ID>251</ID>
+                          <ID>252</ID>
                           <Description>"Parkour Mode"</Description>
                           <VariableType>Auto Assembler Script</VariableType>
                           <AssemblerScript>[ENABLE]
@@ -4474,6 +4506,7 @@ label(exit)
 globalalloc(parkour_down_enable,1)
 globalalloc(parkour_far_enable,1)
 globalalloc(forced_hang_enable,1)
+globalalloc(forced_hang_climb_pass_enable,1)
 globalalloc(parkour_down_low_enable,1)
 globalalloc(freeform_enable,1)
 globalalloc(vault_inner_ledge_enable,1)
@@ -4481,11 +4514,18 @@ globalalloc(forced_step_enable,1)
 globalalloc(dive_beam_alt_enable,1)
 globalalloc(self_swing_enable,1)
 globalalloc(on_vault_f,1)
+globalalloc(target_angle,8)
+globalalloc(forced_hang_climb_pass_f,1)
+
+target_angle:
+dq (double)0.55
 
 parkour_down:
 cmp byte ptr [on_vault_f],01
 je vault_freeform
 cmp byte ptr [dive_beam_alt_enable],01
+je ACRSP.exe+15C3E9B
+cmp byte ptr [forced_hang_climb_pass_enable],01
 je ACRSP.exe+15C3E9B
 cmp byte ptr [parkour_far_enable],01
 je ACRSP.exe+15C3E9B
@@ -4519,6 +4559,7 @@ returnhere:
 alloc(parkour_down_2,2048)
 label(returnhere2)
 label(originalcode2)
+label(climb_pass_2)
 label(exit2)
 
 parkour_down_2:
@@ -4528,8 +4569,18 @@ cmp byte ptr [parkour_down_enable],01
 je ACRSP.exe+15C3CBF
 cmp byte ptr [self_swing_enable],01
 je ACRSP.exe+15C3CBF
+cmp byte ptr [forced_hang_climb_pass_enable],01
+je climb_pass_2
 cmp byte ptr [forced_hang_enable],01
 je exit2
+jmp originalcode2
+
+climb_pass_2:
+movsd xmm3,[target_angle]
+comisd xmm3,xmm2
+ja ACRSP.exe+15C3E12
+mov [forced_hang_climb_pass_f],01
+jmp exit2
 
 originalcode2:
 comisd xmm3,xmm2
@@ -4547,6 +4598,7 @@ returnhere2:
 alloc(parkour_down_3,2048)
 label(returnhere3)
 label(originalcode3)
+label(climb_pass_3)
 label(exit3)
 
 parkour_down_3:
@@ -4556,8 +4608,18 @@ cmp byte ptr [parkour_down_enable],01
 je ACRSP.exe+15C3E8E
 cmp byte ptr [self_swing_enable],01
 je ACRSP.exe+15C3E8E
+cmp byte ptr [forced_hang_climb_pass_enable],01
+je climb_pass_3
 cmp byte ptr [forced_hang_enable],01
 je exit3
+jmp originalcode3
+
+climb_pass_3:
+movsd xmm2,[target_angle]
+comisd xmm2,xmm1
+ja ACRSP.exe+15C3E12
+mov [forced_hang_climb_pass_f],01
+jmp exit3
 
 originalcode3:
 comisd xmm2,xmm1
@@ -4575,6 +4637,7 @@ returnhere3:
 alloc(parkour_far_2,2048)
 label(returnhere4)
 label(originalcode4)
+label(climb_pass_4)
 label(exit4)
 
 parkour_far_2:
@@ -4582,8 +4645,18 @@ cmp byte ptr [dive_beam_alt_enable],01
 je ACRSP.exe+15C3F9B
 cmp byte ptr [parkour_far_enable],01
 je exit4
+cmp byte ptr [forced_hang_climb_pass_enable],01
+je climb_pass_4
 cmp byte ptr [forced_hang_enable],01
 je ACRSP.exe+15C3F9B
+jmp originalcode4
+
+climb_pass_4:
+movsd xmm1,[target_angle]
+comisd xmm1,xmm0
+ja ACRSP.exe+15C3E12
+mov [forced_hang_climb_pass_f],01
+jmp exit4
 
 originalcode4:
 comisd xmm1,xmm0
@@ -4638,6 +4711,7 @@ label(exit)
 
 globalalloc(forced_hang_enable,1)
 globalalloc(forced_hang_alt_enable,1)
+globalalloc(forced_hang_climb_pass_enable,1)
 globalalloc(parkour_down_enable,1)
 globalalloc(dive_beam_enable,1)
 globalalloc(dive_beam_far_enable,1)
@@ -4657,6 +4731,8 @@ je originalcode
 cmp byte ptr [parkour_down_low_enable],01
 je ACRSP.exe+15C3C17
 cmp byte ptr [dive_beam_enable],01
+je ACRSP.exe+15C3C3E
+cmp byte ptr [forced_hang_climb_pass_enable],01
 je ACRSP.exe+15C3C3E
 cmp byte ptr [dive_beam_far_enable],01
 je ACRSP.exe+15C3C3E
@@ -4702,6 +4778,8 @@ cmp byte ptr [dive_beam_alt_enable],01
 je originalcode2
 cmp byte ptr [parkour_down_low_enable],01
 je originalcode2
+cmp byte ptr [forced_hang_climb_pass_enable],01
+je exit2
 cmp byte ptr [dive_beam_enable],01
 je exit2
 cmp byte ptr [dive_beam_far_enable],01
@@ -4741,6 +4819,8 @@ cmp byte ptr [dive_beam_alt_enable],01
 je ACRSP.exe+15C3F1D
 cmp byte ptr [dive_beam_far_enable],01
 je ACRSP.exe+15C3F35
+cmp byte ptr [forced_hang_climb_pass_enable],01
+je ACRSP.exe+15C3EEC
 
 originalcode3:
 test cl,al
@@ -6189,12 +6269,15 @@ label(exit)
 
 globalalloc(disable_ledge_grab_enable,1)
 globalalloc(dive_beam_f,1)
+globalalloc(forced_hang_climb_pass_f,1)
 globalalloc(vault_inner_ledge_f,1)
 
 disable_wall_rebound:
 cmp byte ptr [disable_ledge_grab_enable],01
 je ACRSP.exe+1730818
 cmp byte ptr [dive_beam_f],01
+je ACRSP.exe+1730818
+cmp byte ptr [forced_hang_climb_pass_f],01
 je ACRSP.exe+1730818
 cmp byte ptr [vault_inner_ledge_f],01
 je ACRSP.exe+1730818
