@@ -45,10 +45,9 @@ DYN_PATTERN = re.compile(
     re.IGNORECASE                           # Make .exe matching case-insensitive
 )
 
-
-def process_section(text: str, pattern: re.Pattern) -> Tuple[str, List[str]]:
+def process_section(text: str, pattern: re.Pattern) -> Tuple[str, List[str], List[int]]:
     """
-    Replace dynamic segments in text with '%s' and extract them.
+    Replace dynamic segments in text with '%s' and extract them along with their line numbers.
 
     Args:
         text: The input text containing dynamic segments.
@@ -58,8 +57,10 @@ def process_section(text: str, pattern: re.Pattern) -> Tuple[str, List[str]]:
         A tuple containing:
           - A template string with dynamic parts replaced by '%s'.
           - A list of extracted dynamic strings.
+          - A list of line numbers for each dynamic string.
     """
     dyn_list: List[str] = []
+    dyn_lines: List[int] = []
     result: List[str] = []
     last_index = 0
     for m in pattern.finditer(text):
@@ -67,12 +68,96 @@ def process_section(text: str, pattern: re.Pattern) -> Tuple[str, List[str]]:
         result.append(text[last_index:start])
         result.append("%s")
         dyn_list.append(m.group(0))
+        # Calculate line number by counting newlines before the match
+        line_num = text.count('\n', 0, start)
+        dyn_lines.append(line_num)
         last_index = end
     result.append(text[last_index:])
     template = "".join(result)
-    return template, dyn_list
+    return template, dyn_list, dyn_lines
 
-def build_lua_config_table(name: str, dyn_list_v1: List[str], dyn_list_v2: List[str]) -> Tuple[str, int]:
+def get_address_type(line_content: str) -> str:
+    """Determine the type of address usage on a given line."""
+    line = line_content.strip()
+    # A line that is just an address (e.g., "Game.exe"+123:) is a hook.
+    # DYN_PATTERN includes an optional ':', so we match the line against the pattern.
+    match = DYN_PATTERN.fullmatch(line)
+    if match:
+        return "hook"
+    # A line containing a jump/call to a dynamic address
+    if re.search(r'\b(j\w+|call)\b', line, re.IGNORECASE):
+        return "jmp"
+    return "value"
+
+def generate_dynamic_names(dyn_list: List[str], dyn_lines: List[int], script_text: str) -> Tuple[List[str], Dict[str, str], Dict[str, str]]:
+    """
+    Generate meaningful names for dynamic addresses based on their alloc block context.
+
+    Returns:
+        A tuple containing:
+        - A list of generated names, in the same order as dyn_list.
+        - A dictionary mapping hook addresses to their generated names.
+        - A dictionary mapping jmp/value addresses to their generated names.
+    """
+    script_lines = script_text.split('\n')
+
+    # 1. Differentiate code allocs from data allocs
+    all_alloc_names = re.findall(r'alloc\(([^,)\s]+)', script_text)
+    code_alloc_names = {name for name in all_alloc_names if re.search(r'jmp\s+' + re.escape(name) + r'\b', script_text)}
+
+    # 2. Create a map of line numbers ONLY for code allocs
+    code_alloc_map = {
+        i: re.sub(r'[^a-zA-Z0-9_]', '_', m.group(1))
+        for i, line in enumerate(script_lines)
+        for m in [re.search(r'alloc\(([^,)\s]+)', line)] if m and m.group(1) in code_alloc_names
+    }
+    code_alloc_line_numbers = sorted(code_alloc_map.keys())
+
+    # 3. find_enclosing_alloc now uses this filtered list
+    def find_enclosing_alloc(line_num):
+        enclosing_alloc_line = -1
+        for alloc_line in code_alloc_line_numbers:
+            if alloc_line <= line_num:
+                enclosing_alloc_line = alloc_line
+            else:
+                break
+        # Special case for ASI hooks which might not be inside any alloc block in the script
+        # We can identify them by searching for the alloc name they jump to.
+        if enclosing_alloc_line == -1:
+            line_content = script_lines[line_num]
+            jmp_target_match = re.search(r'jmp\s+([a-zA-Z0-9_]+)', line_content)
+            if jmp_target_match:
+                target = jmp_target_match.group(1)
+                if target in code_alloc_names:
+                    return target
+        return code_alloc_map.get(enclosing_alloc_line, "unknown")
+
+    names = []
+    hook_addr_to_name_map = {}
+    other_addr_to_name_map = {}
+    counters = {}  # To ensure unique names like "alloc_jmp_1", "alloc_jmp_2"
+
+    for dyn_addr, line_num in zip(dyn_list, dyn_lines):
+        alloc_name = find_enclosing_alloc(line_num)
+        addr_type = get_address_type(script_lines[line_num])
+
+        # Generate a unique name
+        key = (alloc_name, addr_type)
+        count = counters.get(key, 0) + 1
+        counters[key] = count
+        name = f"{alloc_name}_{addr_type}_{count}"
+        names.append(name)
+
+        # Map the address to its name for the [DISABLE] section lookup
+        norm_addr = dyn_addr.replace('"', '').rstrip(':')
+        if addr_type == 'hook':
+            hook_addr_to_name_map[norm_addr] = name
+        else:
+            other_addr_to_name_map[norm_addr] = name
+
+    return names, hook_addr_to_name_map, other_addr_to_name_map
+
+def build_lua_config_table(name: str, dyn_list_v1: List[str], dyn_list_v2: List[str], dynamic_names: List[str]) -> Tuple[str, int]:
     """
     Build a Lua configuration table string for a section.
     'name' is used as the Lua variable name (e.g. config_enable).
@@ -82,7 +167,7 @@ def build_lua_config_table(name: str, dyn_list_v1: List[str], dyn_list_v2: List[
         name: The Lua variable name.
         dyn_list_v1: The list of dynamic values from the first script.
         dyn_list_v2: The list of dynamic values from the second script.
-
+        dynamic_names: A list of descriptive names for the dynamic values.
     Returns:
         A tuple containing:
           - The Lua configuration table string.
@@ -92,18 +177,19 @@ def build_lua_config_table(name: str, dyn_list_v1: List[str], dyn_list_v2: List[
         raise ValueError(f"Dynamic value count mismatch for {name}: {len(dyn_list_v1)} vs {len(dyn_list_v2)}")
     n = len(dyn_list_v1)
 
-    def build_version_table(values: List[str]) -> str:
+    def build_version_table(values: List[str], version: int) -> str:
         lines = []
-        for i, val in enumerate(values, start=1):
+        for i, val in enumerate(values):
             # Escape backslashes first, then quotes
             safe_val = val.replace('\\', '\\\\').replace('"', '\\"')
-            lines.append(f'        dynamic{i} = "{safe_val}"')
+            var_name = dynamic_names[i] if i < len(dynamic_names) else f'dynamic{i+1}'
+            lines.append(f'        {var_name} = "{safe_val}"')
         return "{\n" + ",\n".join(lines) + "\n    }"
 
     table = (
 f"""local {name} = {{
-    [1] = {build_version_table(dyn_list_v1)},
-    [2] = {build_version_table(dyn_list_v2)}
+    [1] = {build_version_table(dyn_list_v1, 1)},
+    [2] = {build_version_table(dyn_list_v2, 2)}
 }}"""
     )
     return table, n
@@ -130,7 +216,7 @@ def split_asm_sections(text: str) -> Tuple[str, str]:
 
     return enable, disable
 
-def build_script_part(template: str, dyn_count: int, script_var: str, addr_prefix: str) -> str:
+def build_script_part(template: str, dyn_count: int, script_var: str, addr_prefix: str, dynamic_names: List[str]) -> str:
     """
     Build the Lua script part using a given template and dynamic count.
 
@@ -139,6 +225,7 @@ def build_script_part(template: str, dyn_count: int, script_var: str, addr_prefi
         dyn_count: The number of dynamic values.
         script_var: The Lua variable name for the script (e.g. 'enableScript').
         addr_prefix: The prefix for dynamic addresses (e.g. 'addrE' or 'addrD').
+        dynamic_names: A list of descriptive names for the dynamic values.
 
     Returns:
         The formatted Lua script part.
@@ -150,7 +237,7 @@ def build_script_part(template: str, dyn_count: int, script_var: str, addr_prefi
     template_escaped = template.replace('%s', placeholder).replace('%', '%%').replace(placeholder, '%s')
 
     if dyn_count > 0:
-        dyn_keys = ", ".join([f"{addr_prefix}.dynamic{i}" for i in range(1, dyn_count + 1)])
+        dyn_keys = ", ".join([f"{addr_prefix}.{name}" for name in dynamic_names])
         # Use standard Lua string literal with explicit escapes for safety inside format
         lua_template_str = f"[[\\n{template_escaped}\\n]]"
         # Note: string.format requires careful escaping if template itself contains format specifiers
@@ -180,12 +267,12 @@ def merge_asm_scripts(asm1: str, asm2: str) -> str:
     enable2, disable2 = split_asm_sections(asm2)
 
     # Process ENABLE sections.
-    enable_template1, dyn_enable_v1 = process_section(enable1, DYN_PATTERN)
-    enable_template2, dyn_enable_v2 = process_section(enable2, DYN_PATTERN)
+    enable_template1, dyn_enable_v1, dyn_enable_lines1 = process_section(enable1, DYN_PATTERN)
+    _, dyn_enable_v2, _ = process_section(enable2, DYN_PATTERN)
 
     # Process DISABLE sections.
-    disable_template1, dyn_disable_v1 = process_section(disable1, DYN_PATTERN)
-    disable_template2, dyn_disable_v2 = process_section(disable2, DYN_PATTERN)
+    disable_template1, dyn_disable_v1, dyn_disable_lines1 = process_section(disable1, DYN_PATTERN)
+    _, dyn_disable_v2, _ = process_section(disable2, DYN_PATTERN)
 
     # Verify dynamic count matches.
     if len(dyn_enable_v1) != len(dyn_enable_v2):
@@ -193,14 +280,74 @@ def merge_asm_scripts(asm1: str, asm2: str) -> str:
     if len(dyn_disable_v1) != len(dyn_disable_v2):
         raise ValueError(f"Mismatch in dynamic values count in DISABLE sections ({len(dyn_disable_v1)} vs {len(dyn_disable_v2)})")
 
-    lua_config_enable, num_enable = build_lua_config_table("config_enable", dyn_enable_v1, dyn_enable_v2)
-    lua_config_disable, num_disable = build_lua_config_table("config_disable", dyn_disable_v1, dyn_disable_v2)
+    # Generate descriptive names for dynamic addresses
+    enable_names, hook_map, other_map = generate_dynamic_names(dyn_enable_v1, dyn_enable_lines1, enable1)
+
+    # Generate names for DISABLE section addresses
+    disable_names = []
+    disable_script_lines = disable1.split('\n')
+
+    # Find all hook addresses and their line numbers in the DISABLE script
+    disable_hook_lines = {}
+    for i, line in enumerate(disable_script_lines):
+        line = line.strip()
+        match = DYN_PATTERN.fullmatch(line)
+        if match:
+            norm_addr = match.group(0).replace('"', '').rstrip(':')
+            if norm_addr in hook_map:
+                disable_hook_lines[i] = hook_map[norm_addr]
+
+    sorted_hook_lines = sorted(disable_hook_lines.keys())
+
+    def find_enclosing_hook_name(line_num):
+        enclosing_hook_line = -1
+        for hook_line in sorted_hook_lines:
+            if hook_line <= line_num:
+                enclosing_hook_line = hook_line
+            else:
+                break
+        return disable_hook_lines.get(enclosing_hook_line, "unknown_hook")
+
+    counters = {}
+    for i, (addr, line_num) in enumerate(zip(dyn_disable_v1, dyn_disable_lines1)):
+        norm_addr = addr.replace('"', '').rstrip(':')
+
+        # Priority 1: Is it a hook address?
+        found_name = hook_map.get(norm_addr)
+        if found_name:
+            disable_names.append(found_name)
+            continue
+
+        # Priority 2: Was it already named as a non-hook in the [ENABLE] section?
+        found_name = other_map.get(norm_addr)
+        if found_name:
+            disable_names.append(found_name)
+            continue
+
+        # Priority 3: It's a new address unique to the [DISABLE] section. Generate a new name.
+        hook_name_base = find_enclosing_hook_name(line_num)
+        name_prefix = hook_name_base.rsplit('_hook_', 1)[0] if '_hook_' in hook_name_base else hook_name_base
+        key = name_prefix
+        count = counters.get(key, 0) + 1
+        counters[key] = count
+        # Determine type by searching the whole line, including comments
+        line_content = disable_script_lines[line_num]
+        addr_type = "val"
+        if re.search(r'\b(j\w+|call)\b', line_content, re.IGNORECASE):
+            addr_type = "jmp"
+
+        name = f"{name_prefix}_disable_{addr_type}_{count}"
+        disable_names.append(name)
+        logging.debug(f"New disable address {addr} found, named {name}.")
+
+    lua_config_enable, num_enable = build_lua_config_table("config_enable", dyn_enable_v1, dyn_enable_v2, enable_names)
+    lua_config_disable, num_disable = build_lua_config_table("config_disable", dyn_disable_v1, dyn_disable_v2, disable_names)
 
     # Build script parts using the helper function.
     # Using the template from the *first* script (template1) for both enable/disable parts.
     # This assumes the structure is the same, only dynamic values differ.
-    enable_part = build_script_part(enable_template1, num_enable, "enableScript", "addrE")
-    disable_part = build_script_part(disable_template1, num_disable, "disableScript", "addrD")
+    enable_part = build_script_part(enable_template1, num_enable, "enableScript", "addrE", enable_names)
+    disable_part = build_script_part(disable_template1, num_disable, "disableScript", "addrD", disable_names)
 
     # Build the final merged script text.
     # Ensure disableInfo handling is robust even if disable script is empty
