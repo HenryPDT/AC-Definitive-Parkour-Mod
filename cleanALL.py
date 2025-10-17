@@ -1,5 +1,6 @@
 import re
 import os
+import sys
 import argparse
 import logging
 from common.utils import find_ct_files
@@ -7,11 +8,29 @@ from common.utils import find_ct_files
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
+# Constants for ID reset points
+ID_RESET_BINDS = 100
+ID_RESET_PARKOUR_MODE = 300
+ID_RESET_EXTRA = 500
+ID_RESET_VAULT_LANDING = 700
+
 class Renumberer:
-    def __init__(self):
+    """Handles renumbering of ID tags in CT files."""
+
+    def __init__(self) -> None:
+        """Initialize the renumberer with counter starting at 0."""
         self.id_counter = 0
 
-    def renumber_id(self, match):
+    def renumber_id(self, match: re.Match[str]) -> str:
+        """
+        Generate a new ID tag with incremented counter.
+
+        Args:
+            match: Regex match object containing the ID tag
+
+        Returns:
+            New ID tag with incremented counter
+        """
         new_id = f"<ID>{self.id_counter}</ID>"
         self.id_counter += 1
         return new_id
@@ -19,6 +38,9 @@ class Renumberer:
 def parse_arguments() -> argparse.Namespace:
     """
     Parse command line arguments using argparse.
+
+    Returns:
+        Parsed command line arguments
     """
     parser = argparse.ArgumentParser(
         description="Clean all .CT files in a directory by renumbering IDs and removing unnecessary sections."
@@ -45,7 +67,7 @@ def main():
     # Validate if the directory exists
     if not os.path.isdir(directory):
         logging.error("The specified directory does not exist: %s", directory)
-        exit(1)
+        sys.exit(1)
 
     # Find all .CT files in the directory recursively
     logging.info("Scanning for .CT files in: %s", directory)
@@ -53,15 +75,31 @@ def main():
 
     # Process each .CT file
     for input_file in ct_files:
+        # Validate file accessibility before processing
+        if not os.path.isfile(input_file):
+            logging.error("File does not exist or is not accessible: %s", input_file)
+            continue
+
+        if not os.access(input_file, os.R_OK):
+            logging.error("File is not readable: %s", input_file)
+            continue
+
         renumberer = Renumberer()
         binds_found = False
         parkour_mode_found = False
         extra_found = False
         vault_landing_found = False
 
-        # Read the file
-        with open(input_file, 'r') as f:
-            lines = f.readlines()
+        try:
+            # Read the file with explicit encoding
+            with open(input_file, 'r', encoding='utf-8') as f:
+                lines = f.readlines()
+        except UnicodeDecodeError as e:
+            logging.error("Failed to decode file %s: %s", input_file, e)
+            continue
+        except IOError as e:
+            logging.error("Failed to read file %s: %s", input_file, e)
+            continue
 
         processed_lines = []
         inside_userdefined_symbols = False  # Track if inside <UserdefinedSymbols> section
@@ -95,16 +133,16 @@ def main():
             # Check for specific descriptions to update renumbering logic
             if '<Description>"Binds"</Description>' in line:
                 binds_found = True
-                renumberer.id_counter = 100  # Reset to 3000 after this description
+                renumberer.id_counter = ID_RESET_BINDS
             elif '<Description>"Parkour Mode"</Description>' in line:
                 parkour_mode_found = True
-                renumberer.id_counter = 300  # Reset to 1000 after this description
+                renumberer.id_counter = ID_RESET_PARKOUR_MODE
             elif '<Description>"Extra"</Description>' in line:
                 extra_found = True
-                renumberer.id_counter = 500  # Reset to 2000 after this description
+                renumberer.id_counter = ID_RESET_EXTRA
             elif '<Description>"Vault Landing Far Height"</Description>' in line:
                 vault_landing_found = True
-                renumberer.id_counter = 700  # Reset to 3000 after this description
+                renumberer.id_counter = ID_RESET_VAULT_LANDING
 
             # Skip lines containing 'LastState'
             if 'LastState' in line:
@@ -144,10 +182,14 @@ def main():
         if processed_lines:
             # Remove the final newline from the last line only
             processed_lines[-1] = processed_lines[-1].rstrip('\n')
-        with open(input_file, 'w') as f:
-            f.writelines(processed_lines)
 
-        logging.info("Processed file: %s", input_file)
+        try:
+            # Write the file with explicit encoding
+            with open(input_file, 'w', encoding='utf-8') as f:
+                f.writelines(processed_lines)
+            logging.info("Processed file: %s", input_file)
+        except IOError as e:
+            logging.error("Failed to write file %s: %s", input_file, e)
 
     logging.info("Processing complete.")
 

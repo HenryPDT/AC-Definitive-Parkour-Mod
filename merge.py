@@ -1,16 +1,25 @@
-#!/usr/bin/env python3
+"""
+Assassin's Creed Cheat Table Merger
+Merges two .CT files by combining their AssemblerScript entries with version-specific dynamic addresses.
+"""
 import sys
 import re
 import xml.etree.ElementTree as ET
 import argparse
 import logging
-import os  # Import the os module for directory operations
+import os
 from typing import Tuple, List, Dict
 from common.utils import find_ct_files
 from common.ct_file import get_assembler_scripts
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+
+# Constants for ID reset points in cleanALL.py
+ID_RESET_BINDS = 100
+ID_RESET_PARKOUR_MODE = 300
+ID_RESET_EXTRA = 500
+ID_RESET_VAULT_LANDING = 700
 
 # Compile the dynamic pattern once at the module level.
 # Matches patterns like:
@@ -314,7 +323,12 @@ def main() -> None:
         logging.debug("Verbose logging enabled.")
 
     if not os.path.isdir(input_folder):
-        logging.error(f"Input path is not a valid directory: {input_folder}")
+        logging.error("Input path is not a valid directory: %s", input_folder)
+        sys.exit(1)
+
+    # Additional validation for directory accessibility
+    if not os.access(input_folder, os.R_OK):
+        logging.error("Directory is not readable: %s", input_folder)
         sys.exit(1)
 
     logging.info(f"Scanning folder for CT files: {input_folder}")
@@ -327,6 +341,16 @@ def main() -> None:
         sys.exit(1)
 
     first_ct, second_ct = ct_files[0], ct_files[1]
+
+    # Validate both CT files are accessible
+    for ct_file in [first_ct, second_ct]:
+        if not os.path.isfile(ct_file):
+            logging.error("CT file does not exist: %s", ct_file)
+            sys.exit(1)
+        if not os.access(ct_file, os.R_OK):
+            logging.error("CT file is not readable: %s", ct_file)
+            sys.exit(1)
+
     # Create output path: same directory as script, inside a "Merged" folder
     script_dir = os.path.dirname(os.path.abspath(__file__))
     merged_dir = os.path.join(script_dir, "Merged")
@@ -343,24 +367,36 @@ def main() -> None:
 
 
     try:
-        tree1 = ET.parse(first_ct)
-        logging.debug(f"Successfully parsed {first_ct}")
+        tree1 = ET.parse(first_ct, parser=ET.XMLParser(encoding='utf-8'))
+        logging.debug("Successfully parsed %s", first_ct)
     except ET.ParseError as pe:
         logging.error("Failed to parse %s: %s", first_ct, pe)
         sys.exit(1)
+    except UnicodeDecodeError as e:
+        logging.error("Failed to decode %s: %s", first_ct, e)
+        sys.exit(1)
+    except IOError as e:
+        logging.error("Failed to read %s: %s", first_ct, e)
+        sys.exit(1)
     except Exception as e:
-        logging.error(f"An unexpected error occurred while parsing {first_ct}: {e}", exc_info=True)
+        logging.error("An unexpected error occurred while parsing %s: %s", first_ct, e, exc_info=True)
         sys.exit(1)
 
 
     try:
-        tree2 = ET.parse(second_ct)
-        logging.debug(f"Successfully parsed {second_ct}")
+        tree2 = ET.parse(second_ct, parser=ET.XMLParser(encoding='utf-8'))
+        logging.debug("Successfully parsed %s", second_ct)
     except ET.ParseError as pe:
         logging.error("Failed to parse %s: %s", second_ct, pe)
         sys.exit(1)
+    except UnicodeDecodeError as e:
+        logging.error("Failed to decode %s: %s", second_ct, e)
+        sys.exit(1)
+    except IOError as e:
+        logging.error("Failed to read %s: %s", second_ct, e)
+        sys.exit(1)
     except Exception as e:
-        logging.error(f"An unexpected error occurred while parsing {second_ct}: {e}", exc_info=True)
+        logging.error("An unexpected error occurred while parsing %s: %s", second_ct, e, exc_info=True)
         sys.exit(1)
 
     asm_map1 = get_assembler_scripts(tree1)
@@ -378,10 +414,18 @@ def main() -> None:
             if hasattr(ET, 'indent'):
                 ET.indent(tree1.getroot())
 
+            # Ensure output directory exists and is writable
+            if not os.access(merged_dir, os.W_OK):
+                logging.error("Output directory is not writable: %s", merged_dir)
+                sys.exit(1)
+
             tree1.write(output_ct, encoding="utf-8", xml_declaration=True)
             logging.info("Merged CT file created: %s", output_ct)
+        except IOError as e:
+            logging.error("Failed to write merged CT file %s: %s", output_ct, e)
+            sys.exit(1)
         except Exception as e:
-            logging.error("Failed to write merged CT file: %s", e, exc_info=True)
+            logging.error("Failed to write merged CT file %s: %s", output_ct, e, exc_info=True)
             sys.exit(1)
     else:
         logging.warning("No mergeable entries found or processed. Output file not written.")
