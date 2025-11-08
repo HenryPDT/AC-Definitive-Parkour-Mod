@@ -3615,6 +3615,7 @@ label(returnhere)
 label(originalcode)
 label(exit)
 
+globalalloc(pEntity,4)
 globalalloc(vault_enable,1)
 globalalloc(bindEmptyHand,1)
 globalalloc(on_vault_f,1)
@@ -3633,6 +3634,10 @@ globalalloc(vault_to_fall_f,1)
 globalalloc(vault_to_breakout_f,1)
 globalalloc(vault_inner_ledge_to_hang_coords,16)
 globalalloc(player_rotation,16)
+globalalloc(wallrun_height,4)
+globalalloc(vault_from_hang_f,1)
+globalalloc(vault_from_hang_height,16)
+globalalloc(vault_from_hang_height_original,4)
 
 vault_inner_ledge_f:
 db 00
@@ -3642,6 +3647,12 @@ db 0A
 
 vault_pass_counter:
 db 00
+
+wallrun_height:
+dd (float)-0.25
+
+vault_from_hang_height:
+dd (float)0 (float)0 (float)0.1 (float)0
 
 vault:
 cmp byte ptr [parkour_far_enable],01
@@ -3981,6 +3992,219 @@ nop
 returnhere14:
 
 
+alloc(vault_from_hang,2048)
+label(returnhere15)
+label(originalcode15)
+label(exit15)
+
+vault_from_hang:
+movaps [esp+70],xmm1
+cmp byte ptr [vault_enable],00
+je originalcode15
+mov [vault_from_hang_f],01
+mov edx,[AssassinsCreed_Dx10.exe+1299C90]
+mov ebx,[esp+1C]
+push edx
+push 00
+push 00
+push 0109BBBD
+mov ecx,ebx
+call AssassinsCreed_Dx10.exe+140430
+jmp AssassinsCreed_Dx10.exe+B8865F
+
+originalcode15:
+test bl,bl
+
+exit15:
+jmp returnhere15
+
+"AssassinsCreed_Dx10.exe"+B8861F:
+jmp vault_from_hang
+returnhere15:
+
+
+alloc(vault_from_hang_2,2048)
+label(returnhere16)
+label(originalcode16)
+label(exit16)
+
+vault_from_hang_2:
+cmp byte ptr [vault_enable],00
+je originalcode16
+mov [vault_from_hang_f],01
+mov edx,[pEntity]
+movaps xmm0,[edx+40]
+movaps xmm1,xmm0
+shufps xmm1,xmm1,C6
+movss [vault_from_hang_height_original],xmm1
+addps xmm0,[vault_from_hang_height]
+movaps [edx+40],xmm0
+
+originalcode16:
+mov edx,[eax+34]
+call edx
+
+exit16:
+jmp returnhere16
+
+"AssassinsCreed_Dx10.exe"+CBFAA3:
+jmp vault_from_hang_2
+returnhere16:
+
+
+alloc(vault_from_hang_3,2048)
+label(returnhere17)
+label(exit17)
+
+vault_from_hang_3:
+movaps xmm0,[eax+30]
+mov ecx,[ebx+08]
+cmp byte ptr [vault_from_hang_f],00
+je exit17
+insertps xmm0,[vault_from_hang_height_original],20
+movaps [eax+30],xmm0
+mov [vault_from_hang_f],00
+
+
+exit17:
+jmp returnhere17
+
+"AssassinsCreed_Dx10.exe"+B8E06F:
+jmp vault_from_hang_3
+nop 2
+returnhere17:
+
+
+alloc(vault_wallrun,2048)
+label(returnhere18)
+label(exit18)
+
+vault_wallrun:
+movss xmm1,[esp+18]
+cmp byte ptr [vault_enable],00
+je exit18
+addss xmm1,[wallrun_height]
+
+exit18:
+jmp returnhere18
+
+"AssassinsCreed_Dx10.exe"+C0A5BD:
+jmp vault_wallrun
+nop
+returnhere18:
+
+
+alloc(vault_wallrun_2,2048)
+label(returnhere19)
+label(exit19)
+
+vault_wallrun_2:
+cvtps2pd xmm2,xmm1
+
+exit19:
+jmp returnhere19
+
+"AssassinsCreed_Dx10.exe"+C0B915:
+jmp vault_wallrun_2
+returnhere19:
+
+
+alloc(vault_wallrun_3,2048)
+label(returnhere20)
+label(exit20)
+
+vault_wallrun_3:
+mov eax,00000001
+cmp byte ptr [vault_enable],01
+jne exit20
+mov eax,[esi+10]
+mov [eax+20],01
+mov eax,00000003
+
+exit20:
+jmp returnhere20
+
+"AssassinsCreed_Dx10.exe"+C0733C:
+jmp vault_wallrun_3
+returnhere20:
+
+
+alloc(vault_wallrun_to_hang,2048)
+label(returnhere21)
+label(code21)
+label(exit21)
+
+vault_wallrun_to_hang:
+call AssassinsCreed_Dx10.exe+140A50
+cmp byte ptr [vault_enable],01
+je code21
+cmp byte ptr [bindEmptyHand],01
+je code21
+cmp byte ptr [freeform_enable],01
+je exit21
+
+code21:
+mov edx,[esi+10]
+mov [edx+00000086],01
+
+exit21:
+jmp returnhere21
+
+"AssassinsCreed_Dx10.exe"+B8F8B9:
+jmp vault_wallrun_to_hang
+returnhere21:
+
+
+alloc(vault_wallrun_to_hang_2,2048)
+label(returnhere22)
+label(originalcode22)
+label(exit22)
+
+vault_wallrun_to_hang_2:
+cmp byte ptr [vault_enable],01
+je AssassinsCreed_Dx10.exe+B8F918
+cmp byte ptr [bindEmptyHand],01
+je AssassinsCreed_Dx10.exe+B8F918
+cmp byte ptr [freeform_enable],01
+je AssassinsCreed_Dx10.exe+B8F936
+
+originalcode22:
+cmp eax,02
+jne AssassinsCreed_Dx10.exe+B8F936
+
+exit22:
+jmp returnhere22
+
+"AssassinsCreed_Dx10.exe"+B8F913:
+jmp vault_wallrun_to_hang_2
+returnhere22:
+
+
+alloc(vault_wallrun_to_hang_3,2048)
+label(returnhere23)
+label(originalcode23)
+label(exit23)
+
+vault_wallrun_to_hang_3:
+cmp byte ptr [vault_enable],01
+je AssassinsCreed_Dx10.exe+B8FA7E
+cmp byte ptr [bindEmptyHand],01
+je AssassinsCreed_Dx10.exe+B8FA7E
+cmp byte ptr [freeform_enable],01
+je AssassinsCreed_Dx10.exe+B8FA9C
+
+originalcode23:
+cmp eax,02
+jne AssassinsCreed_Dx10.exe+B8FA9C
+
+exit23:
+jmp returnhere23
+
+"AssassinsCreed_Dx10.exe"+B8FA79:
+jmp vault_wallrun_to_hang_3
+returnhere23:
+
+
 [DISABLE]
 "AssassinsCreed_Dx10.exe"+C6A3B4:
 db 75 1D 8B 44 24 78
@@ -4045,6 +4269,47 @@ db 33 C9 89 4C 24 08
 //xor ecx,ecx
 //mov [esp+08],ecx
 
+"AssassinsCreed_Dx10.exe"+B8861F:
+db 0F 29 4C 24 70
+//movaps [esp+70],xmm1
+
+"AssassinsCreed_Dx10.exe"+CBFAA3:
+db 8B 50 34 FF D2
+//mov edx,[eax+34]
+//call edx
+
+"AssassinsCreed_Dx10.exe"+B8E06F:
+db 0F 28 40 30 8B 4B 08
+//movaps xmm0,[eax+30]
+//mov ecx,[ebx+08]
+
+"AssassinsCreed_Dx10.exe"+C0A5BD:
+db F3 0F 10 4C 24 18
+//movss xmm1,[esp+18]
+
+"AssassinsCreed_Dx10.exe"+C0B915:
+db 72 17 0F 5A D1
+//jb AssassinsCreed_Dx10.exe+C0B92E
+//cvtps2pd xmm2,xmm1
+
+"AssassinsCreed_Dx10.exe"+C0733C:
+db B8 01 00 00 00
+//mov eax,00000001
+
+"AssassinsCreed_Dx10.exe"+B8F8B9:
+db E8 92 11 5B FF
+//call AssassinsCreed_Dx10.exe+140A50
+
+"AssassinsCreed_Dx10.exe"+B8F913:
+db 83 F8 02 75 1E
+//cmp eax,02
+//jne AssassinsCreed_Dx10.exe+B8F936
+
+"AssassinsCreed_Dx10.exe"+B8FA79:
+db 83 F8 02 75 1E
+//cmp eax,02
+//jne AssassinsCreed_Dx10.exe+B8FA9C
+
 dealloc(vault)
 dealloc(vault_2)
 dealloc(vault_landing)
@@ -4059,6 +4324,15 @@ dealloc(vault_freeform)
 dealloc(vault_freeform_2)
 dealloc(vault_to_fall)
 dealloc(vault_to_breakout)
+dealloc(vault_from_hang)
+dealloc(vault_from_hang_2)
+dealloc(vault_from_hang_3)
+dealloc(vault_wallrun)
+dealloc(vault_wallrun_2)
+dealloc(vault_wallrun_3)
+dealloc(vault_wallrun_to_hang)
+dealloc(vault_wallrun_to_hang_2)
+dealloc(vault_wallrun_to_hang_3)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>

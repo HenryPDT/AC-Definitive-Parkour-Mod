@@ -3692,11 +3692,11 @@ jmp pause
 returnhere:
 
 
-alloc(disable_air_trackle,2048)
+alloc(disable_air_tackle,2048)
 label(returnhere2)
 label(exit2)
 
-disable_air_trackle:
+disable_air_tackle:
 cmp byte ptr [parkour_mode_enable],01
 je ACRSP.exe+135B592
 test esi,esi
@@ -3707,7 +3707,7 @@ exit2:
 jmp returnhere2
 
 "ACRSP.exe"+135B568:
-jmp disable_air_trackle
+jmp disable_air_tackle
 returnhere2:
 
 
@@ -3842,7 +3842,7 @@ db 83 BE 60 0F 00 00 00
 //cmp dword ptr [esi+00000F60],00
 
 dealloc(pause)
-dealloc(disable_air_trackle)
+dealloc(disable_air_tackle)
 dealloc(disable_ingame_binds)
 dealloc(disable_combat_grab)
 dealloc(disable_drop_to_hang)
@@ -3888,6 +3888,7 @@ globalalloc(vault_to_fall_f,1)
 globalalloc(vault_to_breakout_f,1)
 globalalloc(vault_inner_ledge_to_hang_coords,16)
 globalalloc(player_rotation,16)
+globalalloc(wallrun_height,4)
 
 vault_inner_ledge_f:
 db 00
@@ -3897,6 +3898,9 @@ db 0A
 
 vault_pass_counter:
 db 00
+
+wallrun_height:
+dd (float)-0.25
 
 vault:
 cmp byte ptr [parkour_far_enable],01
@@ -4300,6 +4304,137 @@ nop 2
 returnhere17:
 
 
+alloc(vault_wallrun,2048)
+label(returnhere18)
+label(exit18)
+
+vault_wallrun:
+movss xmm0,[ebp-000000F8]
+cmp byte ptr [vault_enable],00
+je exit18
+addss xmm0,[wallrun_height]
+
+exit18:
+jmp returnhere18
+
+"ACRSP.exe"+1661054:
+jmp vault_wallrun
+nop 3
+returnhere18:
+
+
+alloc(vault_wallrun_2,2048)
+label(returnhere19)
+label(exit19)
+
+vault_wallrun_2:
+cvtps2pd xmm2,xmm1
+
+exit19:
+jmp returnhere19
+
+"ACRSP.exe"+166271E:
+jmp vault_wallrun_2
+returnhere19:
+
+
+alloc(vault_wallrun_3,2048)
+label(returnhere20)
+label(exit20)
+
+vault_wallrun_3:
+mov eax,00000001
+cmp byte ptr [vault_enable],01
+jne exit20
+mov eax,[ebp-BC]
+mov eax,[eax+10]
+mov [eax+20],01
+mov eax,00000003
+
+exit20:
+jmp returnhere20
+
+"ACRSP.exe"+165F297:
+jmp vault_wallrun_3
+returnhere20:
+
+
+alloc(vault_wallrun_to_hang,2048)
+label(returnhere21)
+label(code21)
+label(exit21)
+
+vault_wallrun_to_hang:
+call ACRSP.exe+199560
+cmp byte ptr [vault_enable],01
+je code21
+cmp byte ptr [bindEmptyHand],01
+je code21
+cmp byte ptr [freeform_enable],01
+je exit21
+
+code21:
+mov ecx,[esi+10]
+mov [ecx+0000009A],01
+
+exit21:
+jmp returnhere21
+
+"ACRSP.exe"+6B975D:
+jmp vault_wallrun_to_hang
+returnhere21:
+
+
+alloc(vault_wallrun_to_hang_2,2048)
+label(returnhere22)
+label(originalcode22)
+label(exit22)
+
+vault_wallrun_to_hang_2:
+cmp byte ptr [vault_enable],01
+je ACRSP.exe+6B97BA
+cmp byte ptr [bindEmptyHand],01
+je ACRSP.exe+6B97BA
+cmp byte ptr [freeform_enable],01
+je ACRSP.exe+6B97E6
+
+originalcode22:
+cmp eax,02
+jne ACRSP.exe+6B97E6
+
+exit22:
+jmp returnhere22
+
+"ACRSP.exe"+6B97B5:
+jmp vault_wallrun_to_hang_2
+returnhere22:
+
+
+alloc(vault_wallrun_to_hang_3,2048)
+label(returnhere23)
+label(originalcode23)
+label(exit23)
+
+vault_wallrun_to_hang_3:
+cmp byte ptr [vault_enable],01
+je ACRSP.exe+6B99E2
+cmp byte ptr [bindEmptyHand],01
+je ACRSP.exe+6B99E2
+cmp byte ptr [freeform_enable],01
+je ACRSP.exe+6B9A0E
+
+originalcode23:
+cmp eax,02
+jne ACRSP.exe+6B9A0E
+
+exit23:
+jmp returnhere23
+
+"ACRSP.exe"+6B99DD:
+jmp vault_wallrun_to_hang_3
+returnhere23:
+
+
 [DISABLE]
 "ACRSP.exe"+15C3E33:
 db 0F 85 75 01 00 00
@@ -4382,6 +4517,33 @@ db 8B CE E8 25 EB FE FF
 //mov ecx,esi
 //call ACRSP.exe+6A3C10
 
+"ACRSP.exe"+1661054:
+db F3 0F 10 85 08 FF FF FF
+//movss xmm0,[ebp-000000F8]
+
+"ACRSP.exe"+166271E:
+db 72 16 0F 5A D1
+//jb ACRSP.exe+1662736
+//cvtps2pd xmm2,xmm1
+
+"ACRSP.exe"+165F297:
+db B8 01 00 00 00
+//mov eax,00000001
+
+"ACRSP.exe"+6B975D:
+db E8 FE FD AD FF
+//call ACRSP.exe+199560
+
+"ACRSP.exe"+6B97B5:
+db 83 F8 02 75 2C
+//cmp eax,02
+//jne ACRSP.exe+6B97E6
+
+"ACRSP.exe"+6B99DD:
+db 83 F8 02 75 2C
+//cmp eax,02
+//jne ACRSP.exe+6B9A0E
+
 dealloc(vault)
 dealloc(vault_2)
 dealloc(vault_landing)
@@ -4399,6 +4561,12 @@ dealloc(vault_from_hang)
 dealloc(vault_from_hang_2)
 dealloc(vault_to_fall)
 dealloc(vault_to_breakout)
+dealloc(vault_wallrun)
+dealloc(vault_wallrun_2)
+dealloc(vault_wallrun_3)
+dealloc(vault_wallrun_to_hang)
+dealloc(vault_wallrun_to_hang_2)
+dealloc(vault_wallrun_to_hang_3)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>

@@ -3573,11 +3573,11 @@ jmp pause
 returnhere:
 
 
-alloc(disable_air_trackle,2048)
+alloc(disable_air_tackle,2048)
 label(returnhere2)
 label(exit2)
 
-disable_air_trackle:
+disable_air_tackle:
 cmp byte ptr [parkour_mode_enable],01
 je AssassinsCreedIIGame.exe+DD7AFB
 test esi,esi
@@ -3588,7 +3588,7 @@ exit2:
 jmp returnhere2
 
 "AssassinsCreedIIGame.exe"+DD7AE9:
-jmp disable_air_trackle
+jmp disable_air_tackle
 returnhere2:
 
 
@@ -3721,7 +3721,7 @@ db 83 BE A8 0E 00 00 00
 //cmp dword ptr [esi+00000EA8],00
 
 dealloc(pause)
-dealloc(disable_air_trackle)
+dealloc(disable_air_tackle)
 dealloc(disable_ingame_binds)
 dealloc(disable_combat_grab)
 dealloc(disable_drop_to_hang)
@@ -3767,6 +3767,7 @@ globalalloc(vault_to_fall_f,1)
 globalalloc(vault_to_breakout_f,1)
 globalalloc(vault_inner_ledge_to_hang_coords,16)
 globalalloc(player_rotation,16)
+globalalloc(wallrun_height,4)
 
 vault_inner_ledge_f:
 db 00
@@ -3776,6 +3777,9 @@ db 0A
 
 vault_pass_counter:
 db 00
+
+wallrun_height:
+dd (float)-0.25
 
 vault:
 cmp byte ptr [parkour_far_enable],01
@@ -4184,6 +4188,137 @@ nop 2
 returnhere17:
 
 
+alloc(vault_wallrun,2048)
+label(returnhere18)
+label(exit18)
+
+vault_wallrun:
+movss xmm0,[ebp-00000118]
+cmp byte ptr [vault_enable],00
+je exit18
+addss xmm0,[wallrun_height]
+
+exit18:
+jmp returnhere18
+
+"AssassinsCreedIIGame.exe"+FA8875:
+jmp vault_wallrun
+nop 3
+returnhere18:
+
+
+alloc(vault_wallrun_2,2048)
+label(returnhere19)
+label(exit19)
+
+vault_wallrun_2:
+cvtps2pd xmm2,xmm1
+
+exit19:
+jmp returnhere19
+
+"AssassinsCreedIIGame.exe"+FA9F32:
+jmp vault_wallrun_2
+returnhere19:
+
+
+alloc(vault_wallrun_3,2048)
+label(returnhere20)
+label(exit20)
+
+vault_wallrun_3:
+mov eax,00000001
+cmp byte ptr [vault_enable],01
+jne exit20
+mov eax,[ebp-BC]
+mov eax,[eax+10]
+mov [eax+20],01
+mov eax,00000003
+
+exit20:
+jmp returnhere20
+
+"AssassinsCreedIIGame.exe"+FA5D60:
+jmp vault_wallrun_3
+returnhere20:
+
+
+alloc(vault_wallrun_to_hang,2048)
+label(returnhere21)
+label(code21)
+label(exit21)
+
+vault_wallrun_to_hang:
+call AssassinsCreedIIGame.exe+165BA0
+cmp byte ptr [vault_enable],01
+je code21
+cmp byte ptr [bindEmptyHand],01
+je code21
+cmp byte ptr [freeform_enable],01
+je exit21
+
+code21:
+mov ecx,[esi+10]
+mov [ecx+0000008A],01
+
+exit21:
+jmp returnhere21
+
+"AssassinsCreedIIGame.exe"+66EA82:
+jmp vault_wallrun_to_hang
+returnhere21:
+
+
+alloc(vault_wallrun_to_hang_2,2048)
+label(returnhere22)
+label(originalcode22)
+label(exit22)
+
+vault_wallrun_to_hang_2:
+cmp byte ptr [vault_enable],01
+je AssassinsCreedIIGame.exe+66EAE2
+cmp byte ptr [bindEmptyHand],01
+je AssassinsCreedIIGame.exe+66EAE2
+cmp byte ptr [freeform_enable],01
+je AssassinsCreedIIGame.exe+66EB0E
+
+originalcode22:
+cmp eax,02
+jne AssassinsCreedIIGame.exe+66EB0E
+
+exit22:
+jmp returnhere22
+
+"AssassinsCreedIIGame.exe"+66EADD:
+jmp vault_wallrun_to_hang_2
+returnhere22:
+
+
+alloc(vault_wallrun_to_hang_3,2048)
+label(returnhere23)
+label(originalcode23)
+label(exit23)
+
+vault_wallrun_to_hang_3:
+cmp byte ptr [vault_enable],01
+je AssassinsCreedIIGame.exe+66ED0D
+cmp byte ptr [bindEmptyHand],01
+je AssassinsCreedIIGame.exe+66ED0D
+cmp byte ptr [freeform_enable],01
+je AssassinsCreedIIGame.exe+66ED39
+
+originalcode23:
+cmp eax,02
+jne AssassinsCreedIIGame.exe+66ED39
+
+exit23:
+jmp returnhere23
+
+"AssassinsCreedIIGame.exe"+66ED08:
+jmp vault_wallrun_to_hang_3
+returnhere23:
+
+
 [DISABLE]
 "AssassinsCreedIIGame.exe"+F67CF6:
 db 75 21 8B 85 6C FF FF FF
@@ -4266,6 +4401,33 @@ db 8B CE E8 55 22 FF FF
 //mov ecx,esi
 //call AssassinsCreedIIGame.exe+65D750
 
+"AssassinsCreedIIGame.exe"+FA8875:
+db F3 0F 10 85 E8 FE FF FF
+//movss xmm0,[ebp-00000118]
+
+"AssassinsCreedIIGame.exe"+FA9F32:
+db 72 16 0F 5A D1
+//jb AssassinsCreedIIGame.exe+FA9F4A
+//cvtps2pd xmm2,xmm1
+
+"AssassinsCreedIIGame.exe"+FA5D60:
+db B8 01 00 00 00
+//mov eax,00000001
+
+"AssassinsCreedIIGame.exe"+66EA82:
+db E8 19 71 AF FF
+//call AssassinsCreedIIGame.exe+165BA0
+
+"AssassinsCreedIIGame.exe"+66EADD:
+db 83 F8 02 75 2C
+//cmp eax,02
+//jne AssassinsCreedIIGame.exe+66EB0E
+
+"AssassinsCreedIIGame.exe"+66ED08:
+db 83 F8 02 75 2C
+//cmp eax,02
+//jne AssassinsCreedIIGame.exe+66ED39
+
 dealloc(vault)
 dealloc(vault_2)
 dealloc(vault_landing)
@@ -4283,6 +4445,12 @@ dealloc(vault_from_hang)
 dealloc(vault_from_hang_2)
 dealloc(vault_to_fall)
 dealloc(vault_to_breakout)
+dealloc(vault_wallrun)
+dealloc(vault_wallrun_2)
+dealloc(vault_wallrun_3)
+dealloc(vault_wallrun_to_hang)
+dealloc(vault_wallrun_to_hang_2)
+dealloc(vault_wallrun_to_hang_3)
 </AssemblerScript>
                         </CheatEntry>
                         <CheatEntry>
